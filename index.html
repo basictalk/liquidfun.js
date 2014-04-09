@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <script src="hello_world.js"></script>
+  <script>
+  var gravity = new Module.b2Vec2(0.0, -10.0);
+  console.log(gravity.y);
+  var world = new Module.b2World(gravity);
+  
+  var groundBodyDef = new Module.b2BodyDef;
+  groundBodyDef.position().Set(0.0, -10.0); 
+  var groundBody = world.CreateBody(groundBodyDef);
+  
+  var groundBox = new Module.b2PolygonShape;
+  groundBox.SetAsBox_xy(50, 10);
+  
+  groundBody.CreateFixture_s(groundBox, 0.0);
+
+  // Define the dynamic body. We set its position and call the body factory.
+  var bodyDef = new Module.b2BodyDef();
+  bodyDef.type = Module.b2BodyType.b2_dynamicBody;
+  bodyDef.position().Set(0.0, 75.0);
+  var body = world.CreateBody(bodyDef);
+
+  // Define another box shape for our dynamic body.
+  var dynamicBox = new Module.b2PolygonShape();
+  dynamicBox.SetAsBox_xy(1.0, 1.0);
+
+  // Define the dynamic body fixture.
+  var fixtureDef = new Module.b2FixtureDef;
+  fixtureDef.SetShape(dynamicBox);
+
+  // Set the box density to be non-zero, so it will be dynamic.
+  fixtureDef.density = 1.0;
+
+  // Override the default friction.
+  fixtureDef.friction = 0.3;
+
+  // Add the shape to the body.
+  body.CreateFixture(fixtureDef);
+
+  // Prepare for simulation. Typically we use a time step of 1/60 of a
+  // second (60Hz) and 10 iterations. This provides a high quality simulation
+  // in most game scenarios.
+  var timeStep = 1.0 / 60.0;
+  var velocityIterations = 6;
+  var positionIterations = 2;
+
+  // This is our little game loop.
+  for (var i = 0; i < 60; ++i)
+  {
+    // Instruct the world to perform a single step of simulation.
+    // It is generally best to keep the time step and iterations fixed.
+    world.Step(timeStep, velocityIterations, positionIterations);
+
+    // Now print the position and angle of the body.
+    var position = body.GetPosition();
+    var angle = body.GetAngle();
+    console.log(position.x + " " + position.y + " " + angle);
+  }
+  </script>
+</html>
