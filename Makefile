@@ -62,5 +62,5 @@ $(O)/Common/b2TrackedBlock.cpp \
 $(O)/Common/b2StackAllocator.cpp
 
 bindings.js:
-	$(CXX) --bind -IBox2D -o hello_world.js bindings.cpp jsBindings/jsBindings.cpp $(OBJECTS)
+	$(CXX) --bind -IBox2D -o hello_world.js jsBindings/jsBindings.cpp $(OBJECTS)
 
