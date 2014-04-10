@@ -1,28 +1,18 @@
 #ifndef B2FIXTUREJSBINDINGS_H
 #define B2FIXTUREJSBINDINGS_H
-#include <emscripten/bind.h>
-#include <Box2D/Box2D.h>
 
-using namespace emscripten;
-
-const b2Shape* GetShape(b2FixtureDef& f) {
-  return f.shape;
-}
-
-void SetShape(b2FixtureDef& f, b2Shape* shape) {
-  f.shape = shape;
-}
-
-EMSCRIPTEN_BINDINGS(b2Fixture) {
-  class_<b2FixtureDef>("b2FixtureDef")
-      .constructor<>()
-      .function("GetShape", &GetShape, allow_raw_pointers())
-      .function("SetShape", &SetShape, allow_raw_pointers())
-      .property("friction", &b2FixtureDef::friction)
-      .property("restitution", &b2FixtureDef::restitution)
-      .property("density", &b2FixtureDef::density);
-
-  class_<b2Fixture>("b2Fixture");
+extern "C" {
+// b2FixtureDef exports
+void* b2FixtureDef_Create();
+void b2FixtureDef_Delete(void* fixture);
+float b2FixtureDef_GetDensity(void* fixture);
+float b2FixtureDef_GetFriction(void* fixture);
+float b2FixtureDef_GetRestitution(void* fixture);
+void* b2FixtureDef_GetShape(void* fixture);
+void b2FixtureDef_SetDensity(void* fixture, float density);
+void b2FixtureDef_SetFriction(void* fixture, float friction);
+void b2FixtureDef_SetRestitution(void* fixture, float restitution);
+void b2FixtureDef_SetShape(void* fixture, void* shape);
 }
 
 #endif
