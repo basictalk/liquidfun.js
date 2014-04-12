@@ -1,25 +1,23 @@
-var b2FixtureDef_Create = Module.cwrap('b2FixtureDef_Create', 'number');
-var b2FixtureDef_SetDensity = Module.cwrap('b2FixtureDef_SetDensity', 'null', 
-  ['number', 'number']);
-var b2FixtureDef_SetFriction = Module.cwrap('b2FixtureDef_SetFriction', 'null',
-  ['number', 'number'])
-var b2FixtureDef_SetShape = Module.cwrap('b2FixtureDef_SetShape', 'null', 
-  ['number', 'number']);
-
-
 function b2FixtureDef() {
-  this.ptr = b2FixtureDef_Create();
+  this.density = 0.0;
+  this.friction = 0.2;
+  this.isSensor = false;
+  this.restitution = 0.0;
+  this.shape = null;
+  this.userData = null;
 }
 
-b2FixtureDef.prototype.SetDensity = function(density) {
-  b2FixtureDef_SetDensity(this.ptr, density);
+// fixture globals
+function b2Fixture() {
+  this.ptr = null;
+  this.shape = null;
 }
 
-b2FixtureDef.prototype.SetFriction = function(friction) {
-  b2FixtureDef_SetFriction(this.ptr, friction);
+b2Fixture.prototype.FromFixtureDef = function(fixtureDef) {
+  this.density = fixtureDef.density;
+  this.friction = fixtureDef.friction;
+  this.isSensor = fixtureDef.isSensor;
+  this.restitution = fixtureDef.restitution;
+  this.shape = fixtureDef.shape;
+  this.userData = fixtureDef.userData;
 }
-
-b2FixtureDef.prototype.SetShape = function(shape) {
-  b2FixtureDef_SetShape(this.ptr, shape.ptr);
-}
-

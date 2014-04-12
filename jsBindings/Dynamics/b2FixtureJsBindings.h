@@ -4,15 +4,19 @@
 extern "C" {
 // b2FixtureDef exports
 void* b2FixtureDef_Create();
-void b2FixtureDef_Delete(void* fixture);
-float b2FixtureDef_GetDensity(void* fixture);
-float b2FixtureDef_GetFriction(void* fixture);
-float b2FixtureDef_GetRestitution(void* fixture);
-void* b2FixtureDef_GetShape(void* fixture);
-void b2FixtureDef_SetDensity(void* fixture, float density);
-void b2FixtureDef_SetFriction(void* fixture, float friction);
-void b2FixtureDef_SetRestitution(void* fixture, float restitution);
-void b2FixtureDef_SetShape(void* fixture, void* shape);
+void b2FixtureDef_Delete(void* fixtureDef);
+float b2FixtureDef_GetDensity(void* fixtureDef);
+float b2FixtureDef_GetFriction(void* fixtureDef);
+float b2FixtureDef_GetRestitution(void* fixtureDef);
+void* b2FixtureDef_GetShape(void* fixtureDef);
+void b2FixtureDef_SetDensity(void* fixtureDef, float density);
+void b2FixtureDef_SetFriction(void* fixtureDef, float friction);
+void b2FixtureDef_SetRestitution(void* fixtureDef, float restitution);
+void b2FixtureDef_SetShape(void* fixtureDef, void* shape);
+
+//b2Fixture exports
+void* b2Fixture_GetNext(void* fixture);
+void* b2Fixture_GetShape(void* fixture);
 }
 
 #endif

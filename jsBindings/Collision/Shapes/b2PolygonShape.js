@@ -1,11 +1,14 @@
-var b2PolygonShape_Create = Module.cwrap('b2PolygonShape_Create', 'number');
-var b2PolygonShape_SetAsBox_xy = Module.cwrap('b2PolygonShape_SetAsBox_xy', 
-  'null', ['number', 'number', 'number']);
-
 function b2PolygonShape() {
-  this.ptr = b2PolygonShape_Create();
+  this.count = 0;
+  this.position = new b2Vec2();
+  this.vertices = [];
+  this.type = b2Shape_Type_e_polygon;
 }
 
-b2PolygonShape.prototype.SetAsBoxXY = function(x, y) {
-  b2PolygonShape_SetAsBox_xy(this.ptr, x, y);
+b2PolygonShape.prototype.SetAsBoxXY = function(hx, hy) {
+  this.count = 4;
+  this.vertices[0] = new b2Vec2(-hx, -hy);
+  this.vertices[1] = new b2Vec2( hx, -hy);
+  this.vertices[2] = new b2Vec2( hx,  hy);
+  this.vertices[3] = new b2Vec2(-hx,  hy);
 }

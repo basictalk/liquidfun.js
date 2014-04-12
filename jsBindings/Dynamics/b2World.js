@@ -1,14 +1,44 @@
-var b2World_Create = Module.cwrap('b2World_Create', 'number', ['number']);
-var b2World_CreateBody = Module.cwrap('b2World_CreateBody', 'number', ['number', 'number']);
-var b2World_Step = Module.cwrap('b2World_Step', 'null', ['number', 'number', 'number']);
+var b2World_Create = Module.cwrap('b2World_Create', 'number', ['number', 'number']);
+var b2World_CreateBody = 
+  Module.cwrap('b2World_CreateBody', 'number', 
+    ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 
+     'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+     'number']);
 var b2World_Delete = Module.cwrap('b2World_Delete', 'null', ['number']);
+var b2World_GetBodyList = Module.cwrap("b2World_GetBodyList", 'number', ['number']);
+var b2World_SetGravity = Module.cwrap('b2World_SetGravity', 'null', 
+  ['number', 'number', 'number']);
+var b2World_Step = Module.cwrap('b2World_Step', 'null', ['number', 'number', 'number']);
 
 function b2World(gravity) {
-  this.ptr = b2World_Create(gravity.ptr);
+  this.bodies = [];
+  this.ptr = b2World_Create(gravity.x, gravity.y);
 }
 
 b2World.prototype.CreateBody = function(bodyDef) {
-  return new b2Body(b2World_CreateBody(this.ptr, bodyDef.ptr));
+  var body = new b2Body(b2World_CreateBody(this.ptr, bodyDef.active, bodyDef.allowSleep,
+    bodyDef.angle, bodyDef.angularVelocity, bodyDef.angularDamping, bodyDef.awake,
+    bodyDef.bullet, bodyDef.fixedRotation, bodyDef.gravityScale, bodyDef.linearDamping,
+    bodyDef.linearVelocity.x, bodyDef.linearVelocity.y, bodyDef.position.x,
+    bodyDef.position.y, bodyDef.type, bodyDef.userData));
+  this.bodies.push(body);
+  return body;
+}
+
+b2World.prototype.GetBodyList = function() {
+  return b2World_GetBodyList(this.ptr);
+}
+
+b2World.prototype.ForEachBody = function(func) {
+  var body = new b2Body(b2World_GetBodyList(this.ptr));
+  while (body.ptr !== 0) {
+    func(body);
+    body = body.GetNext();
+  }
+}
+
+b2World.prototype.SetGravity = function(gravity) {
+  b2World_SetGravity(this.ptr, gravity.x, gravity.y);
 }
 
 b2World.prototype.Step = function(steps, vIterations, pIterations) {

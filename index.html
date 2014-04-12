@@ -1,55 +1,23 @@
 <!doctype html>
 <html>
   <script src="hello_world.js"></script>
+  <script src="jsBindings/Collision/Shapes/b2CircleShape.js"></script>
+  <script src="jsBindings/Collision/Shapes/b2EdgeShape.js"></script>
   <script src="jsBindings/Collision/Shapes/b2PolygonShape.js"></script>
+  <script src="jsBindings/Collision/Shapes/b2Shape.js"></script>
   <script src="jsBindings/Common/b2Math.js"></script>
   <script src="jsBindings/Dynamics/b2Body.js"></script>
   <script src="jsBindings/Dynamics/b2Fixture.js"></script>
-  <script src="jsBindings/Dynamics/b2World.js"></script> 
-  <script>
-   
-  var gravity = new b2Vec2(0, -10);
-  var world = new b2World(gravity);
-  
-  var groundBodyDef = new b2BodyDef();
-  groundBodyDef.SetPosition(0.0, -10.0);
-  var groundBody = world.CreateBody(groundBodyDef);
-  
-  var groundBox = new b2PolygonShape();
-  groundBox.SetAsBoxXY(50, 10);
-  groundBody.CreateFixtureShape(groundBox, 0.0);
-  
-  var bodyDef = new b2BodyDef();
-  bodyDef.SetType(b2_dynamicBody);
-  bodyDef.SetPosition(0, 75);
-  var body = world.CreateBody(bodyDef);
-  
-  var dynamicBox = new b2PolygonShape();
-  dynamicBox.SetAsBoxXY(1.0, 1.0);
-  
-  var fixtureDef = new b2FixtureDef();
-  fixtureDef.SetShape(dynamicBox);
-  fixtureDef.SetFriction(0.3);
-  fixtureDef.SetDensity(1.0);
-  
-  body.CreateFixtureBodyDef(fixtureDef);
-  
-  var timeStep = 1.0 / 60.0;
-  var velocityIterations = 6;
-  var positionIterations = 2;
-  for (var i = 0; i < 60; ++i)
-  {
-    // Instruct the world to perform a single step of simulation.
-    // It is generally best to keep the time step and iterations fixed.
-    world.Step(timeStep, velocityIterations, positionIterations);
+  <script src="jsBindings/Dynamics/b2World.js"></script>
+  <script src="jsBindings/Dynamics/Joints/b2RevoluteJoint.js"></script>
+  <script src="testbed/renderer.js"></script>
+  <script src="testbed/three.js"></script>
+  <script src="testbed/testbed.js"></script>
+  <!-- // tests !-->
+  <script src="testbed/tests/testAddPair.js"></script>
+  <script src="testbed/tests/testChain.js"></script>
+  <script src="testbed/tests/testHw.js"></script>
+  <script src="testbed/tests/testPyramid.js"></script>
 
-    // Now print the position and angle of the body.
-    var position = body.GetPosition();
-    var angle = body.GetAngle(body);
-    console.log(position.GetX() + " " + position.GetY() + " " + angle);
-  }
-  </script>
-  <script src="pixi.js"></script>
-  <script src="testbed.js"></script>
-  <!--<body onload="main()"></body> -->
+  <body onload="initTestbed()"></body>
 </html>
