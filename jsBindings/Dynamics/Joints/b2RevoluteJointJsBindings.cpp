@@ -1,6 +1,6 @@
 #include <Box2D/Box2D.h>
 
-void b2RevoluteJoint_InitializeAndCreate(void* world, void* bodyA, void* bodyB,
+void* b2RevoluteJoint_InitializeAndCreate(void* world, void* bodyA, void* bodyB,
                               double anchorX, double anchorY,
                               //revoluteJointDef
                               double collideConnected, double enableLimit,
@@ -19,5 +19,9 @@ void b2RevoluteJoint_InitializeAndCreate(void* world, void* bodyA, void* bodyB,
   revJoint.userData = (double*)&userData;
 
   revJoint.Initialize((b2Body*)bodyA, (b2Body*)bodyB, b2Vec2(anchorX, anchorY));
-  ((b2World*)world)->CreateJoint(&revJoint);
+  return ((b2World*)world)->CreateJoint(&revJoint);
+}
+
+void b2RevoluteJoint_SetMotorSpeed(void* joint, double speed) {
+  ((b2RevoluteJoint*)joint)->SetMotorSpeed(speed);
 }

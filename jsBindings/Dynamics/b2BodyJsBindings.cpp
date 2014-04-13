@@ -1,25 +1,4 @@
 #include <Box2D/Box2D.h>
-// b2BodyDef functions
-void* b2BodyDef_Create() {
-  return new b2BodyDef();
-}
-
-void b2BodyDef_Delete(void* def) {
-  delete (b2BodyDef*)def;
-}
-
-void b2BodyDef_SetBullet(void* def, float bullet) {
-  ((b2BodyDef*)def)->bullet = (bool)bullet;
-}
-
-void b2BodyDef_SetPosition(void* def, float x, float y) {
-  ((b2BodyDef*)def)->position.Set(x, y);
-}
-
-void b2BodyDef_SetType(void* def, float type) {
-  ((b2BodyDef*)def)->type = (b2BodyType)type;
-}
-
 // b2Body functions
 void* b2Body_CreateFixture_b2BodyDef(void* body, void* def) {
   return ((b2Body*)body)->CreateFixture((b2FixtureDef*)def);
@@ -49,6 +28,33 @@ void* b2Body_CreateFixture_b2CircleShape(void* body,
   return ((b2Body*)body)->CreateFixture(&def);
 }
 
+// create fixture from chain
+const int MaxChainVertices = 128;
+void* b2Body_CreateFixture_b2ChainShape(void* body,
+                                         // Fixturedef
+                                         double density, double friction,
+                                         double isSensor, double restitution,
+                                         double userData,
+                                         // chain
+                                         float* vertices, double length) {
+  b2FixtureDef def;
+  def.density = density;
+  def.friction = friction;
+  def.isSensor = isSensor;
+  def.restitution = restitution;
+  def.userData = (void*)&userData;
+
+  b2ChainShape chain;
+  int count = length / 2;
+  b2Vec2 vertexArr[MaxChainVertices];
+  for (int i = 0, j = 0; i < length; i += 2, j++) {
+    vertexArr[j] = b2Vec2(vertices[i], vertices[i+1]);
+  }
+  chain.CreateChain(vertexArr, count);
+
+  def.shape = &chain;
+  return ((b2Body*)body)->CreateFixture(&def);
+}
 
 // b2Body create fixture from edge shape
 void* b2Body_CreateFixture_b2EdgeShape(void* body,
@@ -106,7 +112,7 @@ void* b2Body_CreateFixture_b2PolygonShape_3(void* body,
   def.shape = &polygon;
   return ((b2Body*)body)->CreateFixture(&def);
 }
-
+#include <stdio.h>
 void* b2Body_CreateFixture_b2PolygonShape_4(void* body,
                                             // Fixturedef
                                             double density, double friction,
@@ -139,8 +145,6 @@ void* b2Body_CreateFixture_b2PolygonShape_4(void* body,
   return ((b2Body*)body)->CreateFixture(&def);
 }
 
-
-
 void* b2Body_CreateFixture_b2Shape(void* body, void* shape, float density) {
   return ((b2Body*)body)->CreateFixture((b2Shape*)shape, density);
 }
@@ -161,8 +165,11 @@ void* b2Body_GetPosition(void* body) {
   return const_cast<b2Vec2*>(&((b2Body*)body)->GetPosition());
 }
 
-void b2Body_GetTransformTest(void* body, float* arr) {
+#include <stdio.h>
+void b2Body_GetTransform(void* body, float* arr) {
   b2Transform* t = const_cast<b2Transform*>(&((b2Body*)body)->GetTransform());
+
+  //printf("%f %f %f %f\n", t->p.x, t->p.y, t->q.s, t->q.c);
 
   arr[0] = (double)t->p.x;
   arr[1] = (double)t->p.y;
@@ -174,6 +181,14 @@ void* b2Body_GetTransform(void* body) {
   return const_cast<b2Transform*>(&((b2Body*)body)->GetTransform());
 }
 
+void b2Body_SetAngularVelocity(void* body, double angle) {
+  ((b2Body*)body)->SetAngularVelocity(angle);
+}
+
 void b2Body_SetLinearVelocity(void* body, double x, double y) {
   ((b2Body*)body)->SetLinearVelocity(b2Vec2(x, y));
+}
+
+void b2Body_SetTransform(void* body, double x, double y, double angle) {
+  ((b2Body*)body)->SetTransform(b2Vec2(x, y), angle);
 }

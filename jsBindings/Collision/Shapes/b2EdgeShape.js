@@ -1,7 +1,3 @@
-/**
- * Created by joshualitt on 4/11/14.
- */
-
 function b2EdgeShape() {
   this.type = b2Shape_Type_e_edge;
   this.v0 = new b2Vec2();

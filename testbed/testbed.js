@@ -1,53 +1,69 @@
-/**
- * Created by joshualitt on 4/9/14.
- */
-
 // shouldnt be a global :(
 var world;
+var renderer;
+var camera;
 var scene;
 var objects = [];
+var timeStep = 1.0 / 60.0;
+var velocityIterations = 2;
+var positionIterations = 2;
+var test;
 
-function initTestbed() {
+function Testbed() {
   scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(45
+  camera = new THREE.PerspectiveCamera(45
     , window.innerWidth / window.innerHeight
     , 0.1, 1000);
-  var renderer = new THREE.WebGLRenderer();
+  renderer = new THREE.WebGLRenderer();
   renderer.setClearColor(0xEEEEEE);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   camera.position.x = 0;
   camera.position.y = 0;
-  camera.position.z = -100;
+  camera.position.z = 100;
   camera.lookAt(scene.position);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild( this.renderer.domElement);
 
   // Init world
-  var gravity = new b2Vec2(0, -10);
+  var gravity = new b2Vec2(0, -20);
   world = new b2World(gravity);
-  var timeStep = 1.0 / 30.0;
-  var velocityIterations = 2;
-  var positionIterations = 2;
-  
+
   // Init test
-  //TestHW();
-  //TestAddPair();
-  //TestPyramid();
-  TestChain();
+  //test = new TestAddPair();
+  //test = new TestAntiPointy();
+  //test = new TestBullet();
+  //test = new TestChain();
+  //test = new TestDamBreak();
+  //test = new TestElasticParticles();
+  //test = new TestHW();
+  //test = new TestParticles();
+  //test = new TestPyramid();
+  //test = new TestRamp();
+  test = new TestVaryingFriction();
+  //test = new TestVaryingRestitution();
+  //test = new TestVerticalStack();
+  //test = new TestSphereStack();
+  //test = new TestWaveMachine();
   
   //Init
-  draw(false);
-  function render() {
-    // bring objects into world
-    world.Step(timeStep, velocityIterations, positionIterations);
-    draw(true);
-    
-    requestAnimationFrame(render);
-    renderer.render(scene, camera);
-  };
+  init();
   render();
 }
 
-function RandomFloat(min, max) {
-  return min + (max - min) * Math.random();
+var render = function() {
+  // bring objects into world
+
+  if (test.Step !== undefined) {
+    test.Step();
+  } else {
+    Step();
+  }
+  draw();
+
+  requestAnimationFrame(render);
+  renderer.render(scene, camera);
+}
+
+var Step = function() {
+  world.Step(timeStep, velocityIterations, positionIterations);
 }

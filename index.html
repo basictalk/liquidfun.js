@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <script src="hello_world.js"></script>
+  <script src="jsBindings/Collision/Shapes/b2ChainShape.js"></script>
   <script src="jsBindings/Collision/Shapes/b2CircleShape.js"></script>
   <script src="jsBindings/Collision/Shapes/b2EdgeShape.js"></script>
   <script src="jsBindings/Collision/Shapes/b2PolygonShape.js"></script>
@@ -10,14 +11,31 @@
   <script src="jsBindings/Dynamics/b2Fixture.js"></script>
   <script src="jsBindings/Dynamics/b2World.js"></script>
   <script src="jsBindings/Dynamics/Joints/b2RevoluteJoint.js"></script>
+  <script src="jsBindings/Particle/b2Particle.js"></script>
+  <script src="jsBindings/Particle/b2ParticleGroup.js"></script>
+  <script src="jsBindings/Particle/b2ParticleSystem.js"></script>
+
   <script src="testbed/renderer.js"></script>
   <script src="testbed/three.js"></script>
   <script src="testbed/testbed.js"></script>
+  <script src="testbed/utils.js"></script>
   <!-- // tests !-->
   <script src="testbed/tests/testAddPair.js"></script>
+  <script src="testbed/tests/testAntiPointy.js"></script>
+  <script src="testbed/tests/testBullet.js"></script>
   <script src="testbed/tests/testChain.js"></script>
+  <script src="testbed/tests/testDamBreak.js"></script>
+  <script src="testbed/tests/testElasticParticles.js"></script>
   <script src="testbed/tests/testHw.js"></script>
+  <script src="testbed/tests/testParticles.js"></script>
   <script src="testbed/tests/testPyramid.js"></script>
+  <script src="testbed/tests/testRamp.js"></script>
+  <script src="testbed/tests/testSphereStack.js"></script>
+  <script src="testbed/tests/testVaryingRestitution.js"></script>
+  <script src="testbed/tests/testVaryingFriction.js"></script>
+  <script src="testbed/tests/testVerticalStack.js"></script>
+  <script src="testbed/tests/testWaveMachine.js"></script>
 
-  <body onload="initTestbed()"></body>
+
+  <body onload="Testbed()"></body>
 </html>

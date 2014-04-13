@@ -20,4 +20,5 @@ b2Fixture.prototype.FromFixtureDef = function(fixtureDef) {
   this.restitution = fixtureDef.restitution;
   this.shape = fixtureDef.shape;
   this.userData = fixtureDef.userData;
+  this.vertices = [];
 }

@@ -30,6 +30,14 @@ var b2Body_CreateFixture_b2CircleShape =
       'number', 'number',
       'number']);
 
+var b2Body_CreateFixture_b2ChainShape =
+  Module.cwrap('b2Body_CreateFixture_b2ChainShape', 'number',
+    ['number',
+      // Fixture defs
+      'number', 'number', 'number', 'number', 'number',
+      // Chain vertices and count
+      'number', 'number']);
+
 var b2Body_CreateFixture_b2EdgeShape =
   Module.cwrap('b2Body_CreateFixture_b2EdgeShape', 'number',
     ['number',
@@ -71,11 +79,15 @@ var b2Body_GetFixtureList =
   Module.cwrap('b2Body_GetFixtureList', 'number', ['number']);
 var b2Body_GetNext = Module.cwrap('b2Body_GetNext', 'number', ['number']);
 var b2Body_GetPosition = Module.cwrap('b2Body_GetPosition', 'number', ['number']);
-var b2Body_GetTransform = Module.cwrap('b2Body_GetTransform', 'number', ['number']);
-var b2Body_GetTransform_Test = Module.cwrap('b2Body_GetTransformTest', 'null', 
+var b2Body_GetTransform = Module.cwrap('b2Body_GetTransform', 'null',
+  ['number', 'number']);
+var b2Body_SetAngularVelocity = Module.cwrap('b2Body_SetAngularVelocity', 'null',
   ['number', 'number']);
 var b2Body_SetLinearVelocity = Module.cwrap('b2Body_SetLinearVelocity', 'null',
   ['number', 'number', 'number']);
+var b2Body_SetTransform =
+  Module.cwrap('b2Body_SetTransform', 'null', ['number', 'number', 'number']);
+
 
 
 function b2Body(ptr) {
@@ -97,6 +109,7 @@ b2Body.prototype.CreateFixtureFromDef= function(fixtureDef) {
       fixture.ptr = this._CreateFixtureFromPolygon(fixtureDef);
       break;
     case b2Shape_Type_e_chain:
+      fixture.ptr = this._CreateFixtureFromChain(fixtureDef);
       break;
   }
   this.fixtures.push(fixture);
@@ -110,6 +123,39 @@ b2Body.prototype._CreateFixtureFromCircle = function(fixtureDef) {
     fixtureDef.restitution, fixtureDef.userData,
     // circle data
     circle.position.x, circle.position.y, circle.radius);
+}
+
+b2Body.prototype._CreateFixtureFromChain = function(fixtureDef) {
+  var chain = fixtureDef.shape;
+  var vertices = chain.vertices;
+  var chainLength = vertices.length;
+  var dataLength = chainLength * 2;
+  var data = new Float32Array(dataLength);
+
+  for (var i = 0, j = 0; i < dataLength; i += 2, j++) {
+    data[i] = vertices[j].x;
+    data[i+1] = vertices[j].y;
+  }
+
+  // Get data byte size, allocate memory on Emscripten heap, and get pointer
+  var nDataBytes = data.length * data.BYTES_PER_ELEMENT;
+  var dataPtr = Module._malloc(nDataBytes);
+
+  // Copy data to Emscripten heap (directly accessed from Module.HEAPU8)
+  var dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, nDataBytes);
+  dataHeap.set(new Uint8Array(data.buffer));
+
+  // Call function and get result
+  var fixture = b2Body_CreateFixture_b2ChainShape(this.ptr,
+    // fixture def
+    fixtureDef.density, fixtureDef.friction, fixtureDef.isSensor,
+    fixtureDef.restitution, fixtureDef.userData,
+    // vertices and length
+    dataHeap.byteOffset, data.length);
+
+  // Free memory
+  Module._free(dataHeap.byteOffset);
+  return fixture;
 }
 
 b2Body.prototype._CreateFixtureFromEdge = function(fixtureDef) {
@@ -126,8 +172,19 @@ b2Body.prototype._CreateFixtureFromEdge = function(fixtureDef) {
 
 b2Body.prototype._CreateFixtureFromPolygon = function(fixtureDef) {
   var vertices = fixtureDef.shape.vertices;
-  switch (fixtureDef.shape.count) {
+  switch (vertices.length) {
     case 3:
+      var v0 = vertices[0];
+      var v1 = vertices[1];
+      var v2 = vertices[2];
+      return b2Body_CreateFixture_b2PolygonShape_3(this.ptr,
+        // fixture Def
+        fixtureDef.density, fixtureDef.friction, fixtureDef.isSensor,
+        fixtureDef.restitution, fixtureDef.userData,
+        // points
+        v0.x, v0.y,
+        v1.x, v1.y,
+        v2.x, v2.y);
       break;
     case 4:
       var v0 = vertices[0];
@@ -188,7 +245,7 @@ b2Body.prototype.GetTransform = function() {
   dataHeap.set(new Uint8Array(data.buffer));
 
   // Call function and get result
-  b2Body_GetTransform_Test(this.ptr, dataHeap.byteOffset);
+  b2Body_GetTransform(this.ptr, dataHeap.byteOffset);
   var result = new Float32Array(dataHeap.buffer, dataHeap.byteOffset, data.length);
   
   var transform = new b2Transform(); 
@@ -199,6 +256,14 @@ b2Body.prototype.GetTransform = function() {
   Module._free(dataHeap.byteOffset);
 }
 
+b2Body.prototype.SetAngularVelocity = function(angle) {
+  b2Body_SetAngularVelocity(this.ptr, angle);
+}
+
 b2Body.prototype.SetLinearVelocity = function(v) {
   b2Body_SetLinearVelocity(this.ptr, v.x, v.y);
+}
+
+b2Body.prototype.SetTransform = function(v, angle) {
+  b2Body_SetTransform(this.ptr, v.x, v.y, angle);
 }

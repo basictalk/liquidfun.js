@@ -39,6 +39,11 @@ function b2Rot(radians) {
   this.c = Math.cos(radians);
 }
 
+b2Rot.prototype.Set = function(radians) {
+  this.s = Math.sin(radians);
+  this.c = Math.cos(radians);
+}
+
 function b2Transform(position, rotation) {
   if (position === undefined) {
     position = new b2Vec2();

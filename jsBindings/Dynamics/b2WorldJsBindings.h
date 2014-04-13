@@ -12,6 +12,18 @@ void* b2World_CreateBody(void* world, double active, double allowSleep,
                          double linearVelocityX, double linearVelocityY,
                          double positionX, double positionY, double type,
                          double userData);
+
+void* b2World_CreateParticleSystem(void* world, double colorMixingStrength,
+                                   double dampingStrength, double destroyByAge,
+                                   double ejectionStrength, double elasticStrength,
+                                   double lifetimeGranularity, double powderStrength,
+                                   double pressureStrength, double radius,
+                                   double repulsiveStrength, double springStrength,
+                                   double staticPressureIterations, double staticPressureRelaxation,
+                                   double staticPressureStrength, double surfaceTensionNormalStrength,
+                                   double surfaceTensionPressureStrength, double viscousStrength);
+
+
 void b2World_Delete(void* world);
 void* b2World_GetBodyList(void* world);
 void b2World_SetGravity(void* world, double x, double y);

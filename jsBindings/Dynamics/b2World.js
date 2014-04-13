@@ -4,6 +4,12 @@ var b2World_CreateBody =
     ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 
      'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
      'number']);
+
+var b2World_CreateParticleSystem =
+  Module.cwrap('b2World_CreateParticleSystem', 'number',
+    ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+     'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
+
 var b2World_Delete = Module.cwrap('b2World_Delete', 'null', ['number']);
 var b2World_GetBodyList = Module.cwrap("b2World_GetBodyList", 'number', ['number']);
 var b2World_SetGravity = Module.cwrap('b2World_SetGravity', 'null', 
@@ -12,6 +18,8 @@ var b2World_Step = Module.cwrap('b2World_Step', 'null', ['number', 'number', 'nu
 
 function b2World(gravity) {
   this.bodies = [];
+  this.joints = [];
+  this.particleSystems = [];
   this.ptr = b2World_Create(gravity.x, gravity.y);
 }
 
@@ -23,6 +31,17 @@ b2World.prototype.CreateBody = function(bodyDef) {
     bodyDef.position.y, bodyDef.type, bodyDef.userData));
   this.bodies.push(body);
   return body;
+}
+
+b2World.prototype.CreateParticleSystem = function(psd) {
+  var ps = new b2ParticleSystem(b2World_CreateParticleSystem(this.ptr, psd.colorMixingStrength,
+    psd.dampingStrength, psd.destroyByAge, psd.ejectionStrength, psd.elasticStrength,
+    psd.lifetimeGranularity, psd.powderStrength, psd.pressureStrength, psd.radius,
+    psd.repulsiveStrength, psd.springStrength, psd.staticPressureIterations,
+    psd.staticPressureRelaxation, psd.staticPressureStrength, psd.surfaceTensionNormalStrength,
+    psd.surfaceTensionPressureStrength, psd.viscousStrength));
+  this.particleSystems.push(ps);
+  return ps;
 }
 
 b2World.prototype.GetBodyList = function() {

@@ -2,13 +2,6 @@
 #define B2BODYJSBINDINGS_H
 
 extern "C" {
-// b2BodyDef exports
-void* b2BodyDef_Create();
-void b2BodyDef_Delete(void* def);
-void b2BodyDef_SetBullet(void* def, float bullet);
-void b2BodyDef_SetPosition(void* def, float x, float y);
-void b2BodyDef_SetType(void* def, float type);
-
 // b2Body exports
 void* b2Body_CreateFixture_b2BodyDef(void* body, void* def);
 
@@ -21,6 +14,15 @@ void* b2Body_CreateFixture_b2CircleShape(void* body,
                                          // circle
                                          double px, double py,
                                          double radius);
+
+// b2body create fixture from chain
+void* b2Body_CreateFixture_b2ChainShape(void* body,
+                                         // Fixturedef
+                                         double density, double friction,
+                                         double isSensor, double restitution,
+                                         double userData,
+                                         // chain
+                                         float* vertices, double length);
 
 // b2Body create fixture from edgeshape
 void* b2Body_CreateFixture_b2EdgeShape(void* body,
@@ -54,18 +56,15 @@ void* b2Body_CreateFixture_b2PolygonShape_4(void* body,
                                             double x2, double y2,
                                             double x3, double y3);
 
-
-
-
-
 void* b2Body_CreateFixture_b2Shape(void* body, void* shape, float density);
 float b2Body_GetAngle(void* body);
 void* b2Body_GetFixtureList(void* body);
 void* b2Body_GetNext(void* body);
 void* b2Body_GetPosition(void* body);
 
-void b2Body_GetTransformTest(void* body, float* arr);
-void* b2Body_GetTransform(void* body);
+void b2Body_GetTransform(void* body, float* arr);
+void b2Body_SetAngularVelocity(void* body, double angle);
 void b2Body_SetLinearVelocity(void* body, double x, double y);
+void b2Body_SetTransform(void* body, double x, double y, double angle);
 }
 #endif

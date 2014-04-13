@@ -62,9 +62,9 @@ $(O)/Common/b2TrackedBlock.cpp \
 $(O)/Common/b2StackAllocator.cpp
 	
 B2BODY = \
-	'_float_multiply_array',\
 	'_b2Body_CreateFixture_b2BodyDef', \
 	'_b2Body_CreateFixture_b2CircleShape', \
+	'_b2Body_CreateFixture_b2ChainShape', \
 	'_b2Body_CreateFixture_b2EdgeShape', \
 	'_b2Body_CreateFixture_b2PolygonShape_3', \
 	'_b2Body_CreateFixture_b2PolygonShape_4', \
@@ -74,60 +74,25 @@ B2BODY = \
 	'_b2Body_GetFixtureList', \
 	'_b2Body_GetPosition', \
 	'_b2Body_GetTransform', \
-	'_b2Body_GetTransformTest', \
-	'_b2Body_SetLinearVelocity'
-	
-B2BODYDEF = \
-	'_b2BodyDef_Create', \
-	'_b2BodyDef_Delete', \
-	'_b2BodyDef_SetBullet', \
-	'_b2BodyDef_SetPosition', \
-	'_b2BodyDef_SetType'
-	
-B2CIRCLESHAPE = \
-	'_b2CircleShape_Create', \
-	'_b2CircleShape_SetPosition'
-	
-B2FIXTURE = \
-	'_b2Fixture_GetNext', \
-	'_b2Fixture_GetShape'
-	
-B2FIXTUREDEF = \
-	'_b2FixtureDef_Create', \
-	'_b2FixtureDef_Delete', \
-	'_b2FixtureDef_GetDensity', \
-	'_b2FixtureDef_GetFriction', \
-	'_b2FixtureDef_GetRestitution', \
-	'_b2FixtureDef_GetShape', \
-	'_b2FixtureDef_SetDensity', \
-	'_b2FixtureDef_SetFriction', \
-	'_b2FixtureDef_SetRestitution', \
-	'_b2FixtureDef_SetShape'
+	'_b2Body_SetAngularVelocity', \
+	'_b2Body_SetLinearVelocity', \
+	'_b2Body_SetTransform'
 	
 B2REVOLUTEJOINT = \
-	'_b2RevoluteJoint_InitializeAndCreate'
-	
-B2SHAPE = \
-	'_b2Shape_GetType'
-	
-B2POLYGONSHAPE = \
-	'_b2PolygonShape_Create', \
-	'_b2PolygonShape_Delete', \
-	'_b2PolygonShape_GetCentroid', \
-	'_b2PolygonShape_GetVertex', \
-	'_b2PolygonShape_GetVertexCount', \
-	'_b2PolygonShape_SetAsBox_xy'
-	
-B2VEC2 = \
-	'_b2Vec2_b2Mul', \
-	'_b2Vec2_Create', \
-	'_b2Vec2_Delete', \
-	'_b2Vec2_GetX', \
-	'_b2Vec2_GetY' \
+	'_b2RevoluteJoint_InitializeAndCreate', \
+	'_b2RevoluteJoint_SetMotorSpeed'
+
+B2PARTICLESYSTEM = \
+	'_b2ParticleSystem_CreateParticle', \
+	'_b2ParticleSystem_CreateParticleGroup_b2CircleShape', \
+  '_b2ParticleSystem_CreateParticleGroup_b2PolygonShape_4', \
+	'_b2ParticleSystem_GetParticleCount', \
+	'_b2ParticleSystem_GetPositionBuffer'	
 	
 B2WORLD = \
 	'_b2World_Create', \
 	'_b2World_CreateBody', \
+	'_b2World_CreateParticleSystem',\
 	'_b2World_Delete', \
 	'_b2World_GetBodyList', \
 	'_b2World_SetGravity', \
@@ -135,16 +100,11 @@ B2WORLD = \
 	
 EXPORTS = EXPORTED_FUNCTIONS="[ \
 	$(B2BODY), \
-	$(B2BODYDEF), \
-	$(B2FIXTURE), \
-	$(B2FIXTUREDEF), \
-	$(B2POLYGONSHAPE), \
+	$(B2PARTICLESYSTEM), \
 	$(B2REVOLUTEJOINT), \
-	$(B2SHAPE), \
-	$(B2VEC2), \
 	$(B2WORLD) \
 	]"
 
 bindings.js:
-	$(EMSCRIPTEN)/emcc -IBox2D -o hello_world.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432
+	$(EMSCRIPTEN)/emcc -IBox2D -o hello_world.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O2
 
