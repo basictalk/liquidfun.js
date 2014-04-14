@@ -12,6 +12,11 @@ void* b2FrictionJointDef_CreateJoint(
     double localAnchorBx, double localAnchorBy, double maxForce,
     double maxTorque);
 
+void* b2FrictionJointDef_InitializeAndCreate(
+    void* world,
+    void* bodyA, void* bodyB, double anchorX, double anchorY,
+    // frictionjointdef
+    double maxForce, double maxTorque, double collideConnected);
 }
 
 #endif

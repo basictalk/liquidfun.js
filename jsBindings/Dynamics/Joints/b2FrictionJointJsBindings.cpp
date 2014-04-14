@@ -20,3 +20,18 @@ void* b2FrictionJointDef_CreateJoint(
 
   return ((b2World*)world)->CreateJoint(&def);
 }
+
+void* b2FrictionJointDef_InitializeAndCreate(
+    void* world,
+    void* bodyA, void* bodyB, double anchorX, double anchorY,
+    // frictionjointdef
+    double collideConnected, double maxForce,
+    double maxTorque) {
+  b2FrictionJointDef fJoint;
+  fJoint.collideConnected = (bool)collideConnected;
+  fJoint.maxForce = maxForce;
+  fJoint.maxTorque = maxTorque;
+
+  fJoint.Initialize((b2Body*)bodyA, (b2Body*)bodyB, b2Vec2(anchorX, anchorY));
+  return ((b2World*)world)->CreateJoint(&fJoint);
+}

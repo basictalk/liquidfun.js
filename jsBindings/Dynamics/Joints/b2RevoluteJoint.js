@@ -1,10 +1,10 @@
 var b2RevoluteJoint_InitializeAndCreate =
-  Module.cwrap('b2RevoluteJoint_InitializeAndCreate', 'number',
+  Module.cwrap('b2RevoluteJointDef_InitializeAndCreate', 'number',
     ['number',
       // joint def
      'number', 'number', 'number', 'number',
       //revoluteJointDef
-     'number', 'number', 'number', 'number', 'number', 'number', 'number',  'number']);
+     'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 
 var b2RevoluteJoint_SetMotorSpeed =
   Module.cwrap('b2RevoluteJoint_SetMotorSpeed', 'number',
@@ -30,8 +30,7 @@ b2RevoluteJointDef.prototype.InitializeAndCreate = function(bodyA, bodyB, anchor
       bodyA.ptr, bodyB.ptr, anchor.x, anchor.y,
     // revolute joint def
     this.collideConnected, this.enableLimit, this.enableMotor, this.lowerAngle,
-    this.maxMotorTorque, this.motorSpeed, this.upperAngle, this.lowerAngle,
-    this.userData);
+    this.maxMotorTorque, this.motorSpeed, this.upperAngle, this.lowerAngle);
   world.joints.push(revoluteJoint);
   return revoluteJoint;
 }

@@ -1,12 +1,37 @@
 #include <Box2D/Box2D.h>
 
-void* b2RevoluteJoint_InitializeAndCreate(void* world, void* bodyA, void* bodyB,
-                              double anchorX, double anchorY,
-                              //revoluteJointDef
-                              double collideConnected, double enableLimit,
-                              double enableMotor, double lowerAngle,
-                              double maxMotorTorque, double motorSpeed,
-                              double upperAngle, double userData) {
+void* b2RevoluteJointDef_Create(
+    void* world,
+    //Joint def
+    void* bodyA, void* bodyB, double collideConnected,
+    //revoluteJointDef
+    double enableLimit, double enableMotor,   double lowerAngle,
+    double localAnchorAx, double localAnchorAy, double localAnchorBx,
+    double localAnchorBy, double maxMotorTorque, double motorSpeed,
+    double referenceAngle, double upperAngle) {
+  b2RevoluteJointDef revJoint;
+  revJoint.bodyA = (b2Body*)bodyA;
+  revJoint.bodyB = (b2Body*)bodyB;
+  revJoint.collideConnected = collideConnected;
+  revJoint.enableLimit = enableLimit;
+  revJoint.enableMotor = enableMotor;
+  revJoint.localAnchorA = b2Vec2(localAnchorAx, localAnchorAy);
+  revJoint.localAnchorA = b2Vec2(localAnchorBx, localAnchorBy);
+  revJoint.lowerAngle = lowerAngle;
+  revJoint.maxMotorTorque = maxMotorTorque;
+  revJoint.motorSpeed = motorSpeed;
+  revJoint.referenceAngle = referenceAngle;
+  revJoint.upperAngle = upperAngle;
+
+  return ((b2World*)world)->CreateJoint(&revJoint);
+}
+
+void* b2RevoluteJointDef_InitializeAndCreate(
+    void* world, void* bodyA, void* bodyB, double anchorX, double anchorY,
+    //revoluteJointDef
+    double collideConnected, double enableLimit,
+    double enableMotor, double lowerAngle, double maxMotorTorque,
+    double motorSpeed, double upperAngle) {
   b2RevoluteJointDef revJoint;
   revJoint.collideConnected = collideConnected;
   revJoint.enableLimit = enableLimit;
@@ -14,9 +39,7 @@ void* b2RevoluteJoint_InitializeAndCreate(void* world, void* bodyA, void* bodyB,
   revJoint.lowerAngle = lowerAngle;
   revJoint.maxMotorTorque = maxMotorTorque;
   revJoint.motorSpeed = motorSpeed;
-  revJoint.type = e_revoluteJoint;
   revJoint.upperAngle = upperAngle;
-  revJoint.userData = (double*)&userData;
 
   revJoint.Initialize((b2Body*)bodyA, (b2Body*)bodyB, b2Vec2(anchorX, anchorY));
   return ((b2World*)world)->CreateJoint(&revJoint);

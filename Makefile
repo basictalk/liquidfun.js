@@ -82,6 +82,10 @@ B2CIRCLESHAPE = \
 	'_b2CircleShape_CreateFixture', \
 	'_b2CircleShape_CreateParticleGroup'
 
+B2DISTANCEJOINT = \
+	'_b2DistanceJointDef_Create', \
+	'_b2DistanceJointDef_InitializeAndCreate', \
+
 B2EDGESHAPE = \
 	'_b2EdgeShape_CreateFixture'
 
@@ -91,11 +95,35 @@ B2POLYGONSHAPE = \
 	'_b2PolygonShape_CreateParticleGroup_4'
 
 B2FRICTIONJOINT = \
-	'_b2FrictionJointDef_CreateJoint'
+	'_b2FrictionJointDef_CreateJoint', \
+	'_b2FrictionJointDef_InitializeAndCreate' \
+	
+B2GEARJOINT = \
+	'_b2GearJointDef_Create', \
+	'_b2GearJointDef_InitializeAndCreate', \
+	
+B2MOTORJOINT = \
+	'_b2MotorJointDef_Create', \
+	'_b2MotorJointDef_InitializeAndCreate', \
+
+B2MOUSEJOINT = \
+	'_b2MouseJointDef_Create', \
+	
+B2PRISMATICJOINT = \
+	'_b2PrismaticJointDef_Create', \
+	'_b2PrismaticJointDef_InitializeAndCreate', \
+
+B2PULLEYJOINT = \
+	'_b2PulleyJointDef_Create', \
+	'_b2PulleyJointDef_InitializeAndCreate', \
 
 B2REVOLUTEJOINT = \
-	'_b2RevoluteJoint_InitializeAndCreate', \
+	'_b2RevoluteJointDef_Create', \
+	'_b2RevoluteJointDef_InitializeAndCreate', \
 	'_b2RevoluteJoint_SetMotorSpeed'
+
+B2ROPEJOINT = \
+	'_b2RopeJointDef_Create'
 
 B2PARTICLESYSTEM = \
 	'_b2ParticleSystem_CreateParticle', \
@@ -104,6 +132,14 @@ B2PARTICLESYSTEM = \
 	'_b2ParticleSystem_SetDamping', \
 	'_b2ParticleSystem_SetDensity', \
 	'_b2ParticleSystem_SetRadius'
+	
+B2WELDJOINT = \
+	'_b2WeldJointtDef_Create', \
+	'_b2WeldJointDef_InitializeAndCreate', \
+	
+B2WHEELJOINT = \
+	'_b2WheelJointDef_Create', \
+	'_b2WheelJointDef_InitializeAndCreate', \
 	
 B2WORLD = \
 	'_b2World_Create', \

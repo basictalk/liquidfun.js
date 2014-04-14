@@ -39,7 +39,8 @@ function Testbed(inTest) {
   // Init test
   //test = new TestAddPair();
   //test = new TestAntiPointy();
-  test = new TestApplyForce();
+  //test = new TestApplyForce();
+  test = new TestBodyTypes();
   //test = new TestBridge();
   //test = new TestBullet();
   //test = new TestChain();
