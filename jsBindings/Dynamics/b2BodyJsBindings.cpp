@@ -1,175 +1,34 @@
 #include <Box2D/Box2D.h>
 // b2Body functions
-void* b2Body_CreateFixture_b2BodyDef(void* body, void* def) {
-  return ((b2Body*)body)->CreateFixture((b2FixtureDef*)def);
+void b2Body_ApplyForce(void* body, double forceX, double forceY,
+                       double pointX, double pointY, double wake) {
+  ((b2Body*)body)->ApplyForce(b2Vec2(forceX, forceY), b2Vec2(pointX, pointY),
+                              (bool)wake);
+}
+void b2Body_ApplyTorque(void* body, double force, double wake) {
+  ((b2Body*)body)->ApplyTorque(force, (bool)wake);
 }
 
-// create fixture from circle
-void* b2Body_CreateFixture_b2CircleShape(void* body,
-                                         // Fixturedef
-                                         double density, double friction,
-                                         double isSensor, double restitution,
-                                         double userData,
-                                         // circle
-                                         double px, double py,
-                                         double radius) {
-  b2FixtureDef def;
-  def.density = density;
-  def.friction = friction;
-  def.isSensor = isSensor;
-  def.restitution = restitution;
-  def.userData = (void*)&userData;
-
-  b2CircleShape circle;
-  circle.m_p.Set(px, py);
-  circle.m_radius = radius;
-
-  def.shape = &circle;
-  return ((b2Body*)body)->CreateFixture(&def);
-}
-
-// create fixture from chain
-const int MaxChainVertices = 128;
-void* b2Body_CreateFixture_b2ChainShape(void* body,
-                                         // Fixturedef
-                                         double density, double friction,
-                                         double isSensor, double restitution,
-                                         double userData,
-                                         // chain
-                                         float* vertices, double length) {
-  b2FixtureDef def;
-  def.density = density;
-  def.friction = friction;
-  def.isSensor = isSensor;
-  def.restitution = restitution;
-  def.userData = (void*)&userData;
-
-  b2ChainShape chain;
-  int count = length / 2;
-  b2Vec2 vertexArr[MaxChainVertices];
-  for (int i = 0, j = 0; i < length; i += 2, j++) {
-    vertexArr[j] = b2Vec2(vertices[i], vertices[i+1]);
-  }
-  chain.CreateChain(vertexArr, count);
-
-  def.shape = &chain;
-  return ((b2Body*)body)->CreateFixture(&def);
-}
-
-// b2Body create fixture from edge shape
-void* b2Body_CreateFixture_b2EdgeShape(void* body,
-                                         // Fixturedef
-                                         double density, double friction,
-                                         double isSensor, double restitution,
-                                         double userData,
-                                         // circle
-                                         double x0, double y0,
-                                         double x1, double y1) {
-  b2FixtureDef def;
-  def.density = density;
-  def.friction = friction;
-  def.isSensor = isSensor;
-  def.restitution = restitution;
-  def.userData = (void*)&userData;
-
-  b2Vec2 v0(x0, y0);
-  b2Vec2 v1(x1, y1);
-
-  b2EdgeShape edge;
-  edge.Set(v0, v1);
-
-  def.shape = &edge;
-  return ((b2Body*)body)->CreateFixture(&def);
-}
-
-// b2Body createFixture from polygon shape and def
-void* b2Body_CreateFixture_b2PolygonShape_3(void* body,
-                                            // Fixturedef
-                                            double density, double friction,
-                                            double isSensor, double restitution,
-                                            double userData,
-                                            // shape
-                                            double x0, double y0,
-                                            double x1, double y1,
-                                            double x2, double y2) {
-  b2FixtureDef def;
-  def.density = density;
-  def.friction = friction;
-  def.isSensor = isSensor;
-  def.restitution = restitution;
-  def.userData = (void*)&userData;
-
-  const int count = 3;
-  b2Vec2 points[count] = {
-      b2Vec2(x0, y0),
-      b2Vec2(x1, y1),
-      b2Vec2(x2, y2)
-  };
-
-  b2PolygonShape polygon;
-  polygon.Set(points, count);
-
-  def.shape = &polygon;
-  return ((b2Body*)body)->CreateFixture(&def);
-}
-#include <stdio.h>
-void* b2Body_CreateFixture_b2PolygonShape_4(void* body,
-                                            // Fixturedef
-                                            double density, double friction,
-                                            double isSensor, double restitution,
-                                            double userData,
-                                            // shape
-                                            double x0, double y0,
-                                            double x1, double y1,
-                                            double x2, double y2,
-                                            double x3, double y3) {
-  b2FixtureDef def;
-  def.density = density;
-  def.friction = friction;
-  def.isSensor = isSensor;
-  def.restitution = restitution;
-  def.userData = (void*)&userData;
-
-  const int count = 4;
-  b2Vec2 points[count] = {
-      b2Vec2(x0, y0),
-      b2Vec2(x1, y1),
-      b2Vec2(x2, y2),
-      b2Vec2(x3, y3)
-  };
-
-  b2PolygonShape polygon;
-  polygon.Set(points, count);
-
-  def.shape = &polygon;
-  return ((b2Body*)body)->CreateFixture(&def);
-}
-
-void* b2Body_CreateFixture_b2Shape(void* body, void* shape, float density) {
-  return ((b2Body*)body)->CreateFixture((b2Shape*)shape, density);
-}
-
-float b2Body_GetAngle(void* body) {
+double b2Body_GetAngle(void* body) {
   return ((b2Body*)body)->GetAngle();
 }
 
-void* b2Body_GetFixtureList(void* body) {
-  return ((b2Body*)body)->GetFixtureList();
+double b2Body_GetInertia(void* body) {
+  return ((b2Body*)body)->GetInertia();
 }
 
-void* b2Body_GetNext(void* body) {
-  return ((b2Body*)body)->GetNext();
+double b2Body_GetMass(void* body) {
+  return ((b2Body*)body)->GetMass();
 }
 
-void* b2Body_GetPosition(void* body) {
-  return const_cast<b2Vec2*>(&((b2Body*)body)->GetPosition());
+void b2Body_GetPosition(void* body, float* arr) {
+  b2Vec2 pos = ((b2Body*)body)->GetPosition();
+  arr[0] = pos.x;
+  arr[1] = pos.y;
 }
 
-#include <stdio.h>
 void b2Body_GetTransform(void* body, float* arr) {
   b2Transform* t = const_cast<b2Transform*>(&((b2Body*)body)->GetTransform());
-
-  //printf("%f %f %f %f\n", t->p.x, t->p.y, t->q.s, t->q.c);
 
   arr[0] = (double)t->p.x;
   arr[1] = (double)t->p.y;
@@ -179,6 +38,18 @@ void b2Body_GetTransform(void* body, float* arr) {
 
 void* b2Body_GetTransform(void* body) {
   return const_cast<b2Transform*>(&((b2Body*)body)->GetTransform());
+}
+
+void b2Body_GetWorldPoint(void* body, double pointX, double pointY, float* arr) {
+  b2Vec2 worldPoint = ((b2Body*)body)->GetWorldPoint(b2Vec2(pointX, pointY));
+  arr[0] = worldPoint.x;
+  arr[1] = worldPoint.y;
+}
+
+void b2Body_GetWorldVector(void* body, double vX, double vY, float* arr) {
+  b2Vec2 worldVec = ((b2Body*)body)->GetWorldPoint(b2Vec2(vX, vY));
+  arr[0] = worldVec.x;
+  arr[1] = worldVec.y;
 }
 
 void b2Body_SetAngularVelocity(void* body, double angle) {

@@ -1,7 +1,8 @@
 var b2RevoluteJoint_InitializeAndCreate =
   Module.cwrap('b2RevoluteJoint_InitializeAndCreate', 'number',
-    ['number', 'number', 'number',
-     'number', 'number',
+    ['number',
+      // joint def
+     'number', 'number', 'number', 'number',
       //revoluteJointDef
      'number', 'number', 'number', 'number', 'number', 'number', 'number',  'number']);
 
@@ -9,7 +10,7 @@ var b2RevoluteJoint_SetMotorSpeed =
   Module.cwrap('b2RevoluteJoint_SetMotorSpeed', 'number',
     ['number', 'number']);
 
-      function b2RevoluteJointDef() {
+function b2RevoluteJointDef() {
   this.collideConnected = false;
   this.enableLimit = false;
   this.enableMotor = false;
@@ -19,12 +20,14 @@ var b2RevoluteJoint_SetMotorSpeed =
   this.upperAngle = 0;
   this.userData = null;
 }
-
-// This should be on b2 world
+// todo refactor this to have a separate initialize and create(create being called
+// from world
 b2RevoluteJointDef.prototype.InitializeAndCreate = function(bodyA, bodyB, anchor) {
   var revoluteJoint = new b2RevoluteJoint(bodyA, bodyB, this);
   revoluteJoint.ptr =
-    b2RevoluteJoint_InitializeAndCreate(world.ptr, bodyA.ptr, bodyB.ptr, anchor.x, anchor.y,
+    b2RevoluteJoint_InitializeAndCreate(world.ptr,
+    // joint def
+      bodyA.ptr, bodyB.ptr, anchor.x, anchor.y,
     // revolute joint def
     this.collideConnected, this.enableLimit, this.enableMotor, this.lowerAngle,
     this.maxMotorTorque, this.motorSpeed, this.upperAngle, this.lowerAngle,

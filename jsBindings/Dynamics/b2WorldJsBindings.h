@@ -25,7 +25,7 @@ void* b2World_CreateParticleSystem(void* world, double colorMixingStrength,
 
 
 void b2World_Delete(void* world);
-void* b2World_GetBodyList(void* world);
+void b2World_SetContactListener(void* world);
 void b2World_SetGravity(void* world, double x, double y);
 void b2World_Step(void* world, float step, float vIterations, float pIterations);
 }

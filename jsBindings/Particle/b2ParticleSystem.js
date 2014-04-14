@@ -28,40 +28,30 @@ var b2ParticleSystem_CreateParticle =
     'number', 'number', 'number', 'number'
   ]);
 
-var b2ParticleSystem_CreateParticleGroup_b2CircleShape =
-  Module.cwrap('b2ParticleSystem_CreateParticleGroup_b2CircleShape', 'number',
-  ['number',
-    // particleGroupDef
-   'number', 'number', 'number', 'number', 'number', 'number', 'number',
-   'number', 'number', 'number', 'number', 'number', 'number', 'number',
-   'number', 'number', 'number', 'number', 'number',
-   //Circle
-   'number', 'number', 'number'
-  ]);
-
-var b2ParticleSystem_CreateParticleGroup_b2PolygonShape_4 =
-  Module.cwrap('b2ParticleSystem_CreateParticleGroup_b2PolygonShape_4', 'number',
-    ['number',
-      // particleGroupDef
-      'number', 'number', 'number', 'number', 'number', 'number', 'number',
-      'number', 'number', 'number', 'number', 'number', 'number', 'number',
-      'number', 'number', 'number', 'number', 'number',
-      // polygon
-      'number', 'number',
-      'number', 'number',
-      'number', 'number',
-      'number', 'number'
-    ]);
-
 var b2ParticleSystem_GetParticleCount =
   Module.cwrap('b2ParticleSystem_GetParticleCount', 'number', ['number']);
 
 var b2ParticleSystem_GetPositionBuffer =
   Module.cwrap('b2ParticleSystem_GetPositionBuffer', 'null', ['number', 'number']);
 
+var b2ParticleSystem_SetDamping =
+  Module.cwrap('b2ParticleSystem_SetDamping', 'null', ['number', 'number']);
+
+var b2ParticleSystem_SetDensity =
+  Module.cwrap('b2ParticleSystem_SetDensity', 'null', ['number', 'number']);
+
+var b2ParticleSystem_SetRadius =
+  Module.cwrap('b2ParticleSystem_SetRadius', 'null', ['number', 'number']);
+
 function b2ParticleSystem(ptr) {
+  this.dampingStrength = 1.0;
+  // is this a sane default for density?
+  this.density = 1.0;
   this.ptr = ptr;
   this.particleGroups = [];
+  this.radius = 1.0;
+
+  // this needs to go
   this.graphics = [];
 }
 
@@ -75,87 +65,39 @@ b2ParticleSystem.prototype.CreateParticle = function(pd) {
 
 b2ParticleSystem.prototype.CreateParticleGroup = function(pgd) {
   var particleGroup = new b2ParticleGroup();
-  switch (pgd.shape.type) {
-    case b2Shape_Type_e_circle:
-      particleGroup.ptr = this._CreateParticleGroupFromCircle(pgd);
-      break;
-    case b2Shape_Type_e_edge:
-      break;
-    case b2Shape_Type_e_polygon:
-      particleGroup.ptr = this._CreateParticleGroupFromPolygon(pgd);
-      break;
-    case b2Shape_Type_e_chain:
-      break;
-  }
+  particleGroup.ptr = pgd.shape._CreateParticleGroup(this, pgd);
   this.particleGroups.push(particleGroup);
 }
 
-// particle group creation helpers
-b2ParticleSystem.prototype._CreateParticleGroupFromCircle = function(pgd) {
-  var circle = pgd.shape;
-  var pg = new b2ParticleGroup(b2ParticleSystem_CreateParticleGroup_b2CircleShape(
-    this.ptr,
-    // particle group def
-    pgd.angle,  pgd.angularVelocity, pgd.color.r, pgd.color.g, pgd.color.b, pgd.color.a,
-    pgd.flags, pgd.group.ptr, pgd.groupFlags, pgd.lifetime, pgd.linearVelocity.x,
-    pgd.linearVelocity.y, pgd.position.x, pgd.position.y, pgd.positionData, pgd.particleCount,
-    pgd.strength, pgd.stride, pgd.userData,
-    // circle
-    circle.position.x, circle.position.y, circle.radius));
-  return pg;
-}
-
-b2ParticleSystem.prototype._CreateParticleGroupFromPolygon = function(pgd) {
-  var v = pgd.shape.vertices;
-  switch (v.length) {
-    case 3:
-      break;
-    case 4:
-      var pg = new b2ParticleGroup(b2ParticleSystem_CreateParticleGroup_b2PolygonShape_4(
-        this.ptr,
-        // particle group def
-        pgd.angle,  pgd.angularVelocity, pgd.color.r, pgd.color.g, pgd.color.b, pgd.color.a,
-        pgd.flags, pgd.group.ptr, pgd.groupFlags, pgd.lifetime, pgd.linearVelocity.x,
-        pgd.linearVelocity.y, pgd.position.x, pgd.position.y, pgd.positionData, pgd.particleCount,
-         pgd.strength, pgd.stride, pgd.userData,
-        // polygon
-        v[0].x, v[0].y,
-        v[1].x, v[1].y,
-        v[2].x, v[2].y,
-        v[3].x, v[3].y));
-      return pg;
-      break;
-  }
-
-}
-
-
-// was just about to wire this up, gl hf
-
-//this function can be optimized to reuse its buffer potentially
 b2ParticleSystem.prototype.GetPositionBuffer = function() {
-  var count = b2ParticleSystem_GetParticleCount(this.ptr);
-  //Create example data to test float_multiply_array
-  var data = new Float32Array(2 * count);
-
-  // Get data byte size, allocate memory on Emscripten heap, and get pointer
-  var nDataBytes = data.length * data.BYTES_PER_ELEMENT;
-  var dataPtr = Module._malloc(nDataBytes);
-
-  // Copy data to Emscripten heap (directly accessed from Module.HEAPU8)
-  var dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, nDataBytes);
-  dataHeap.set(new Uint8Array(data.buffer));
-
-  // Call function and get result
-  b2ParticleSystem_GetPositionBuffer(this.ptr, dataHeap.byteOffset);
-  var result = new Float32Array(dataHeap.buffer, dataHeap.byteOffset, data.length);
-
-  this.bufferPtr = dataHeap.byteOffset;
-  //Module._free(dataHeap.byteOffset);
-
+  var count = b2ParticleSystem_GetParticleCount(this.ptr) * 2;
+  if (count > _pBufLength) {
+    Module._free(_pBuf);
+    var nDataBytes = count * 2 * Float32Array.BYTES_PER_ELEMENT;
+    var dataPtr = Module._malloc(nDataBytes);
+    _pBuf = new Uint8Array(Module.HEAPU8.buffer, dataPtr, nDataBytes);
+    _pBufLength = count * 2;
+  }
+  b2ParticleSystem_GetPositionBuffer(this.ptr, _pBuf.byteOffset);
+  var result = new Float32Array(_pBuf.buffer, _pBuf.byteOffset, count);
   return result;
 }
 
 b2ParticleSystem.prototype.DeletePositionBuffer = function() {
-  Module._free(this.bufferPtr);
+ // Module._free(this.bufferPtr);
+}
+
+b2ParticleSystem.prototype.SetDamping = function(damping) {
+  this.dampingStrength = damping;
+  b2ParticleSystem_SetDamping(this.ptr, damping);
+}
+
+b2ParticleSystem.prototype.SetDensity = function(density) {
+  this.density = density;
+  b2ParticleSystem_SetDensity(this.ptr, density);
+}
+
+b2ParticleSystem.prototype.SetRadius = function(radius) {
+  this.radius = radius;
+  b2ParticleSystem_SetRadius(this.ptr, radius);
 }

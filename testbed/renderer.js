@@ -4,14 +4,31 @@
 
 // TODO I can do a much better job reusing geometry by attaching it to a given shape
 // todo circles don't take into account their center
+// todo rotate
+
+function initUnitCircle() {
+  var resolution = 8,
+    radius = 1,
+    size = 360 / resolution,
+    geometry = new THREE.Geometry();
+  for(var i = 0; i <= resolution; i++) {
+    var segment = ( i * size ) * Math.PI / 180;
+    var vertex = new THREE.Vector3(Math.cos( segment ) * radius, Math.sin( segment ) * radius, 0);
+    geometry.vertices.push(vertex);
+  }
+  geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+  return geometry;
+}
+
 function init() {
-  world.particleGeometry = initParticleGeometry();
+  world.unitCircle = initUnitCircle();
   for (var i = 0, max = world.bodies.length; i < max; i++) {
     var body = world.bodies[i];
     var maxFixtures = body.fixtures.length;
     var transform = body.GetTransform();
     for (var j = 0; j < maxFixtures; j++) {
-      initFixture(body.fixtures[j], transform);
+      var fixture = body.fixtures[j];
+      fixture.shape.drawInit(fixture, transform);
     }
   }
 
@@ -26,7 +43,8 @@ function draw() {
     var maxFixtures = body.fixtures.length;
     var transform = body.GetTransform();
     for (var j = 0; j < maxFixtures; j++) {
-      drawFixture(body.fixtures[j], transform);
+      var fixture = body.fixtures[j];
+      fixture.shape.draw(fixture, transform);
     }
   }
 
@@ -37,55 +55,11 @@ function draw() {
 }
 
 // geometry init code
-function initFixture(fixture, transform) {
-  switch (fixture.shape.type) {
-    case b2Shape_Type_e_circle:
-      initCircle(fixture, transform);
-      break;
-    case b2Shape_Type_e_edge:
-      initEdge(fixture, transform);
-      break;
-    case b2Shape_Type_e_polygon:
-      initPolygon(fixture, transform);
-      break;
-    case b2Shape_Type_e_chain:
-      initChain(fixture, transform);
-      break;
-    default:
-      console.log("Shape unsupported");
-  }
-}
-
-function initCircle(circleFixture, transform) {
-  var radius = circleFixture.shape.radius,
-    material = new THREE.LineBasicMaterial( { color: 0x0000ff }),
-    resolution = 8,
-    size = 360 / resolution,
-    geometry = new THREE.Geometry(),
-    transformedV = new b2Vec2();
-
-  // draw line from midpoint out
-  geometry.vertices.push(new THREE.Vector3(0, 0));
-  circleFixture.vertices.push(new b2Vec2(0, 0));
-  for(var i = 0; i <= resolution; i++) {
-    var segment = ( i * size ) * Math.PI / 180;
-    var vertex = new THREE.Vector3(Math.cos( segment ) * radius, Math.sin( segment ) * radius, 0);
-    b2Vec2.Mul(transformedV, transform, vertex);
-    circleFixture.vertices.push(vertex);
-    geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y));
-  }
-
-  var line = new THREE.Line(geometry, material);
-  circleFixture.graphic = line;
-  scene.add(line);
-}
-
-function initChain(chainFixture, transform) {
+b2ChainShape.prototype.drawInit = function(fixture, transform) {
   var geometry = new THREE.Geometry(),
     material =  new THREE.LineBasicMaterial({color: 0x000000}),
     transformedV = new b2Vec2(),
-    chain = chainFixture.shape,
-    vertices = chain.vertices;
+    vertices = this.vertices;
 
   var v1 = vertices[0];
   for (var i = 1, max = vertices.length; i < max; i++) {
@@ -99,37 +73,49 @@ function initChain(chainFixture, transform) {
   }
 
   var line = new THREE.Line(geometry, material);
-  chainFixture.graphic = line;
+  fixture.graphic = line;
   scene.add(line);
 }
 
-function initEdge(edgeFixture, transform) {
+// todo this should se the transform
+b2CircleShape.prototype.drawInit = function(fixture, transform) {
+  var radius = this.radius,
+    material = new THREE.LineBasicMaterial( { color: 0x0000ff });
+
+  // draw line from midpoint out
+  var line = new THREE.Line(world.unitCircle, material);
+  line.scale.x = radius;
+  line.scale.y = radius;
+  line.scale.z = radius;
+  fixture.graphic = line;
+  scene.add(line);
+}
+
+b2EdgeShape.prototype.drawInit = function(fixture, transform) {
   var geometry = new THREE.Geometry(),
     material =  new THREE.LineBasicMaterial({color: 0x000000}),
-    transformedV = new b2Vec2(),
-    edge = edgeFixture.shape;
+    transformedV = new b2Vec2();
 
-  b2Vec2.Mul(transformedV, transform, edge.v0);
+  b2Vec2.Mul(transformedV, transform, this.v0);
   geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y, 0));
 
-  b2Vec2.Mul(transformedV, transform, edge.v1);
+  b2Vec2.Mul(transformedV, transform, this.v1);
   geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y, 0));
 
   var line = new THREE.Line(geometry, material);
-  edgeFixture.graphic = line;
+  fixture.graphic = line;
   scene.add(line);
 }
 
-function initPolygon(polygonFixture, transform) {
-  var polygon = polygonFixture.shape,
-    vertexCount = polygon.vertices.length,
+b2PolygonShape.prototype.drawInit = function(fixture, transform) {
+  var vertexCount = this.vertices.length,
     geometry, material,
     transformedV = new b2Vec2();
 
   geometry = new THREE.Geometry();
   material = new THREE.LineBasicMaterial({color: 0x000000})
   for (var i = 0; i < vertexCount; i++) {
-    var vertex = polygon.vertices[i];
+    var vertex = this.vertices[i];
     b2Vec2.Mul(transformedV, transform, vertex);
     geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y, 0));
   }
@@ -137,21 +123,8 @@ function initPolygon(polygonFixture, transform) {
   geometry.vertices.push(geometry.vertices[0]);
 
   var line = new THREE.Line(geometry, material);
-  polygonFixture.graphic = line;
+  fixture.graphic = line;
   scene.add(line);
-}
-
-function initParticleGeometry() {
-  var resolution = 4,
-    radius = 0.025,
-    size = 360 / resolution,
-    geometry = new THREE.Geometry();
-  for(var i = 0; i <= resolution; i++) {
-    var segment = ( i * size ) * Math.PI / 180;
-    var vertex = new THREE.Vector3(Math.cos( segment ) * radius, Math.sin( segment ) * radius, 0);
-    geometry.vertices.push(vertex);
-  }
-  return geometry;
 }
 
 function initParticleSystem(system) {
@@ -160,9 +133,10 @@ function initParticleSystem(system) {
     material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
 
   for (var i = 0; i < maxParticles; i += 2) {
-    var line = new THREE.Line(world.particleGeometry, material);
+    var line = new THREE.Line(world.unitCircle, material);
     line.position.x = particles[i];
     line.position.y = particles[i + 1];
+    line.scale.x = system.radius;
     system.graphics.push(line);
     scene.add(line);
   }
@@ -170,52 +144,25 @@ function initParticleSystem(system) {
   system.DeletePositionBuffer();
 }
 
-// redraw code
-function drawFixture(fixture, transform) {
-  switch (fixture.shape.type) {
-    case b2Shape_Type_e_circle:
-      drawCircle(fixture, transform);
-      break;
-    case b2Shape_Type_e_edge:
-      drawEdge(fixture, transform);
-      break;
-    case b2Shape_Type_e_polygon:
-      drawPolygon(fixture, transform);
-      break;
-    case b2Shape_Type_e_chain:
-      drawChain(fixture, transform);
-      break;
-    default:
-      console.log("Shape unsupported");
-  }
-}
-
-function drawCircle(circleFixture, transform) {
-  var line = circleFixture.graphic,
+b2CircleShape.prototype.draw = function(fixture, transform) {
+  var line = fixture.graphic,
     geometry = line.geometry,
-    vertexCount = geometry.vertices.length,
-    transformedV = new b2Vec2(),
-    circlePosition = circleFixture.shape.position,
+    circlePosition = this.position,
     center = new b2Vec2(circlePosition.x, circlePosition.y);
 
-  //b2Vec2.Mul(center, transform, center);
-  //line.position.x = center.x;
-  //line.position.y = center.y;
-  for (var i = 0; i < vertexCount; i++) {
-    var vertex = circleFixture.vertices[i];
-    b2Vec2.Mul(transformedV, transform, vertex);
-    geometry.vertices[i].x = transformedV.x + center.x;
-    geometry.vertices[i].y = transformedV.y + center.y;
+  // this is a hack :(
+  line.rotation.z = Math.acos(transform.q.c);
+  b2Vec2.Mul(center, transform, center);
+  line.position.x = center.x;
+  line.position.y = center.y;
 
-  }
   geometry.verticesNeedUpdate = true;
 }
 
-function drawChain(chainFixture, transform) {
+b2ChainShape.prototype.draw = function(fixture, transform) {
   var transformedV = new b2Vec2(),
-    chain = chainFixture.shape,
-    chainVertices = chain.vertices,
-    line = chainFixture.graphic,
+    chainVertices = this.vertices,
+    line = fixture.graphic,
     geometry = line.geometry,
     vertices = geometry.vertices,
     vertexCount = chainVertices.length;
@@ -229,31 +176,29 @@ function drawChain(chainFixture, transform) {
   geometry.verticesNeedUpdate = true;
 }
 
-function drawEdge(edgeFixture, transform) {
+b2EdgeShape.prototype.draw = function(fixture, transform) {
   var transformedV = new b2Vec2(),
-    edge = edgeFixture.shape,
-    line = edgeFixture.graphic,
+    line = fixture.graphic,
     geometry = line.geometry;
 
-  b2Vec2.Mul(transformedV, transform, edge.v0);
+  b2Vec2.Mul(transformedV, transform, this.v0);
   geometry.vertices[0].x = transformedV.x;
   geometry.vertices[0].y = transformedV.y;
 
-  b2Vec2.Mul(transformedV, transform, edge.v1);
+  b2Vec2.Mul(transformedV, transform, this.v1);
   geometry.vertices[1].x = transformedV.x;
   geometry.vertices[1].y = transformedV.y;
   geometry.verticesNeedUpdate = true;
 }
 
-function drawPolygon(polygonFixture, transform) {
-  var polygon = polygonFixture.shape,
-    vertexCount = polygon.vertices.length,
+b2PolygonShape.prototype.draw = function(fixture, transform) {
+  var vertexCount = this.vertices.length,
     transformedV = new b2Vec2(),
-    line = polygonFixture.graphic,
+    line = fixture.graphic,
     geometry = line.geometry;
 
   for (var i = 0; i < vertexCount; i++) {
-    var vertex = polygon.vertices[i];
+    var vertex = this.vertices[i];
     b2Vec2.Mul(transformedV, transform, vertex);
     geometry.vertices[i].x = transformedV.x;
     geometry.vertices[i].y = transformedV.y;
@@ -276,17 +221,24 @@ function drawParticleSystem(system) {
       var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
       for (; i < maxParticles; i += 2, j++) {
         index = j;
-        var line = new THREE.Line(world.particleGeometry, material);
+        var line = new THREE.Line(world.unitCircle, material);
         line.position.x = particles[i];
         line.position.y = particles[i + 1];
+        line.scale.x = system.radius;
+        line.scale.y = system.radius;
+        line.scale.z = system.radius;
         system.graphics.push(line);
         scene.add(line);
       }
       system.DeletePositionBuffer();
       return;
     }
-    system.graphics[index].position.x = particles[i];
-    system.graphics[index].position.y = particles[i + 1];
+    var line = system.graphics[index];
+    line.position.x = particles[i];
+    line.position.y = particles[i + 1];
+    line.scale.x = system.radius;
+    line.scale.y = system.radius;
+    line.scale.z = system.radius;
   }
 
   system.DeletePositionBuffer();

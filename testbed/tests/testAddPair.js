@@ -27,6 +27,7 @@ function TestAddPair() {
   box.SetAsBoxXY(1.5, 1.5);
   bodyDef.position.Set(-40, 5);
   bodyDef.bullet = true;
+  body = world.CreateBody(bodyDef);
   body.CreateFixtureFromShape(box, 1.0);
   var velocity = new b2Vec2(150, 0);
   body.SetLinearVelocity(velocity);

@@ -30,7 +30,7 @@ function TestElasticParticles() {
   ground.CreateFixtureFromShape(shape3, 0);
 
   var psd = new b2ParticleSystemDef();
-  psd.radius = 0.025;
+  psd.radius = 0.035;
   var particleSystem = world.CreateParticleSystem(psd);
 
   // one group

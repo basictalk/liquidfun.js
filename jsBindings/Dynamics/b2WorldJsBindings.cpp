@@ -1,5 +1,27 @@
 #include <Box2D/Box2D.h>
 #include <stdio.h>
+#include <emscripten.h>
+
+extern "C" {
+  extern void b2WorldBeginContact(void* a, void* b);
+  extern void b2WorldEndContact(void* a, void* b);
+}
+
+// internal classes
+class b2WorldContactListener : public b2ContactListener
+  {
+    void BeginContact(b2Contact* contact) {
+      b2WorldBeginContact((void*)contact->GetFixtureA(),
+                          (void*)contact->GetFixtureB());
+    }
+
+    void EndContact(b2Contact* contact) {
+      b2WorldEndContact((void*)contact->GetFixtureA(),
+                        (void*)contact->GetFixtureB());
+    }
+  };
+
+b2WorldContactListener listener;
 
 // b2World Exports
 void* b2World_Create(double x, double y) {
@@ -76,8 +98,8 @@ void b2World_Delete(void* world) {
   delete (b2World*)world;
 }
 
-void* b2World_GetBodyList(void* world) {
-  return ((b2World*)world)->GetBodyList();
+void b2World_SetContactListener(void* world) {
+  ((b2World*)world)->SetContactListener(&listener);
 }
 
 void b2World_SetGravity(void* world, double x, double y) {

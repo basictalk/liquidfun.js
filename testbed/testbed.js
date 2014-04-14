@@ -8,8 +8,10 @@ var timeStep = 1.0 / 60.0;
 var velocityIterations = 2;
 var positionIterations = 2;
 var test;
+var canvasWidth = 640;
+var canvasHeight = 480;
 
-function Testbed() {
+function InitTestbed() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(45
     , window.innerWidth / window.innerHeight
@@ -28,24 +30,37 @@ function Testbed() {
   var gravity = new b2Vec2(0, -20);
   world = new b2World(gravity);
 
+  Testbed();
+}
+
+function Testbed(inTest) {
+
+  //test = inTest;
   // Init test
   //test = new TestAddPair();
   //test = new TestAntiPointy();
+  test = new TestApplyForce();
+  //test = new TestBridge();
   //test = new TestBullet();
   //test = new TestChain();
   //test = new TestDamBreak();
-  //test = new TestElasticParticles();
+ // test = new TestElasticParticles();
   //test = new TestHW();
   //test = new TestParticles();
   //test = new TestPyramid();
   //test = new TestRamp();
-  test = new TestVaryingFriction();
+  //test = new TestVaryingFriction();
   //test = new TestVaryingRestitution();
   //test = new TestVerticalStack();
   //test = new TestSphereStack();
   //test = new TestWaveMachine();
   
   //Init
+  document.addEventListener('keypress', function(event) {
+    if (test.Keyboard !== undefined) {
+      test.Keyboard(String.fromCharCode(event.which) );
+    }
+  });
   init();
   render();
 }
@@ -59,6 +74,8 @@ var render = function() {
     Step();
   }
   draw();
+
+
 
   requestAnimationFrame(render);
   renderer.render(scene, camera);

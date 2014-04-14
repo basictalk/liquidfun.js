@@ -14,6 +14,11 @@ b2Vec2.prototype.Set = function(x, y) {
   this.y = y;
 }
 
+b2Vec2.MulScalar = function(out, scalar) {
+  out.x = out.x * scalar;
+  out.y = out.y * scalar;
+}
+
 b2Vec2.Mul = function(out, T, v) {
   var Tp = T.p;
   var Tqc = T.q.c;
@@ -44,6 +49,10 @@ b2Rot.prototype.Set = function(radians) {
   this.c = Math.cos(radians);
 }
 
+b2Rot.prototype.GetXAxis = function() {
+  return new b2Vec2(this.c, this.s);
+}
+
 function b2Transform(position, rotation) {
   if (position === undefined) {
     position = new b2Vec2();
@@ -62,5 +71,4 @@ b2Transform.prototype.FromFloat64Array = function(arr) {
   p.y = arr[1];
   q.s = arr[2];
   q.c = arr[3];
-// console.log(p.x + " " + p.y + " " + q.s + " " + q.c);
 }
