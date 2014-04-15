@@ -20,18 +20,16 @@ double b2ParticleSystem_CreateParticle(void* particleSystem,
 }
 
 // Shapes array is not currently supported for b2ParticleSystems
+
+void* b2ParticleSystem_GetColorBuffer(void* particleSystem) {
+  return ((b2ParticleSystem*)particleSystem)->GetColorBuffer();
+}
 double b2ParticleSystem_GetParticleCount(void* particleSystem) {
   return ((b2ParticleSystem*)particleSystem)->GetParticleCount();
 }
 
-void b2ParticleSystem_GetPositionBuffer(void* particleSystem, float* arr) {
-  int32 count = ((b2ParticleSystem*)particleSystem)->GetParticleCount();
-  b2Vec2* buffer = ((b2ParticleSystem*)particleSystem)->GetPositionBuffer();
-
-  for (int i = 0, j = 0; i < 2 * count; i += 2, j++) {
-    arr[i] = buffer[j].x;
-    arr[i+1] = buffer[j].y;
-  }
+void* b2ParticleSystem_GetPositionBuffer(void* particleSystem) {
+  return ((b2ParticleSystem*)particleSystem)->GetPositionBuffer();
 }
 
 void b2ParticleSystem_SetDamping(void* particleSystem, double damping) {

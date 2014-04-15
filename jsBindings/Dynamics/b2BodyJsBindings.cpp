@@ -13,8 +13,18 @@ double b2Body_GetAngle(void* body) {
   return ((b2Body*)body)->GetAngle();
 }
 
+double b2Body_GetAngularVelocity(void* body) {
+  return ((b2Body*)body)->GetAngularVelocity();
+}
+
 double b2Body_GetInertia(void* body) {
   return ((b2Body*)body)->GetInertia();
+}
+
+void b2Body_GetLinearVelocity(void* body, float* arr) {
+  b2Vec2 linVelocity = ((b2Body*)body)->GetLinearVelocity();
+  arr[0] = linVelocity.x;
+  arr[1] = linVelocity.y;
 }
 
 double b2Body_GetMass(void* body) {
@@ -34,6 +44,10 @@ void b2Body_GetTransform(void* body, float* arr) {
   arr[1] = (double)t->p.y;
   arr[2] = (double)t->q.s;
   arr[3] = (double)t->q.c;
+}
+
+double b2Body_GetType(void* body) {
+  return ((b2Body*)body)->GetType();
 }
 
 void* b2Body_GetTransform(void* body) {
@@ -62,4 +76,8 @@ void b2Body_SetLinearVelocity(void* body, double x, double y) {
 
 void b2Body_SetTransform(void* body, double x, double y, double angle) {
   ((b2Body*)body)->SetTransform(b2Vec2(x, y), angle);
+}
+
+void b2Body_SetType(void* body, double type) {
+  ((b2Body*)body)->SetType((b2BodyType)type);
 }

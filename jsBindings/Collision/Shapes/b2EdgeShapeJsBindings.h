@@ -5,9 +5,10 @@ extern "C" {
 void* b2EdgeShape_CreateFixture(
     void* body,
     // Fixturedef
-    double density, double friction,
-    double isSensor, double restitution,
-    double userData,
+    double density, double friction, double isSensor,
+    double restitution, double userData,
+    // filter
+    double categoryBits, double groupIndex, double maskBits,
     // circle
     double x0, double y0,
     double x1, double y1);

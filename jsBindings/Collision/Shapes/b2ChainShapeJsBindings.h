@@ -5,9 +5,10 @@ extern "C" {
 void* b2ChainShape_CreateFixture(
     void* body,
     // Fixturedef
-    double density, double friction,
-    double isSensor, double restitution,
-    double userData,
+    double density, double friction, double isSensor,
+    double restitution, double userData,
+    // filter
+    double categoryBits, double groupIndex, double maskBits,
     // chain
     float* vertices, double length);
 }

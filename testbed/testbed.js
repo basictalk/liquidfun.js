@@ -7,9 +7,7 @@ var objects = [];
 var timeStep = 1.0 / 60.0;
 var velocityIterations = 2;
 var positionIterations = 2;
-var test;
-var canvasWidth = 640;
-var canvasHeight = 480;
+var test = null;
 
 function InitTestbed() {
   scene = new THREE.Scene();
@@ -29,23 +27,22 @@ function InitTestbed() {
   // Init world
   var gravity = new b2Vec2(0, -20);
   world = new b2World(gravity);
-
-  Testbed();
 }
 
 function Testbed(inTest) {
-
-  //test = inTest;
+  test = inTest;
   // Init test
   //test = new TestAddPair();
   //test = new TestAntiPointy();
   //test = new TestApplyForce();
-  test = new TestBodyTypes();
+  //test = new TestBodyTypes();
   //test = new TestBridge();
   //test = new TestBullet();
   //test = new TestChain();
   //test = new TestDamBreak();
- // test = new TestElasticParticles();
+  //test = new TestElasticParticles();
+  //test = new TestRigidParticles();
+  //test = new TestRopeJoint();
   //test = new TestHW();
   //test = new TestParticles();
   //test = new TestPyramid();
@@ -76,10 +73,28 @@ var render = function() {
   }
   draw();
 
-
-
-  requestAnimationFrame(render);
   renderer.render(scene, camera);
+  requestAnimationFrame(render);
+}
+
+var resetWorld = function() {
+  while (world.joints.length > 0) {
+    world.DestroyJoint(world.joints[0]);
+  }
+
+  while (world.bodies.length > 0) {
+    world.DestroyBody(world.bodies[0]);
+  }
+
+  while (world.particleSystems.length > 0) {
+    world.DestroyParticleSystem(world.particleSystems[0]);
+  }
+  // clear three.js
+  var obj, i;
+  for ( i = scene.children.length - 1; i >= 0 ; i -- ) {
+    obj = scene.children[i];
+    scene.remove(obj);
+  }
 }
 
 var Step = function() {

@@ -9,12 +9,14 @@ void* b2WheelJointDef_Create(
     // wheel joint def
     double dampingRatio, double enableMotor, double frequencyHz,
     double localAnchorAx, double localAnchorAy, double localAnchorBx,
-    double localAnchorBy, double maxMotorTorque, double motorSpeed);
+    double localAnchorBy, double localAxisAx, double localAxisAy,
+    double maxMotorTorque, double motorSpeed);
 
 void* b2WheelJointDef_InitializeAndCreate(
     void* world,
-    void* bodyA, void* bodyB, double anchorX, double anchorY,
-    double axisX, double axisY,
+    // initialize args
+    void* bodyA, void* bodyB, double anchorX,
+    double anchorY, double axisX, double axisY,
     //joint def
     double collideConnected,
     // wheel joint def

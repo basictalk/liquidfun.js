@@ -2,14 +2,16 @@
 #define B2CIRCLESHAPEJSBINDINGS_H
 extern "C" {
 // b2Body create fixture from circle
-void* b2CircleShape_CreateFixture(void* body,
-                                   // Fixturedef
-                                   double density, double friction,
-                                   double isSensor, double restitution,
-                                   double userData,
-                                   // circle
-                                   double px, double py,
-                                   double radius);
+void* b2CircleShape_CreateFixture(
+    void* body,
+    // Fixturedef
+    double density, double friction, double isSensor,
+    double restitution, double userData,
+    // filter
+    double categoryBits, double groupIndex, double maskBits,
+    // circle
+    double px, double py,
+    double radius);
 
 void* b2CircleShape_CreateParticleGroup(
     void* particleSystem,

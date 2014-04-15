@@ -4,9 +4,10 @@
 void* b2CircleShape_CreateFixture(
     void* body,
     // Fixturedef
-    double density, double friction,
-    double isSensor, double restitution,
-    double userData,
+    double density, double friction, double isSensor,
+    double restitution, double userData,
+    // filter
+    double categoryBits, double groupIndex, double maskBits,
     // circle
     double px, double py,
     double radius) {
@@ -16,6 +17,9 @@ void* b2CircleShape_CreateFixture(
   def.isSensor = isSensor;
   def.restitution = restitution;
   def.userData = (void*)&userData;
+  def.filter.categoryBits = categoryBits;
+  def.filter.groupIndex = groupIndex;
+  def.filter.maskBits = maskBits;
 
   b2CircleShape circle;
   circle.m_p.Set(px, py);

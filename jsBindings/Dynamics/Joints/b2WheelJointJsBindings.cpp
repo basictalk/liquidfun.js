@@ -7,7 +7,8 @@ void* b2WheelJointDef_Create(
     // wheel joint def
     double dampingRatio, double enableMotor, double frequencyHz,
     double localAnchorAx, double localAnchorAy, double localAnchorBx,
-    double localAnchorBy, double maxMotorTorque, double motorSpeed) {
+    double localAnchorBy, double localAxisAx, double localAxisAy,
+    double maxMotorTorque, double motorSpeed) {
   b2WheelJointDef def;
   def.bodyA = (b2Body*)bodyA;
   def.bodyB = (b2Body*)bodyB;
@@ -18,6 +19,7 @@ void* b2WheelJointDef_Create(
   def.frequencyHz = frequencyHz;
   def.localAnchorA = b2Vec2(localAnchorAx, localAnchorAy);
   def.localAnchorB = b2Vec2(localAnchorBx, localAnchorBy);
+  def.localAxisA = b2Vec2(localAxisAx, localAxisAy);
   def.maxMotorTorque = maxMotorTorque;
   def.motorSpeed = motorSpeed;
 
@@ -26,8 +28,9 @@ void* b2WheelJointDef_Create(
 
 void* b2WheelJointDef_InitializeAndCreate(
     void* world,
-    void* bodyA, void* bodyB, double anchorX, double anchorY,
-    double axisX, double axisY,
+    // initialize args
+    void* bodyA, void* bodyB, double anchorX,
+    double anchorY, double axisX, double axisY,
     // joint def
     double collideConnected,
     // wheel joint def

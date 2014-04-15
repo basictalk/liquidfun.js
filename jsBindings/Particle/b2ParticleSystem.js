@@ -24,15 +24,20 @@ var b2ParticleSystem_CreateParticle =
   Module.cwrap('b2ParticleSystem_CreateParticle', 'number',
   ['number',
     //particle def
-    'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
-    'number', 'number', 'number', 'number'
+    'number', 'number', 'number',
+    'number', 'number', 'number',
+    'number', 'number', 'number',
+    'number', 'number', 'number'
   ]);
+
+var b2ParticleSystem_GetColorBuffer =
+  Module.cwrap('b2ParticleSystem_GetColorBuffer', 'number', ['number']);
 
 var b2ParticleSystem_GetParticleCount =
   Module.cwrap('b2ParticleSystem_GetParticleCount', 'number', ['number']);
 
 var b2ParticleSystem_GetPositionBuffer =
-  Module.cwrap('b2ParticleSystem_GetPositionBuffer', 'null', ['number', 'number']);
+  Module.cwrap('b2ParticleSystem_GetPositionBuffer', 'number', ['number']);
 
 var b2ParticleSystem_SetDamping =
   Module.cwrap('b2ParticleSystem_SetDamping', 'null', ['number', 'number']);
@@ -57,11 +62,11 @@ function b2ParticleSystem(ptr) {
 
 b2ParticleSystem.prototype.CreateParticle = function(pd) {
   return b2ParticleSystem_CreateParticle(this.ptr,
-    pd.color.r, pd.color.g, pd.color.b, pd.color.a, pd.flags, pd.group,
-    pd.lifetime, pd.position.x, pd.position.y, pd.userData,
-    pd.velocity.x, pd.velocity.y);
+    pd.color.r, pd.color.g, pd.color.b,
+    pd.color.a, pd.flags, pd.group,
+    pd.lifetime, pd.position.x, pd.position.y,
+    pd.userData, pd.velocity.x, pd.velocity.y);
 }
-
 
 b2ParticleSystem.prototype.CreateParticleGroup = function(pgd) {
   var particleGroup = new b2ParticleGroup();
@@ -69,22 +74,17 @@ b2ParticleSystem.prototype.CreateParticleGroup = function(pgd) {
   this.particleGroups.push(particleGroup);
 }
 
-b2ParticleSystem.prototype.GetPositionBuffer = function() {
-  var count = b2ParticleSystem_GetParticleCount(this.ptr) * 2;
-  if (count > _pBufLength) {
-    Module._free(_pBuf);
-    var nDataBytes = count * 2 * Float32Array.BYTES_PER_ELEMENT;
-    var dataPtr = Module._malloc(nDataBytes);
-    _pBuf = new Uint8Array(Module.HEAPU8.buffer, dataPtr, nDataBytes);
-    _pBufLength = count * 2;
-  }
-  b2ParticleSystem_GetPositionBuffer(this.ptr, _pBuf.byteOffset);
-  var result = new Float32Array(_pBuf.buffer, _pBuf.byteOffset, count);
-  return result;
+b2ParticleSystem.prototype.GetColorBuffer = function() {
+  var count = b2ParticleSystem_GetParticleCount(this.ptr) * 4;
+  var offset = b2ParticleSystem_GetColorBuffer(this.ptr);
+  var colors = new Uint8Array(Module.HEAPU8.buffer, offset, count);
+  return colors;
 }
 
-b2ParticleSystem.prototype.DeletePositionBuffer = function() {
- // Module._free(this.bufferPtr);
+b2ParticleSystem.prototype.GetPositionBuffer = function() {
+  var count = b2ParticleSystem_GetParticleCount(this.ptr) * 2;
+  var offset = b2ParticleSystem_GetPositionBuffer(this.ptr);
+  return new Float32Array(Module.HEAPU8.buffer, offset, count);
 }
 
 b2ParticleSystem.prototype.SetDamping = function(damping) {

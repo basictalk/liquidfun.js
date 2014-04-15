@@ -65,15 +65,19 @@ B2BODY = \
 	'_b2Body_ApplyTorque', \
 	'_b2Body_ApplyForce', \
 	'_b2Body_GetAngle', \
+	'_b2Body_GetAngularVelocity', \
 	'_b2Body_GetInertia', \
+	'_b2Body_GetLinearVelocity', \
 	'_b2Body_GetMass', \
 	'_b2Body_GetPosition', \
 	'_b2Body_GetTransform', \
+	'_b2Body_GetType', \
 	'_b2Body_GetWorldPoint', \
 	'_b2Body_GetWorldVector', \
 	'_b2Body_SetAngularVelocity', \
 	'_b2Body_SetLinearVelocity', \
-	'_b2Body_SetTransform'
+	'_b2Body_SetTransform', \
+	'_b2Body_SetType'
 	
 B2CHAINSHAPE = \
 	'_b2ChainShape_CreateFixture'	
@@ -84,7 +88,7 @@ B2CIRCLESHAPE = \
 
 B2DISTANCEJOINT = \
 	'_b2DistanceJointDef_Create', \
-	'_b2DistanceJointDef_InitializeAndCreate', \
+	'_b2DistanceJointDef_InitializeAndCreate' \
 
 B2EDGESHAPE = \
 	'_b2EdgeShape_CreateFixture'
@@ -95,27 +99,27 @@ B2POLYGONSHAPE = \
 	'_b2PolygonShape_CreateParticleGroup_4'
 
 B2FRICTIONJOINT = \
-	'_b2FrictionJointDef_CreateJoint', \
+	'_b2FrictionJointDef_Create', \
 	'_b2FrictionJointDef_InitializeAndCreate' \
 	
 B2GEARJOINT = \
 	'_b2GearJointDef_Create', \
-	'_b2GearJointDef_InitializeAndCreate', \
+	'_b2GearJointDef_InitializeAndCreate' \
 	
 B2MOTORJOINT = \
 	'_b2MotorJointDef_Create', \
-	'_b2MotorJointDef_InitializeAndCreate', \
+	'_b2MotorJointDef_InitializeAndCreate' \
 
 B2MOUSEJOINT = \
-	'_b2MouseJointDef_Create', \
+	'_b2MouseJointDef_Create' \
 	
 B2PRISMATICJOINT = \
 	'_b2PrismaticJointDef_Create', \
-	'_b2PrismaticJointDef_InitializeAndCreate', \
+	'_b2PrismaticJointDef_InitializeAndCreate' \
 
 B2PULLEYJOINT = \
 	'_b2PulleyJointDef_Create', \
-	'_b2PulleyJointDef_InitializeAndCreate', \
+	'_b2PulleyJointDef_InitializeAndCreate' \
 
 B2REVOLUTEJOINT = \
 	'_b2RevoluteJointDef_Create', \
@@ -127,6 +131,7 @@ B2ROPEJOINT = \
 
 B2PARTICLESYSTEM = \
 	'_b2ParticleSystem_CreateParticle', \
+	'_b2ParticleSystem_GetColorBuffer', \
 	'_b2ParticleSystem_GetParticleCount', \
 	'_b2ParticleSystem_GetPositionBuffer', \
 	'_b2ParticleSystem_SetDamping', \
@@ -134,18 +139,21 @@ B2PARTICLESYSTEM = \
 	'_b2ParticleSystem_SetRadius'
 	
 B2WELDJOINT = \
-	'_b2WeldJointtDef_Create', \
-	'_b2WeldJointDef_InitializeAndCreate', \
+	'_b2WeldJointDef_Create', \
+	'_b2WeldJointDef_InitializeAndCreate' \
 	
 B2WHEELJOINT = \
 	'_b2WheelJointDef_Create', \
-	'_b2WheelJointDef_InitializeAndCreate', \
+	'_b2WheelJointDef_InitializeAndCreate' \
 	
 B2WORLD = \
 	'_b2World_Create', \
 	'_b2World_CreateBody', \
 	'_b2World_CreateParticleSystem',\
 	'_b2World_Delete', \
+	'_b2World_DestroyBody', \
+	'_b2World_DestroyJoint', \
+	'_b2World_DestroyParticleSystem', \
 	'_b2World_SetContactListener', \
 	'_b2World_SetGravity', \
 	'_b2World_Step'
@@ -155,13 +163,22 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	$(B2CHAINSHAPE), \
 	$(B2CIRCLESHAPE), \
 	$(B2EDGESHAPE), \
+	$(B2DISTANCEJOINT), \
+	$(B2FRICTIONJOINT), \
+	$(B2GEARJOINT), \
+	$(B2MOTORJOINT), \
+	$(B2MOUSEJOINT), \
 	$(B2PARTICLESYSTEM), \
 	$(B2POLYGONSHAPE), \
-	$(B2FRICTIONJOINT), \
+	$(B2PRISMATICJOINT), \
+	$(B2PULLEYJOINT), \
 	$(B2REVOLUTEJOINT), \
+	$(B2ROPEJOINT), \
+	$(B2WELDJOINT), \
+	$(B2WHEELJOINT), \
 	$(B2WORLD) \
 	]"
 
 bindings.js:
-	$(EMSCRIPTEN)/emcc -IBox2D -o hello_world.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O0 --js-library callbacks.js
+	$(EMSCRIPTEN)/emcc -IBox2D -o hello_world.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O1 --js-library callbacks.js
 

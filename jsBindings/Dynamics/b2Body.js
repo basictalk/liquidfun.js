@@ -26,11 +26,16 @@ var b2Body_ApplyForce = Module.cwrap('b2Body_ApplyForce', 'number',
 var b2Body_ApplyTorque = Module.cwrap('b2Body_ApplyTorque', 'number',
   ['number', 'number', 'number']);
 var b2Body_GetAngle = Module.cwrap('b2Body_GetAngle', 'number', ['number']);
+var b2Body_GetAngularVelocity =
+  Module.cwrap('b2Body_GetAngularVelocity', 'number', ['number']);
 var b2Body_GetInertia = Module.cwrap('b2Body_GetInertia', 'number', ['number']);
+var b2Body_GetLinearVelocity =
+  Module.cwrap('b2Body_GetLinearVelocity', 'null', ['number', 'number']);
 var b2Body_GetMass = Module.cwrap('b2Body_GetMass', 'number', ['number']);
 var b2Body_GetPosition = Module.cwrap('b2Body_GetPosition', 'null', ['number', 'number']);
 var b2Body_GetTransform = Module.cwrap('b2Body_GetTransform', 'null',
   ['number', 'number']);
+var b2Body_GetType = Module.cwrap('b2Body_GetType', 'number', ['number']);
 var b2Body_GetWorldPoint = Module.cwrap('b2Body_GetWorldPoint', 'null',
   ['number', 'number', 'number', 'number']);
 var b2Body_GetWorldVector = Module.cwrap('b2Body_GetWorldVector', 'null',
@@ -41,6 +46,8 @@ var b2Body_SetLinearVelocity = Module.cwrap('b2Body_SetLinearVelocity', 'null',
   ['number', 'number', 'number']);
 var b2Body_SetTransform =
   Module.cwrap('b2Body_SetTransform', 'null', ['number', 'number', 'number']);
+var b2Body_SetType =
+  Module.cwrap('b2Body_SetType', 'null', ['number', 'number']);
 
 function b2Body(ptr) {
   this.ptr = ptr;
@@ -74,12 +81,24 @@ b2Body.prototype.CreateFixtureFromShape = function(shape, density) {
 b2Body.prototype.GetAngle = function() {
   return b2Body_GetAngle(this.ptr);
 }
+
+b2Body.prototype.GetAngularVelocity = function() {
+  return b2Body_GetAngularVelocity(this.ptr);
+}
+
 b2Body.prototype.GetInertia = function() {
   return b2Body_GetInertia(this.ptr);
 }
 
 b2Body.prototype.GetMass = function() {
   return b2Body_GetMass(this.ptr);
+}
+
+b2Body.prototype.GetLinearVelocity = function() {
+  b2Body_GetLinearVelocity(this.ptr, _vec2Buf.byteOffset);
+  var result = new Float32Array(_vec2Buf.buffer, _vec2Buf.byteOffset, _vec2Buf.length);
+  var velocity = new b2Vec2(result[0], result[1]);
+  return velocity;
 }
 
 b2Body.prototype.GetPosition = function() {
@@ -97,18 +116,21 @@ b2Body.prototype.GetTransform = function() {
   return transform;
 }
 
+b2Body.prototype.GetType = function() {
+  return b2Body_GetType(this.ptr);
+}
+
 b2Body.prototype.GetWorldPoint = function(vec) {
   b2Body_GetWorldPoint(this.ptr, vec.x, vec.y, _vec2Buf.byteOffset);
   var result = new Float32Array(_vec2Buf.buffer, _vec2Buf.byteOffset, _vec2Buf.length);
   return new b2Vec2(result[0], result[1]);
 }
 
-b2Body.prototype.GetWorldVector= function(vec) {
+b2Body.prototype.GetWorldVector = function(vec) {
   b2Body_GetWorldVector(this.ptr, vec.x, vec.y, _vec2Buf.byteOffset);
   var result = new Float32Array(_vec2Buf.buffer, _vec2Buf.byteOffset, _vec2Buf.length);
   return new b2Vec2(result[0], result[1]);
 }
-
 
 b2Body.prototype.SetAngularVelocity = function(angle) {
   b2Body_SetAngularVelocity(this.ptr, angle);
@@ -120,4 +142,8 @@ b2Body.prototype.SetLinearVelocity = function(v) {
 
 b2Body.prototype.SetTransform = function(v, angle) {
   b2Body_SetTransform(this.ptr, v.x, v.y, angle);
+}
+
+b2Body.prototype.SetType = function(type) {
+  b2Body_SetType(this.ptr, type);
 }

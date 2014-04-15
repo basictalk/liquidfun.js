@@ -30,8 +30,8 @@ void* b2PrismaticJointDef_Create(
 
 void* b2PrismaticJointDef_InitializeAndCreate(
     void* world,
-    void* bodyA, void* bodyB, double anchorX, double anchorY, double axisX,
-    double axisY,
+    void* bodyA, void* bodyB, double anchorX,
+    double anchorY, double axisX,  double axisY,
     //joint def
     double collideConnected,
     //prismatic joint def

@@ -129,10 +129,13 @@ b2PolygonShape.prototype.drawInit = function(fixture, transform) {
 
 function initParticleSystem(system) {
   var particles = system.GetPositionBuffer(),
-    maxParticles = particles.length,
-    material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+    maxParticles = particles.length;
+  var color = system.GetColorBuffer();
 
-  for (var i = 0; i < maxParticles; i += 2) {
+  for (var i = 0, c = 0; i < maxParticles; i += 2, c += 4) {
+    var col = new THREE.Color("rgb(" + color[c] + "," + color[c+1] + "," + color[c+2] +")");
+    var material = new THREE.LineBasicMaterial( { color: col } );
+    material.color = col;
     var line = new THREE.Line(world.unitCircle, material);
     line.position.x = particles[i];
     line.position.y = particles[i + 1];
@@ -140,8 +143,6 @@ function initParticleSystem(system) {
     system.graphics.push(line);
     scene.add(line);
   }
-
-  system.DeletePositionBuffer();
 }
 
 b2CircleShape.prototype.draw = function(fixture, transform) {
@@ -209,13 +210,14 @@ b2PolygonShape.prototype.draw = function(fixture, transform) {
 
 function drawParticleSystem(system) {
   var particles = system.GetPositionBuffer();
+  var color = system.GetColorBuffer();
   var maxParticles = particles.length;
 
   if (system.graphics === undefined) {
     initParticleSystem(system);
   }
 
-  for (var i = 0, j = 0; i < maxParticles; i += 2, j++) {
+  for (var i = 0, j = 0, c = 0; i < maxParticles; i += 2, j++, c+=4) {
     var index = j;
     if (system.graphics[index] == undefined) {
       var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
@@ -230,7 +232,6 @@ function drawParticleSystem(system) {
         system.graphics.push(line);
         scene.add(line);
       }
-      system.DeletePositionBuffer();
       return;
     }
     var line = system.graphics[index];
@@ -239,7 +240,10 @@ function drawParticleSystem(system) {
     line.scale.x = system.radius;
     line.scale.y = system.radius;
     line.scale.z = system.radius;
+   // var col = new THREE.Color("rgb(" + color[c] + "," + color[c+1] + "," + color[c+2] +")");
+  //  line.material.color.r = color[c] / 255;
+  //  line.material.color.g = color[c+1] / 255;
+  //  line.material.color.b = color[c+2] / 255;
+  //  line.material.color = new THREE.Color("rgb(" + color[c] + "," + color[c+1] + "," + color[c+2] +")");
   }
-
-  system.DeletePositionBuffer();
 }

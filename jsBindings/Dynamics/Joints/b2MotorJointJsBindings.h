@@ -10,8 +10,10 @@ void* b2MotorJointDef_Create(
     double angularOffset, double correctionFactor, double linearOffsetX,
     double linearOffsetY, double maxForce, double maxTorque);
 
-void* b2MotorJointDef_CreateAndInitialize(
+void* b2MotorJointDef_InitializeAndCreate(
     void* world,
+    //initialize args
+    void* bodyA, void* bodyB,
     // joint def
     double collideConnected,
     // motorjoint def

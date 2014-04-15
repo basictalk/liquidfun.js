@@ -20,8 +20,9 @@ void* b2MotorJointDef_Create(
   return ((b2World*)world)->CreateJoint(&def);
 }
 
-void* b2MotorJointDef_CreateAndInitialize(
+void* b2MotorJointDef_InitializeAndCreate(
     void* world,
+    //initialize args
     void* bodyA, void* bodyB,
     // joint def
     double collideConnected,

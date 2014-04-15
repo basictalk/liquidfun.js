@@ -4,9 +4,10 @@
 void* b2PolygonShape_CreateFixture_3(
     void* body,
     // Fixturedef
-    double density, double friction,
-    double isSensor, double restitution,
-    double userData,
+    double density, double friction, double isSensor,
+    double restitution, double userData,
+    // filter
+    double categoryBits, double groupIndex, double maskBits,
     // shape
     double x0, double y0,
     double x1, double y1,
@@ -17,6 +18,9 @@ void* b2PolygonShape_CreateFixture_3(
   def.isSensor = isSensor;
   def.restitution = restitution;
   def.userData = (void*)&userData;
+  def.filter.categoryBits = categoryBits;
+  def.filter.groupIndex = groupIndex;
+  def.filter.maskBits = maskBits;
 
   const int count = 3;
   b2Vec2 points[count] = {
@@ -35,9 +39,10 @@ void* b2PolygonShape_CreateFixture_3(
 void* b2PolygonShape_CreateFixture_4(
     void* body,
     // Fixturedef
-    double density, double friction,
-    double isSensor, double restitution,
-    double userData,
+    double density, double friction, double isSensor,
+    double restitution, double userData,
+    // filter
+    double categoryBits, double groupIndex, double maskBits,
     // shape
     double x0, double y0,
     double x1, double y1,
@@ -49,6 +54,9 @@ void* b2PolygonShape_CreateFixture_4(
   def.isSensor = isSensor;
   def.restitution = restitution;
   def.userData = (void*)&userData;
+  def.filter.categoryBits = categoryBits;
+  def.filter.groupIndex = groupIndex;
+  def.filter.maskBits = maskBits;
 
   const int count = 4;
   b2Vec2 points[count] = {

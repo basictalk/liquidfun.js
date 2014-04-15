@@ -13,7 +13,9 @@ void* b2WeldJointDef_Create(
 
 void* b2WeldJointDef_InitializeAndCreate(
     void* world,
-    void* bodyA, void* bodyB, double anchorX, double anchorY,
+    // initialize args
+    void* bodyA, void* bodyB, double anchorX,
+    double anchorY,
     // joint def
     double collideConnected,
     // weld joint def

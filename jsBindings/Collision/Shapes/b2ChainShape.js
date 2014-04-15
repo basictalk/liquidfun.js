@@ -2,7 +2,8 @@ var b2ChainShape_CreateFixture =
   Module.cwrap('b2ChainShape_CreateFixture', 'number',
     ['number',
       // Fixture defs
-      'number', 'number', 'number', 'number', 'number',
+      'number', 'number', 'number',
+      'number', 'number',
       // Chain vertices and count
       'number', 'number']);
 
@@ -41,6 +42,8 @@ b2ChainShape.prototype._CreateFixture = function(body, fixtureDef) {
     // fixture def
     fixtureDef.density, fixtureDef.friction, fixtureDef.isSensor,
     fixtureDef.restitution, fixtureDef.userData,
+    // filter def
+    fixtureDef.filter.categoryBits, fixtureDef.filter.groupIndex, fixtureDef.filter.maskBits,
     // vertices and length
     dataHeap.byteOffset, data.length);
 

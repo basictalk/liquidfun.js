@@ -5,9 +5,10 @@ const int MaxChainVertices = 128;
 void* b2ChainShape_CreateFixture(
     void* body,
     // Fixturedef
-    double density, double friction,
-    double isSensor, double restitution,
-    double userData,
+    double density, double friction, double isSensor,
+    double restitution, double userData,
+    // filter
+    double categoryBits, double groupIndex, double maskBits,
     // chain
     float* vertices, double length) {
   b2FixtureDef def;
@@ -16,6 +17,9 @@ void* b2ChainShape_CreateFixture(
   def.isSensor = isSensor;
   def.restitution = restitution;
   def.userData = (void*)&userData;
+  def.filter.categoryBits = categoryBits;
+  def.filter.groupIndex = groupIndex;
+  def.filter.maskBits = maskBits;
 
   b2ChainShape chain;
   int count = length / 2;

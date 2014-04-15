@@ -13,7 +13,9 @@ void* b2RevoluteJointDef_Create(
     double referenceAngle, double upperAngle);
 
 void* b2RevoluteJointDef_InitializeAndCreate(
-    void* world, void* bodyA, void* bodyB, double anchorX, double anchorY,
+    void* world,
+    // initialize args
+    void* bodyA, void* bodyB, double anchorX, double anchorY,
     //revoluteJointDef
     double collideConnected, double enableLimit,
     double enableMotor, double lowerAngle, double maxMotorTorque,

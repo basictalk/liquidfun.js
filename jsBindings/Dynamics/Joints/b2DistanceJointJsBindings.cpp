@@ -22,6 +22,7 @@ void* b2DistanceJointDef_Create(
 
 void* b2DistanceJointDef_InitializeAndCreate(
     void* world,
+    // initialize args
     void* bodyA, void* bodyB, double anchorAx, double anchorAy,
     double anchorBx, double anchorBy,
     // joint def

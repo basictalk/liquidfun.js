@@ -1,3 +1,9 @@
+function b2Filter() {
+  this.categoryBits = 0x0001;
+  this.groupIndex = 0;
+  this.maskBits = 0xFFFF;
+}
+
 function b2FixtureDef() {
   this.density = 0.0;
   this.friction = 0.2;
@@ -5,6 +11,7 @@ function b2FixtureDef() {
   this.restitution = 0.0;
   this.shape = null;
   this.userData = null;
+  this.filter = new b2Filter();
 }
 
 // fixture globals

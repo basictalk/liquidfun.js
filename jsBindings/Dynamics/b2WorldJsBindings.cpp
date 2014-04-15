@@ -28,14 +28,13 @@ void* b2World_Create(double x, double y) {
   return new b2World(b2Vec2(x, y));
 }
 
-void* b2World_CreateBody(void* world, double active, double allowSleep,
-                         double angle, double angularVelocity,
-                         double angularDamping, double awake,
-                         double bullet, double fixedRotation,
-                         double gravityScale, double linearDamping,
-                         double linearVelocityX, double linearVelocityY,
-                         double positionX, double positionY, double type,
-                         double userData) {
+void* b2World_CreateBody(
+    void* world, double active, double allowSleep,
+    double angle, double angularVelocity, double angularDamping,
+    double awake, double bullet, double fixedRotation,
+    double gravityScale, double linearDamping, double linearVelocityX,
+    double linearVelocityY, double positionX, double positionY,
+    double type, double userData) {
   b2BodyDef def;
   def.active = active;
   def.allowSleep = allowSleep;
@@ -54,15 +53,13 @@ void* b2World_CreateBody(void* world, double active, double allowSleep,
   return ((b2World*)world)->CreateBody(&def);
 }
 
-void* b2World_CreateParticleSystem(void*world, double colorMixingStrength,
-                                   double dampingStrength, double destroyByAge,
-                                   double ejectionStrength, double elasticStrength,
-                                   double lifetimeGranularity, double powderStrength,
-                                   double pressureStrength, double radius,
-                                   double repulsiveStrength, double springStrength,
-                                   double staticPressureIterations, double staticPressureRelaxation,
-                                   double staticPressureStrength, double surfaceTensionNormalStrength,
-                                   double surfaceTensionPressureStrength, double viscousStrength) {
+void* b2World_CreateParticleSystem(
+    void* world, double colorMixingStrength, double dampingStrength,
+    double destroyByAge, double ejectionStrength, double elasticStrength,
+    double lifetimeGranularity, double powderStrength, double pressureStrength,
+    double radius, double repulsiveStrength, double springStrength,
+    double staticPressureIterations, double staticPressureRelaxation, double staticPressureStrength,
+    double surfaceTensionNormalStrength, double surfaceTensionPressureStrength, double viscousStrength) {
   b2ParticleSystemDef def;
   def.colorMixingStrength = colorMixingStrength;
   def.dampingStrength = dampingStrength;
@@ -98,6 +95,18 @@ void b2World_Delete(void* world) {
   delete (b2World*)world;
 }
 
+void b2World_DestroyBody(void* world, void* body) {
+  ((b2World*)world)->DestroyBody((b2Body*)body);
+}
+
+void b2World_DestroyJoint(void* world, void* joint) {
+  ((b2World*)world)->DestroyJoint((b2Joint*)joint);
+}
+
+void b2World_DestroyParticleSystem(void* world, void* particleSystem) {
+  ((b2World*)world)->DestroyParticleSystem((b2ParticleSystem*)particleSystem);
+}
+
 void b2World_SetContactListener(void* world) {
   ((b2World*)world)->SetContactListener(&listener);
 }
@@ -108,5 +117,5 @@ void b2World_SetGravity(void* world, double x, double y) {
 
 void b2World_Step(void* world, float step, float vIterations, float pIterations) {
 
-  ((b2World*)world)->Step(step, (int32)vIterations, (int32)pIterations, 2);
+  ((b2World*)world)->Step(step, (int32)vIterations, (int32)pIterations, 3);
 }

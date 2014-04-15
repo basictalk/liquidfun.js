@@ -5,9 +5,10 @@ extern "C" {
 void* b2PolygonShape_CreateFixture_3(
     void* body,
     // Fixturedef
-    double density, double friction,
-    double isSensor, double restitution,
-    double userData,
+    double density, double friction, double isSensor,
+    double restitution, double userData,
+    // filter
+    double categoryBits, double groupIndex, double maskBits,
     // shape
     double x0, double y0,
     double x1, double y1,
@@ -16,9 +17,10 @@ void* b2PolygonShape_CreateFixture_3(
 void* b2PolygonShape_CreateFixture_4(
     void* body,
     // Fixturedef
-    double density, double friction,
-    double isSensor, double restitution,
-    double userData,
+    double density, double friction, double isSensor,
+    double restitution, double userData,
+    // filter
+    double categoryBits, double groupIndex, double maskBits,
     // shape
     double x0, double y0,
     double x1, double y1,

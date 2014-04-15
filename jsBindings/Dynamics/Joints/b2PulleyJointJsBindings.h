@@ -9,15 +9,16 @@ void* b2PulleyJointDef_Create(
     // pulley joint def
     double groundAnchorAx, double groundAnchorAy, double groundAnchorBx,
     double groundAnchorBy, double lengthA, double lengthB,
-    double localAnchorAx, double localAnchorAy,
-    double localAnchorBx, double localAnchorBy, double ratio);
+    double localAnchorAx, double localAnchorAy, double localAnchorBx,
+    double localAnchorBy, double ratio);
 
 void* b2PulleyJointDef_InitializeAndCreate(
     void* world,
+    // initialize args
     void* bodyA, void* bodyB, double anchorAx,
     double anchorAy, double anchorBx, double anchorBy,
-    double groundAnchorAx, double groundAnchorAy,
-    double groundAnchorBx, double groundAnchorBy,  double ratio,
+    double groundAnchorAx, double groundAnchorAy, double groundAnchorBx,
+    double groundAnchorBy,  double ratio,
     // jointdef
     double collideConnected);
 

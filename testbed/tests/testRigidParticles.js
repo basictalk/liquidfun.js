@@ -1,5 +1,5 @@
 // This test is buggy :( todo debug the particle issues
-function TestElasticParticles() {
+function TestRigidParticles() {
   camera.position.z = 10;
 
   var bd = new b2BodyDef();
@@ -38,8 +38,7 @@ function TestElasticParticles() {
   circle.position.Set(0, 3);
   circle.radius = 0.5;
   var pgd = new b2ParticleGroupDef();
-  pgd.flags = b2_springParticle;
-  pgd.groupFlags = b2_solidParticleGroup;
+  pgd.groupFlags = b2_rigidParticleGroup | b2_solidParticleGroup;;
   pgd.shape = circle;
   pgd.color.Set(255, 0, 0, 255);
   particleSystem.CreateParticleGroup(pgd);
@@ -49,8 +48,7 @@ function TestElasticParticles() {
   circle.position.Set(-1, 3);
   circle.radius = 0.5;
   pgd = new b2ParticleGroupDef();
-  pgd.flags = b2_elasticParticle;
-  pgd.groupFlags = b2_solidParticleGroup;
+  pgd.groupFlags = b2_rigidParticleGroup | b2_solidParticleGroup;;
   pgd.shape = circle;
   pgd.color.Set(0, 255, 0, 255);
   particleSystem.CreateParticleGroup(pgd);
@@ -59,8 +57,7 @@ function TestElasticParticles() {
   var box = new b2PolygonShape();
   var pgd = new b2ParticleGroupDef();
   box.SetAsBoxXY(1, 0.5);
-  pgd.flags = b2_elasticParticle;
-  pgd.groupFlags = b2_solidParticleGroup;
+  pgd.groupFlags = b2_rigidParticleGroup | b2_solidParticleGroup;;
   pgd.position.Set(1, 4);
   pgd.angle = -0.5;
   pgd.angularVelocity = 2;
