@@ -62,8 +62,10 @@ $(O)/Common/b2TrackedBlock.cpp \
 $(O)/Common/b2StackAllocator.cpp
 	
 B2BODY = \
+	'_b2Body_ApplyAngularImpulse', \
 	'_b2Body_ApplyTorque', \
 	'_b2Body_ApplyForce', \
+	'_b2Body_DestroyFixture', \
 	'_b2Body_GetAngle', \
 	'_b2Body_GetAngularVelocity', \
 	'_b2Body_GetInertia', \
@@ -72,6 +74,7 @@ B2BODY = \
 	'_b2Body_GetPosition', \
 	'_b2Body_GetTransform', \
 	'_b2Body_GetType', \
+	'_b2Body_GetWorldCenter', \
 	'_b2Body_GetWorldPoint', \
 	'_b2Body_GetWorldVector', \
 	'_b2Body_SetAngularVelocity', \
@@ -86,6 +89,12 @@ B2CIRCLESHAPE = \
 	'_b2CircleShape_CreateFixture', \
 	'_b2CircleShape_CreateParticleGroup'
 
+B2COLLISION = \
+	'_b2Manifold_GetPointCount'
+
+B2CONTACT = \
+	'_b2Contact_GetManifold'
+
 B2DISTANCEJOINT = \
 	'_b2DistanceJointDef_Create', \
 	'_b2DistanceJointDef_InitializeAndCreate' \
@@ -96,6 +105,8 @@ B2EDGESHAPE = \
 B2POLYGONSHAPE = \
 	'_b2PolygonShape_CreateFixture_3', \
 	'_b2PolygonShape_CreateFixture_4', \
+	'_b2PolygonShape_CreateFixture_5', \
+	'_b2PolygonShape_CreateFixture_6', \
 	'_b2PolygonShape_CreateParticleGroup_4'
 
 B2FRICTIONJOINT = \
@@ -143,6 +154,8 @@ B2WELDJOINT = \
 	'_b2WeldJointDef_InitializeAndCreate' \
 	
 B2WHEELJOINT = \
+	'_b2WheelJoint_SetMotorSpeed', \
+	'_b2WheelJoint_SetSpringFrequencyHz', \
 	'_b2WheelJointDef_Create', \
 	'_b2WheelJointDef_InitializeAndCreate' \
 	
@@ -162,6 +175,8 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	$(B2BODY), \
 	$(B2CHAINSHAPE), \
 	$(B2CIRCLESHAPE), \
+	$(B2COLLISION), \
+	$(B2CONTACT), \
 	$(B2EDGESHAPE), \
 	$(B2DISTANCEJOINT), \
 	$(B2FRICTIONJOINT), \

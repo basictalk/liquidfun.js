@@ -73,6 +73,86 @@ void* b2PolygonShape_CreateFixture_4(
   return ((b2Body*)body)->CreateFixture(&def);
 }
 
+void* b2PolygonShape_CreateFixture_5(
+    void* body,
+    // Fixturedef
+    double density, double friction, double isSensor,
+    double restitution, double userData,
+    // filter
+    double categoryBits, double groupIndex, double maskBits,
+    // shape
+    double x0, double y0,
+    double x1, double y1,
+    double x2, double y2,
+    double x3, double y3,
+    double x4, double y4) {
+  b2FixtureDef def;
+  def.density = density;
+  def.friction = friction;
+  def.isSensor = isSensor;
+  def.restitution = restitution;
+  def.userData = (void*)&userData;
+  def.filter.categoryBits = categoryBits;
+  def.filter.groupIndex = groupIndex;
+  def.filter.maskBits = maskBits;
+
+  const int count = 5;
+  b2Vec2 points[count] = {
+      b2Vec2(x0, y0),
+      b2Vec2(x1, y1),
+      b2Vec2(x2, y2),
+      b2Vec2(x3, y3),
+      b2Vec2(x4, y4)
+  };
+
+  b2PolygonShape polygon;
+  polygon.Set(points, count);
+
+  def.shape = &polygon;
+  return ((b2Body*)body)->CreateFixture(&def);
+}
+
+void* b2PolygonShape_CreateFixture_6(
+    void* body,
+    // Fixturedef
+    double density, double friction, double isSensor,
+    double restitution, double userData,
+    // filter
+    double categoryBits, double groupIndex, double maskBits,
+    // shape
+    double x0, double y0,
+    double x1, double y1,
+    double x2, double y2,
+    double x3, double y3,
+    double x4, double y4,
+    double x5, double y5) {
+  b2FixtureDef def;
+  def.density = density;
+  def.friction = friction;
+  def.isSensor = isSensor;
+  def.restitution = restitution;
+  def.userData = (void*)&userData;
+  def.filter.categoryBits = categoryBits;
+  def.filter.groupIndex = groupIndex;
+  def.filter.maskBits = maskBits;
+
+  const int count = 6;
+  b2Vec2 points[count] = {
+      b2Vec2(x0, y0),
+      b2Vec2(x1, y1),
+      b2Vec2(x2, y2),
+      b2Vec2(x3, y3),
+      b2Vec2(x4, y4),
+      b2Vec2(x5, y5)
+  };
+
+  b2PolygonShape polygon;
+  polygon.Set(points, count);
+
+  def.shape = &polygon;
+  return ((b2Body*)body)->CreateFixture(&def);
+}
+
 // Create b2ParticleSystem from 4 sided polygon
 void* b2PolygonShape_CreateParticleGroup_4(
     void* particleSystem,

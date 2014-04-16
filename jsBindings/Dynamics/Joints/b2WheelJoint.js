@@ -1,3 +1,24 @@
+// wheel joint globals
+var b2WheelJoint_SetMotorSpeed =
+  Module.cwrap('b2WheelJoint_SetMotorSpeed', 'null', ['number', 'number']);
+var b2WheelJoint_SetSpringFrequencyHz =
+  Module.cwrap('b2WheelJoint_SetSpringFrequencyHz', 'null', ['number', 'number']);
+
+/**@constructor*/
+function b2WheelJoint(def) {
+  this.next = null;
+  this.ptr = null;
+}
+
+b2WheelJoint.prototype.SetMotorSpeed = function(speed) {
+  b2WheelJoint_SetMotorSpeed(this.ptr, speed);
+};
+
+b2WheelJoint.prototype.SetSpringFrequencyHz = function(hz) {
+  b2WheelJoint_SetSpringFrequencyHz(this.ptr, hz);
+};
+
+// wheeljoint def
 var b2WheelJointDef_Create = Module.cwrap("b2WheelJointDef_Create",
   'number',
   ['number',
@@ -21,6 +42,7 @@ var b2WheelJointDef_InitializeAndCreate = Module.cwrap("b2WheelJointDef_Initiali
     'number', 'number', 'number',
     'number', 'number']);
 
+/** @constructor*/
 function b2WheelJointDef() {
   // joint def
   this.bodyA = null;
@@ -50,7 +72,7 @@ b2WheelJointDef.prototype.Create = function(world) {
     this.localAnchorB.y, this.localAxisA.x, this.localAxisA.y,
     this.maxMotorTorque, this.motorSpeed);
   return wheelJoint;
-}
+};
 
 b2WheelJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, anchor, axis) {
   this.bodyA = bodyA;
@@ -66,11 +88,6 @@ b2WheelJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, anchor, 
     // wheel joint def
     this.dampingRatio, this.enableMotor, this.frequencyHz,
     this.maxMotorTorque, this.motorSpeed);
-  world.joints.push(wheelJoint);
+  b2World._Push(wheelJoint, world.joints);
   return wheelJoint;
-}
-
-function b2WheelJoint(def) {
-  this.next = null;
-  this.ptr = null;
-}
+};

@@ -1,3 +1,11 @@
+/**@constructor*/
+function b2DistanceJoint(def) {
+  this.bodyA = def.bodyA;
+  this.bodyB = def.bodyB;
+  this.ptr = null;
+  this.next = null;
+}
+
 var b2DistanceJointDef_Create = Module.cwrap("b2DistanceJointDef_Create",
   'number',
   ['number',
@@ -17,6 +25,7 @@ var b2DistanceJointDef_InitializeAndCreate = Module.cwrap("b2DistanceJointDef_In
     // friction joint def
     'number', 'number', 'number']);
 
+/**@constructor*/
 function b2DistanceJointDef() {
   this.bodyA = null;
   this.bodyB = null;
@@ -39,7 +48,7 @@ b2DistanceJointDef.prototype.Create = function(world) {
     this.localAnchorA.x, this.localAnchorA.y,
     this.localAnchorB.x, this.localAnchorB.y);
   return distanceJoint;
-}
+};
 
 b2DistanceJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, anchor) {
   this.bodyA = bodyA;
@@ -54,13 +63,6 @@ b2DistanceJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, ancho
     this.collideConnected,
     //distance joint def
     this.dampingRatio, this.frequencyHz);
-  world.joints.push(distanceJoint);
+  b2World._Push(distanceJoint, world.joints);
   return distanceJoint;
-}
-
-function b2DistanceJoint(def) {
-  this.bodyA = def.bodyA;
-  this.bodyB = def.bodyB;
-  this.ptr = null;
-  this.next = null;
-}
+};

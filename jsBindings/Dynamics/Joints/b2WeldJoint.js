@@ -18,6 +18,7 @@ var b2WeldJointDef_InitializeAndCreate = Module.cwrap("b2WeldJointDef_Initialize
     // weld joint def
     'number', 'number']);
 
+/** @constructor */
 function b2WeldJointDef() {
   // joint def
   this.bodyA = null;
@@ -43,7 +44,7 @@ b2WeldJointDef.prototype.Create = function(world) {
     this.localAnchorA.y, this.localAnchorB.x, this.localAnchorB.y,
     this.referenceAngle);
   return weldJoint;
-}
+};
 
 b2WeldJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, anchor) {
   this.bodyA = bodyA;
@@ -58,10 +59,11 @@ b2WeldJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, anchor) {
     this.collideConnected,
     //Weld joint def
     this.dampingRatio, this.frequencyHz);
-  world.joints.push(weldJoint);
+  b2World._Push(weldJoint, world.joints);
   return weldJoint;
-}
+};
 
+/** @constructor */
 function b2WeldJoint(def) {
   this.bodyA = def.bodyA;
   this.bodyB = def.bodyB;

@@ -5,7 +5,7 @@ void* b2RevoluteJointDef_Create(
     //Joint def
     void* bodyA, void* bodyB, double collideConnected,
     //revoluteJointDef
-    double enableLimit, double enableMotor,   double lowerAngle,
+    double enableLimit, double enableMotor, double lowerAngle,
     double localAnchorAx, double localAnchorAy, double localAnchorBx,
     double localAnchorBy, double maxMotorTorque, double motorSpeed,
     double referenceAngle, double upperAngle) {
@@ -16,7 +16,7 @@ void* b2RevoluteJointDef_Create(
   revJoint.enableLimit = enableLimit;
   revJoint.enableMotor = enableMotor;
   revJoint.localAnchorA = b2Vec2(localAnchorAx, localAnchorAy);
-  revJoint.localAnchorA = b2Vec2(localAnchorBx, localAnchorBy);
+  revJoint.localAnchorB = b2Vec2(localAnchorBx, localAnchorBy);
   revJoint.lowerAngle = lowerAngle;
   revJoint.maxMotorTorque = maxMotorTorque;
   revJoint.motorSpeed = motorSpeed;

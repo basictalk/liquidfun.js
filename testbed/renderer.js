@@ -195,8 +195,13 @@ b2EdgeShape.prototype.draw = function(fixture, transform) {
 b2PolygonShape.prototype.draw = function(fixture, transform) {
   var vertexCount = this.vertices.length,
     transformedV = new b2Vec2(),
-    line = fixture.graphic,
-    geometry = line.geometry;
+    line = fixture.graphic;
+  if (line === undefined) {
+    this.drawInit(fixture, transform);
+    line = fixture.graphic;
+    return;
+  }
+  var geometry = line.geometry;
 
   for (var i = 0; i < vertexCount; i++) {
     var vertex = this.vertices[i];

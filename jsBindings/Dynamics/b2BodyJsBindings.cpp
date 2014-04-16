@@ -1,5 +1,8 @@
 #include <Box2D/Box2D.h>
 // b2Body functions
+void b2Body_ApplyAngularImpulse(void* body, double impulse, double wake) {
+  ((b2Body*)body)->ApplyAngularImpulse(impulse, wake);
+}
 void b2Body_ApplyForce(void* body, double forceX, double forceY,
                        double pointX, double pointY, double wake) {
   ((b2Body*)body)->ApplyForce(b2Vec2(forceX, forceY), b2Vec2(pointX, pointY),
@@ -7,6 +10,10 @@ void b2Body_ApplyForce(void* body, double forceX, double forceY,
 }
 void b2Body_ApplyTorque(void* body, double force, double wake) {
   ((b2Body*)body)->ApplyTorque(force, (bool)wake);
+}
+
+void b2Body_DestroyFixture(void* body, void* fixture) {
+  ((b2Body*)body)->DestroyFixture((b2Fixture*)fixture);
 }
 
 double b2Body_GetAngle(void* body) {
@@ -50,8 +57,10 @@ double b2Body_GetType(void* body) {
   return ((b2Body*)body)->GetType();
 }
 
-void* b2Body_GetTransform(void* body) {
-  return const_cast<b2Transform*>(&((b2Body*)body)->GetTransform());
+void b2Body_GetWorldCenter(void* body, float* arr) {
+  b2Vec2 worldCenter = ((b2Body*)body)->GetWorldCenter();
+  arr[0] = worldCenter.x;
+  arr[1] = worldCenter.y;
 }
 
 void b2Body_GetWorldPoint(void* body, double pointX, double pointY, float* arr) {

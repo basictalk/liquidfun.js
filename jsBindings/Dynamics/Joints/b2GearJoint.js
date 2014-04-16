@@ -24,7 +24,7 @@ b2GearJointDef.prototype.Create = function(world) {
     //gear joint def
     this.joint1, this.joint2, this.ratio);
   return gearJoint;
-}
+};
 
 function b2GearJoint(def) {
   this.ptr = null;

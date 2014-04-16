@@ -70,7 +70,7 @@ b2PrismaticJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, anch
     // prismatic joint def
     this.enableLimit, this.enableMotor, this.lowerTranslation,
     this.maxMotorForce, this.motorSpeed, this.upperTranslation);
-  world.joints.push(prismaticJoint);
+  b2World._Push(prismaticJoint, world.joints);
   return prismaticJoint;
 }
 

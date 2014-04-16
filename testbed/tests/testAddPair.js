@@ -10,8 +10,8 @@ function TestAddPair() {
   var bodyDef = new b2BodyDef();
   bodyDef.type = b2_dynamicBody;
 
-  for (var x = -10; x < 5; x++) {
-    for (var y = -10; y < 5; y++) {
+  for (var x = -10; x < 10; x++) {
+    for (var y = -10; y < 10; y++) {
       var circle = new b2CircleShape();
       circle.position.Set(0, 0);
       circle.radius = 0.1;

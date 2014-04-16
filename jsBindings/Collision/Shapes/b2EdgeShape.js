@@ -8,6 +8,7 @@ var b2EdgeShape_CreateFixture =
       'number', 'number',  'number',
       'number']);
 
+/** @constructor */
 function b2EdgeShape() {
   this.v0 = new b2Vec2();
   this.v1 = new b2Vec2();
@@ -17,7 +18,7 @@ function b2EdgeShape() {
 b2EdgeShape.prototype.Set = function(v0, v1) {
   this.v0 = v0;
   this.v1 = v1;
-}
+};
 
 b2EdgeShape.prototype._CreateFixture = function(body, fixtureDef) {
   return b2EdgeShape_CreateFixture(body.ptr,
@@ -29,4 +30,4 @@ b2EdgeShape.prototype._CreateFixture = function(body, fixtureDef) {
     // edge data
     this.v0.x, this.v0.y, this.v1.x,
     this.v1.y);
-}
+};

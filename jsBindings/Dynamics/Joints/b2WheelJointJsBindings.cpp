@@ -1,5 +1,13 @@
 #include <Box2D/Box2D.h>
 
+void b2WheelJoint_SetMotorSpeed(void* wheel, double speed) {
+  ((b2WheelJoint*)wheel)->SetMotorSpeed(speed);
+}
+
+void b2WheelJoint_SetSpringFrequencyHz(void* wheel, double frequency) {
+  ((b2WheelJoint*)wheel)->SetSpringFrequencyHz(frequency);
+}
+
 void* b2WheelJointDef_Create(
     void* world,
     // joint def

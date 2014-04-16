@@ -29,7 +29,7 @@ function TestRamp() {
 
   var circle = new b2CircleShape();
   circle.position.Set(-20, 33);
-  circle.radius = 2;
+  circle.radius = 1.5;
   var pd = new b2ParticleGroupDef();
   pd.flags = b2_waterParticle;
   pd.shape = circle;

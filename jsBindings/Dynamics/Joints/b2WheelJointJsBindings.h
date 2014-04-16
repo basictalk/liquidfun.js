@@ -2,6 +2,9 @@
 #define B2WHEELJOINTJSBINDINGS_H
 
 extern "C" {
+void b2WheelJoint_SetMotorSpeed(void* wheel, double speed);
+void b2WheelJoint_SetSpringFrequencyHz(void* wheel, double frequency);
+
 void* b2WheelJointDef_Create(
     void* world,
     // joint def
@@ -22,7 +25,6 @@ void* b2WheelJointDef_InitializeAndCreate(
     // wheel joint def
     double dampingRatio, double enableMotor, double frequencyHz,
     double maxMotorTorque, double motorSpeed);
-
 }
 
 #endif

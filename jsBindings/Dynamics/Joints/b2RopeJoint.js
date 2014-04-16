@@ -29,7 +29,7 @@ b2RopeJointDef.prototype.Create = function(world) {
     this.localAnchorA.x, this.localAnchorA.y, this.localAnchorB.x,
     this.localAnchorB.y, this.maxLength);
   return ropeJoint;
-}
+};
 
 function b2RopeJoint(def) {
   this.next = null;

@@ -40,7 +40,7 @@ b2FrictionJointDef.prototype.Create = function(world) {
     this.localAnchorA.x, this.localAnchorA.y, this.localAnchorB.x,
     this.localAnchorB.y, this.maxForce, this.maxTorque);
   return frictionJoint;
-}
+};
 
 b2FrictionJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, anchor) {
   this.bodyA = bodyA;
@@ -55,9 +55,9 @@ b2FrictionJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, ancho
     this.collideConnected,
     // friction joint def
     this.maxForce, this.maxTorque);
-  world.joints.push(frictionJoint);
+  b2World._Push(frictionJoint, world.joints);
   return frictionJoint;
-}
+};
 
 function b2FrictionJoint(def) {
   this.bodyA = def.bodyA;

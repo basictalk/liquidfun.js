@@ -44,6 +44,7 @@ var b2_fixtureContactFilterParticle = 1 << 16;
 /// particles.
 var b2_particleContactFilterParticle = 1 << 17;
 
+/** @constructor */
 function b2ParticleColor(r, g, b, a) {
   if (r === undefined) {
     r = 0;

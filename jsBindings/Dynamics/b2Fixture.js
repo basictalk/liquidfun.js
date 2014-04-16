@@ -1,9 +1,11 @@
+/**@constructor*/
 function b2Filter() {
   this.categoryBits = 0x0001;
   this.groupIndex = 0;
   this.maskBits = 0xFFFF;
 }
 
+/**@constructor*/
 function b2FixtureDef() {
   this.density = 0.0;
   this.friction = 0.2;
@@ -15,7 +17,9 @@ function b2FixtureDef() {
 }
 
 // fixture globals
+/**@constructor*/
 function b2Fixture() {
+  this.body = null;
   this.ptr = null;
   this.shape = null;
 }
@@ -28,4 +32,4 @@ b2Fixture.prototype.FromFixtureDef = function(fixtureDef) {
   this.shape = fixtureDef.shape;
   this.userData = fixtureDef.userData;
   this.vertices = [];
-}
+};

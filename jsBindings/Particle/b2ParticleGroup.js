@@ -32,6 +32,7 @@ function b2ParticleGroupDef() {
   this.userData = null;
 }
 
+/** @constructor */
 function b2ParticleGroup(ptr) {
   this.ptr = ptr;
 }

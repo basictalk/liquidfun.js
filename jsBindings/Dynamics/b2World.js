@@ -1,16 +1,37 @@
 // global call back function
-function b2WorldBeginContact(fixA, fixB) {
-  var fixLook = world.fixturesLookup;
+b2World.BeginContactBody = function(contactPtr) {
+  if (world.listener.BeginContactBody === undefined) {
+    return;
+  }
+  /*var fixLook = world.fixturesLookup;
   console.log(world.fixturesLookup[fixA].detail);
   console.log(world.fixturesLookup[fixB].detail);
-  this.listener.BeginContact(fixLook[fixA], fixLook[fixB]);
+  this.listener.BeginContact(fixLook[fixA], fixLook[fixB]);*/
 }
 
-function b2WorldEndContact(fixA, fixB) {
-  var fixLook = world.fixturesLookup;
+b2World.EndContactBody = function(contactPtr) {
+  if (world.listener.EndContactBody === undefined) {
+    return;
+  }
+  /*var fixLook = world.fixturesLookup;
   console.log(world.fixturesLookup[fixA].detail);
   console.log(world.fixturesLookup[fixB].detail);
-  this.listener.EndContact(fixLook[fixA], fixLook[fixB]);
+  this.listener.EndContact(fixLook[fixA], fixLook[fixB]);*/
+}
+
+b2World.PreSolve = function(contactPtr, oldManifoldPtr) {
+  if (world.listener.PreSolve === undefined) {
+    return;
+  }
+  this.listener.PreSolve(new b2Contact(contactPtr), new b2Manifold(oldManifoldPtr));
+}
+
+b2World.PostSolve = function(contactPtr, impulsePtr) {
+  if (world.listener.PostSolve === undefined) {
+    return;
+  }
+  world.listener.PostSolve(new b2Contact(contactPtr),
+    new b2ContactImpulse(impulsePtr));
 }
 
 // Emscripten exports
@@ -51,6 +72,7 @@ var _transBuf = null;
 var _vec2Buf = null;
 
 // Todo move the buffers to native access
+/** @constructor */
 function b2World(gravity) {
   this.bodies = [];
   this.bodiesLookup = {};
@@ -70,13 +92,12 @@ function b2World(gravity) {
   _vec2Buf = new Uint8Array(Module.HEAPU8.buffer, dataPtr, nDataBytes);
 }
 
-b2World.prototype._Push = function(item, list) {
+b2World._Push = function(item, list) {
   item.lindex = list.length;
   list.push(item);
-  console.log(list.length);
-}
+};
 
-b2World.prototype._RemoveItem = function(item, list) {
+b2World._RemoveItem = function(item, list) {
   var length = list.length;
   var lindex = item.lindex;
   if (length > 1) {
@@ -84,8 +105,8 @@ b2World.prototype._RemoveItem = function(item, list) {
     list[lindex].lindex = lindex;
   }
   list.pop();
-  console.log(list.length);
-}
+};
+
 
 b2World.prototype.CreateBody = function(bodyDef) {
   var body = new b2Body(b2World_CreateBody(
@@ -95,16 +116,16 @@ b2World.prototype.CreateBody = function(bodyDef) {
     bodyDef.gravityScale, bodyDef.linearDamping, bodyDef.linearVelocity.x,
     bodyDef.linearVelocity.y, bodyDef.position.x, bodyDef.position.y,
     bodyDef.type, bodyDef.userData));
-  this._Push(body, this.bodies);
+  b2World._Push(body, this.bodies);
   this.bodiesLookup[body.ptr] = body;
   return body;
-}
+};
 
 b2World.prototype.CreateJoint = function(jointDef) {
   var joint = jointDef.Create(this);
-  this._Push(joint, this.joints);
+  b2World._Push(joint, this.joints);
   return joint;
-}
+};
 
 b2World.prototype.CreateParticleSystem = function(psd) {
   var ps = new b2ParticleSystem(b2World_CreateParticleSystem(
@@ -115,36 +136,36 @@ b2World.prototype.CreateParticleSystem = function(psd) {
     psd.springStrength, psd.staticPressureIterations, psd.staticPressureRelaxation,
     psd.staticPressureStrength, psd.surfaceTensionNormalStrength, psd.surfaceTensionPressureStrength,
     psd.viscousStrength));
-  this._Push(ps, this.particleSystems);
+  b2World._Push(ps, this.particleSystems);
   ps.dampingStrength = psd.dampingStrength;
   ps.radius = psd.radius;
   return ps;
-}
+};
 
 b2World.prototype.DestroyBody = function(body) {
   b2World_DestroyBody(this.ptr, body.ptr);
-  this._RemoveItem(body, this.bodies);
-}
+  b2World._RemoveItem(body, this.bodies);
+};
 
 b2World.prototype.DestroyJoint = function(joint) {
   b2World_DestroyJoint(this.ptr, joint.ptr);
-  this._RemoveItem(joint, this.joints);
-}
+  b2World._RemoveItem(joint, this.joints);
+};
 
 b2World.prototype.DestroyParticleSystem = function(particleSystem) {
   b2World_DestroyParticleSystem(this.ptr, particleSystem.ptr);
-  this._RemoveItem(particleSystem, this.particleSystems);
-}
+  b2World._RemoveItem(particleSystem, this.particleSystems);
+};
 
 b2World.prototype.SetContactListener = function(listener) {
   this.listener = listener;
   b2World_SetContactListener(this.ptr);
-}
+};
 
 b2World.prototype.SetGravity = function(gravity) {
   b2World_SetGravity(this.ptr, gravity.x, gravity.y);
-}
+};
 
 b2World.prototype.Step = function(steps, vIterations, pIterations) {
   b2World_Step(this.ptr, steps, vIterations, pIterations);
-}
+};

@@ -22,6 +22,33 @@ var b2PolygonShape_CreateFixture_4 =
       'number', 'number',
       'number', 'number']);
 
+var b2PolygonShape_CreateFixture_5 =
+  Module.cwrap('b2PolygonShape_CreateFixture_5', 'number',
+    ['number',
+      // Fixture defs
+      'number', 'number', 'number',
+      'number', 'number',
+      // b2Vec2
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number']);
+
+var b2PolygonShape_CreateFixture_6 =
+  Module.cwrap('b2PolygonShape_CreateFixture_6', 'number',
+    ['number',
+      // Fixture defs
+      'number', 'number', 'number',
+      'number', 'number',
+      // b2Vec2
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number']);
+
 // particle group creation wrappers
 var b2PolygonShape_CreateParticleGroup_4 =
   Module.cwrap('b2PolygonShape_CreateParticleGroup_4', 'number',
@@ -41,7 +68,7 @@ var b2PolygonShape_CreateParticleGroup_4 =
       'number', 'number'
     ]);
 
-
+/** @constructor */
 function b2PolygonShape() {
   this.position = new b2Vec2();
   this.vertices = [];
@@ -53,7 +80,7 @@ b2PolygonShape.prototype.SetAsBoxXY = function(hx, hy) {
   this.vertices[1] = new b2Vec2( hx, -hy);
   this.vertices[2] = new b2Vec2( hx,  hy);
   this.vertices[3] = new b2Vec2(-hx,  hy);
-}
+};
 
 b2PolygonShape.prototype.SetAsBoxXYCenterAngle = function(hx, hy, center, angle) {
   this.vertices[0] = new b2Vec2(-hx, -hy);
@@ -68,7 +95,7 @@ b2PolygonShape.prototype.SetAsBoxXYCenterAngle = function(hx, hy, center, angle)
   for (var i = 0; i < 4; i++) {
     b2Vec2.Mul(this.vertices[i], xf, this.vertices[i]);
   }
-}
+};
 
 b2PolygonShape.prototype._CreateFixture = function(body, fixtureDef) {
   var vertices = this.vertices;
@@ -105,8 +132,48 @@ b2PolygonShape.prototype._CreateFixture = function(body, fixtureDef) {
         v2.x, v2.y,
         v3.x, v3.y);
       break;
+    case 5:
+      var v0 = vertices[0];
+      var v1 = vertices[1];
+      var v2 = vertices[2];
+      var v3 = vertices[3];
+      var v4 = vertices[4];
+      return b2PolygonShape_CreateFixture_5(body.ptr,
+        // fixture Def
+        fixtureDef.density, fixtureDef.friction, fixtureDef.isSensor,
+        fixtureDef.restitution, fixtureDef.userData,
+        // filter def
+        fixtureDef.filter.categoryBits, fixtureDef.filter.groupIndex, fixtureDef.filter.maskBits,
+        // points
+        v0.x, v0.y,
+        v1.x, v1.y,
+        v2.x, v2.y,
+        v3.x, v3.y,
+        v4.x, v4.y);
+      break;
+    case 6:
+      var v0 = vertices[0];
+      var v1 = vertices[1];
+      var v2 = vertices[2];
+      var v3 = vertices[3];
+      var v4 = vertices[4];
+      var v5 = vertices[5];
+      return b2PolygonShape_CreateFixture_6(body.ptr,
+        // fixture Def
+        fixtureDef.density, fixtureDef.friction, fixtureDef.isSensor,
+        fixtureDef.restitution, fixtureDef.userData,
+        // filter def
+        fixtureDef.filter.categoryBits, fixtureDef.filter.groupIndex, fixtureDef.filter.maskBits,
+        // points
+        v0.x, v0.y,
+        v1.x, v1.y,
+        v2.x, v2.y,
+        v3.x, v3.y,
+        v4.x, v4.y,
+        v5.x, v5.y);
+      break;
   }
-}
+};
 
 b2PolygonShape.prototype._CreateParticleGroup = function(particleSystem, pgd) {
   var v = this.vertices;
@@ -132,4 +199,4 @@ b2PolygonShape.prototype._CreateParticleGroup = function(particleSystem, pgd) {
       return pg;
       break;
   }
-}
+};

@@ -1,7 +1,32 @@
+var b2RevoluteJoint_SetMotorSpeed =
+  Module.cwrap('b2RevoluteJoint_SetMotorSpeed', 'number',
+    ['number', 'number']);
+
+/** @constructor */
+function b2RevoluteJoint(revoluteJointDef) {
+  this.collideConnected = revoluteJointDef.collideConnected;
+  this.enableLimit = revoluteJointDef.enableLimit;
+  this.enableMotor = revoluteJointDef.enableMotor;
+  this.lowerAngle = revoluteJointDef.lowerAngle;
+  this.maxMotorTorque = revoluteJointDef.maxMotorTorque;
+  this.motorSpeed = revoluteJointDef.motorSpeed;
+  this.next = null;
+  this.ptr = null;
+  this.upperAngle = revoluteJointDef.upperAngle;
+  this.userData = revoluteJointDef.userData;
+
+}
+
+b2RevoluteJoint.prototype.SetMotorSpeed = function(speed) {
+  b2RevoluteJoint_SetMotorSpeed(this.ptr, speed);
+  this.motorSpeed = speed;
+};
+
+
 var b2RevoluteJointDef_Create =
-  Module.cwrap('b2RevoluteJointDef_Create', 'number'
+  Module.cwrap('b2RevoluteJointDef_Create', 'number',
     ['number',
-     //joint def
+    //joint def
     'number', 'number', 'number',
     // revolute joint def
     'number', 'number', 'number',
@@ -20,10 +45,7 @@ var b2RevoluteJointDef_InitializeAndCreate =
      'number', 'number', 'number',
      'number']);
 
-var b2RevoluteJoint_SetMotorSpeed =
-  Module.cwrap('b2RevoluteJoint_SetMotorSpeed', 'number',
-    ['number', 'number']);
-
+/** @constructor */
 function b2RevoluteJointDef() {
   this.collideConnected = false;
   this.enableLimit = false;
@@ -39,7 +61,7 @@ function b2RevoluteJointDef() {
 }
 
 b2RevoluteJointDef.prototype.Create = function(world) {
-  var revoluteJoint = new b2RevoluteJoint(this)
+  var revoluteJoint = new b2RevoluteJoint(this);
   revoluteJoint.ptr = b2RevoluteJointDef_Create(
     world.ptr,
     // joint def
@@ -50,7 +72,7 @@ b2RevoluteJointDef.prototype.Create = function(world) {
     this.localAnchorB.y, this.maxMotorTorque, this.motorSpeed,
     this.referenceAngle, this.upperAngle);
   return revoluteJoint;
-}
+};
 
 // todo Initialize and create probably shouldnt use the global world ptr
 b2RevoluteJointDef.prototype.InitializeAndCreate = function(bodyA, bodyB, anchor) {
@@ -67,28 +89,6 @@ b2RevoluteJointDef.prototype.InitializeAndCreate = function(bodyA, bodyB, anchor
       // revloute joint def
       this.enableLimit, this.enableMotor, this.lowerAngle,
       this.maxMotorTorque, this.motorSpeed, this.upperAngle);
-  world._Push(revoluteJoint, world.joints);
+  b2World._Push(revoluteJoint, world.joints);
   return revoluteJoint;
-}
-
-function b2RevoluteJoint(revoluteJointDef) {
-  this.bodyA = this.bodyA;
-  this.bodyB = this.bodyB;
-  this.collideConnected = revoluteJointDef.collideConnected;
-  this.enableLimit = revoluteJointDef.enableLimit;
-  this.enableMotor = revoluteJointDef.enableMotor;
-  this.lowerAngle = revoluteJointDef.lowerAngle;
-  this.maxMotorTorque = revoluteJointDef.maxMotorTorque;
-  this.motorSpeed = revoluteJointDef.motorSpeed;
-  this.next = null;
-  this.ptr = null;
-  this.upperAngle = revoluteJointDef.upperAngle;
-  this.userData = revoluteJointDef.userData;
-
-}
-
-b2RevoluteJoint.prototype.SetMotorSpeed = function(speed) {
-  b2RevoluteJoint_SetMotorSpeed(this.ptr, speed);
-  this.motorSpeed = speed;
-}
-
+};

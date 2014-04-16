@@ -66,7 +66,7 @@ b2PulleyJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, groundA
     groundAnchorB.y, ratio,
     // joint def
     this.collideConnected);
-  world.joints.push(pulleyJoint);
+  b2World._Push(pulleyJoint, world.joints);
   return pulleyJoint;
 }
 

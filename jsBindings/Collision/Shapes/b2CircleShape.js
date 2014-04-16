@@ -23,6 +23,7 @@ var b2CircleShape_CreateParticleGroup =
       'number', 'number', 'number'
     ]);
 
+/**@constructor*/
 function b2CircleShape() {
   this.position = new b2Vec2();
   this.radius = 0;

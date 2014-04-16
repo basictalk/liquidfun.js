@@ -59,7 +59,7 @@ function TestApplyForce() {
   var xf2 = new b2Transform();
   xf2.q.Set(-0.3524 * Math.PI);
   xf2.p = xf2.q.GetXAxis();
-  b2Vec2.MulScalar(xf2.p, -1);
+  b2Vec2.MulScalar(xf2.p, xf2.p, -1);
 
   var poly2 = new b2PolygonShape();
   out = new b2Vec2();

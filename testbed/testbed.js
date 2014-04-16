@@ -1,12 +1,12 @@
 // shouldnt be a global :(
-var world;
+var world = null;
 var renderer;
 var camera;
 var scene;
 var objects = [];
 var timeStep = 1.0 / 60.0;
-var velocityIterations = 2;
-var positionIterations = 2;
+var velocityIterations = 8;
+var positionIterations = 3;
 var test = null;
 
 function InitTestbed() {
@@ -24,13 +24,19 @@ function InitTestbed() {
   camera.lookAt(scene.position);
   document.body.appendChild( this.renderer.domElement);
 
-  // Init world
-  var gravity = new b2Vec2(0, -20);
-  world = new b2World(gravity);
+
+  // hack
+  Testbed();
 }
 
-function Testbed(inTest) {
-  test = inTest;
+function Testbed(obj) {
+  // Init world
+  ResetWorld();
+  var gravity = new b2Vec2(0, -10);
+  world = new b2World(gravity);
+
+  //test = new obj;
+  test = new TestMobile();
   // Init test
   //test = new TestAddPair();
   //test = new TestAntiPointy();
@@ -77,24 +83,30 @@ var render = function() {
   requestAnimationFrame(render);
 }
 
-var resetWorld = function() {
-  while (world.joints.length > 0) {
-    world.DestroyJoint(world.joints[0]);
+var ResetWorld = function() {
+  if (world !== null) {
+    while (world.joints.length > 0) {
+      world.DestroyJoint(world.joints[0]);
+    }
+
+    while (world.bodies.length > 0) {
+      world.DestroyBody(world.bodies[0]);
+    }
+
+    while (world.particleSystems.length > 0) {
+      world.DestroyParticleSystem(world.particleSystems[0]);
+    }
   }
 
-  while (world.bodies.length > 0) {
-    world.DestroyBody(world.bodies[0]);
-  }
-
-  while (world.particleSystems.length > 0) {
-    world.DestroyParticleSystem(world.particleSystems[0]);
-  }
   // clear three.js
   var obj, i;
   for ( i = scene.children.length - 1; i >= 0 ; i -- ) {
     obj = scene.children[i];
     scene.remove(obj);
   }
+  delete test;
+  camera.position.z = 100;
+  delete world;
 }
 
 var Step = function() {

@@ -40,7 +40,7 @@ b2MotorJointDef.prototype.Create = function(world) {
     this.angularOffset, this.correctionFactor, this.linearOffset.x,
     this.linearOffset.y, this.maxForce, this.maxTorque);
   return motorJoint;
-}
+};
 
 b2MotorJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB) {
   this.bodyA = bodyA;
@@ -54,9 +54,9 @@ b2MotorJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB) {
     this.collideConnected,
     //motor joint def
     this.correctionFactor, this.maxForce, this.maxTorque);
-  world.joints.push(motorJoint);
+  b2World._Push(motorJoint, world.joints);
   return motorJoint;
-}
+};
 
 function b2MotorJoint(def) {
   this.bodyA = def.bodyA;

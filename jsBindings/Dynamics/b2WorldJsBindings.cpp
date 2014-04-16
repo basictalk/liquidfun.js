@@ -3,21 +3,33 @@
 #include <emscripten.h>
 
 extern "C" {
-  extern void b2WorldBeginContact(void* a, void* b);
-  extern void b2WorldEndContact(void* a, void* b);
+  extern void b2WorldBeginContactBody(void* contactPtr);
+  extern void b2WorldEndContactBody(void* contactPtr);
+  extern void b2WorldPreSolve(void* contactPtr, void* oldManifoldPtr);
+  extern void b2WorldPostSolve(void* contactPtr, void* impulsePtr);
 }
 
 // internal classes
+// TODO it might be inefficient to call out of asm.js for each contact
+// consider short circuiting unused callbacks in this layer, or maybe
+// function ptrs.  we could also pass this data in an unfolded
+// struct but this might also be inefficient
 class b2WorldContactListener : public b2ContactListener
   {
     void BeginContact(b2Contact* contact) {
-      b2WorldBeginContact((void*)contact->GetFixtureA(),
-                          (void*)contact->GetFixtureB());
+      b2WorldBeginContactBody(contact);
     }
 
     void EndContact(b2Contact* contact) {
-      b2WorldEndContact((void*)contact->GetFixtureA(),
-                        (void*)contact->GetFixtureB());
+      b2WorldEndContactBody(contact);
+    }
+
+    void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) {
+      b2WorldPreSolve(contact, const_cast<b2Manifold*>(oldManifold));
+    }
+
+    void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) {
+      b2WorldPostSolve(contact, const_cast<b2ContactImpulse*>(impulse));
     }
   };
 
@@ -78,15 +90,6 @@ void* b2World_CreateParticleSystem(
   def.surfaceTensionNormalStrength = surfaceTensionNormalStrength;
   def.surfaceTensionPressureStrength = surfaceTensionPressureStrength;
   def.viscousStrength = viscousStrength;
-
-  /*printf("%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",
-         colorMixingStrength, dampingStrength,destroyByAge,ejectionStrength,elasticStrength,
-         lifetimeGranularity, powderStrength,pressureStrength,radius,
-          repulsiveStrength, springStrength,staticPressureIterations, staticPressureRelaxation,
-          staticPressureStrength, surfaceTensionNormalStrength,
-          surfaceTensionPressureStrength, viscousStrength);*/
-
-
 
   return ((b2World*)world)->CreateParticleSystem(&def);
 }

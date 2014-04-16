@@ -48,6 +48,7 @@ var b2ParticleSystem_SetDensity =
 var b2ParticleSystem_SetRadius =
   Module.cwrap('b2ParticleSystem_SetRadius', 'null', ['number', 'number']);
 
+/** @constructor */
 function b2ParticleSystem(ptr) {
   this.dampingStrength = 1.0;
   // is this a sane default for density?
