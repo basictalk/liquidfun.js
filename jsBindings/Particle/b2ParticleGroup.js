@@ -12,6 +12,7 @@ var b2_particleGroupInternalMask =
     b2_particleGroupWillBeDestroyed |
     b2_particleGroupNeedsUpdateDepth;
 
+/**@constructor*/
 function b2ParticleGroupDef() {
   this.angle = 0;
   this.angularVelocity = 0;

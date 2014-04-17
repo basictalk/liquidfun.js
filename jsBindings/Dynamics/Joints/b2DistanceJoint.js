@@ -11,7 +11,7 @@ var b2DistanceJointDef_Create = Module.cwrap("b2DistanceJointDef_Create",
   ['number',
     // joint Def
     'number', 'number', 'number',
-    // friction joint def
+    // distance joint def
     'number', 'number', 'number',
     'number', 'number', 'number',
     'number']);
@@ -22,7 +22,7 @@ var b2DistanceJointDef_InitializeAndCreate = Module.cwrap("b2DistanceJointDef_In
     // initialize args
     'number', 'number', 'number',
     'number', 'number', 'number',
-    // friction joint def
+    // distance joint def
     'number', 'number', 'number']);
 
 /**@constructor*/

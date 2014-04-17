@@ -7,7 +7,7 @@ b2World.BeginContactBody = function(contactPtr) {
   console.log(world.fixturesLookup[fixA].detail);
   console.log(world.fixturesLookup[fixB].detail);
   this.listener.BeginContact(fixLook[fixA], fixLook[fixB]);*/
-}
+};
 
 b2World.EndContactBody = function(contactPtr) {
   if (world.listener.EndContactBody === undefined) {
@@ -17,14 +17,14 @@ b2World.EndContactBody = function(contactPtr) {
   console.log(world.fixturesLookup[fixA].detail);
   console.log(world.fixturesLookup[fixB].detail);
   this.listener.EndContact(fixLook[fixA], fixLook[fixB]);*/
-}
+};
 
 b2World.PreSolve = function(contactPtr, oldManifoldPtr) {
   if (world.listener.PreSolve === undefined) {
     return;
   }
   this.listener.PreSolve(new b2Contact(contactPtr), new b2Manifold(oldManifoldPtr));
-}
+};
 
 b2World.PostSolve = function(contactPtr, impulsePtr) {
   if (world.listener.PostSolve === undefined) {
@@ -32,7 +32,11 @@ b2World.PostSolve = function(contactPtr, impulsePtr) {
   }
   world.listener.PostSolve(new b2Contact(contactPtr),
     new b2ContactImpulse(impulsePtr));
-}
+};
+
+b2World.QueryAABB = function(fixturePtr) {
+  world.queryAABBCallback.ReportFixture(world.fixturesLookup[fixturePtr]);
+};
 
 // Emscripten exports
 var b2World_Create = Module.cwrap('b2World_Create', 'number', ['number', 'number']);
@@ -63,6 +67,10 @@ var b2World_DestroyJoint =
 var b2World_DestroyParticleSystem =
   Module.cwrap('b2World_DestroyParticleSystem', 'null', ['number', 'number']);
 
+var b2World_QueryAABB =
+  Module.cwrap('b2World_QueryAABB', 'null',
+    ['number', 'number', 'number' ,'number' ,'number']);
+
 var b2World_SetContactListener = Module.cwrap('b2World_SetContactListener', 'null', ['number']);
 var b2World_SetGravity = Module.cwrap('b2World_SetGravity', 'null', 
   ['number', 'number', 'number']);
@@ -78,9 +86,11 @@ function b2World(gravity) {
   this.bodiesLookup = {};
   this.fixturesLookup = {};
   this.joints = [];
+  this.listener = null;
   this.particleSystems = [];
   this.ptr = b2World_Create(gravity.x, gravity.y);
-  this.listener = null;
+  this.queryCallback = null;
+
 
   // preallocate some buffers to prevent having to constantly reuse
   var nDataBytes = 4 * Float32Array.BYTES_PER_ELEMENT;
@@ -155,6 +165,12 @@ b2World.prototype.DestroyJoint = function(joint) {
 b2World.prototype.DestroyParticleSystem = function(particleSystem) {
   b2World_DestroyParticleSystem(this.ptr, particleSystem.ptr);
   b2World._RemoveItem(particleSystem, this.particleSystems);
+};
+
+b2World.prototype.QueryAABB = function(callback, aabb) {
+  this.queryAABBCallback = callback;
+  b2World_QueryAABB(this.ptr, aabb.lowerBound.x, aabb.lowerBound.y,
+    aabb.upperBound.x, aabb.upperBound.y);
 };
 
 b2World.prototype.SetContactListener = function(listener) {

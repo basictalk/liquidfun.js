@@ -1,4 +1,5 @@
 #include <Box2D/Box2D.h>
+#include <stdio.h>
 // b2Body functions
 void b2Body_ApplyAngularImpulse(void* body, double impulse, double wake) {
   ((b2Body*)body)->ApplyAngularImpulse(impulse, wake);
@@ -73,6 +74,10 @@ void b2Body_GetWorldVector(void* body, double vX, double vY, float* arr) {
   b2Vec2 worldVec = ((b2Body*)body)->GetWorldPoint(b2Vec2(vX, vY));
   arr[0] = worldVec.x;
   arr[1] = worldVec.y;
+}
+
+void b2Body_SetAwake(void* body, double flag) {
+  ((b2Body*)body)->SetAwake((bool)flag);
 }
 
 void b2Body_SetAngularVelocity(void* body, double angle) {

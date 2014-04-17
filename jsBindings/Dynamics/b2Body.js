@@ -1,26 +1,3 @@
-// General body globals
-var b2_staticBody = 0;
-var b2_kinematicBody = 1;
-var b2_dynamicBody = 2;
-
-/** @constructor */
-function b2BodyDef() {
-  this.active = true;
-  this.allowSleep = true;
-  this.angle = 0;
-  this.angularVelocity = 0;
-  this.angularDamping = 0;
-  this.awake = true;
-  this.bullet = false;
-  this.fixedRotation = false;
-  this.gravityScale = 1.0;
-  this.linearDamping = 0;
-  this.linearVelocity = new b2Vec2();
-  this.position = new b2Vec2();
-  this.type = b2_staticBody;
-  this.userData = null;
-}
-
 // b2Body Globals
 var b2Body_ApplyAngularImpulse = Module.cwrap('b2Body_ApplyAngularImpulse', 'null',
   ['number', 'number', 'number']);
@@ -49,6 +26,8 @@ var b2Body_GetWorldVector = Module.cwrap('b2Body_GetWorldVector', 'null',
   ['number', 'number', 'number', 'number']);
 var b2Body_SetAngularVelocity = Module.cwrap('b2Body_SetAngularVelocity', 'null',
   ['number', 'number']);
+var b2Body_SetAwake =
+  Module.cwrap('b2Body_SetAwake', 'number',['number', 'number']);
 var b2Body_SetLinearVelocity = Module.cwrap('b2Body_SetLinearVelocity', 'null',
   ['number', 'number', 'number']);
 var b2Body_SetTransform =
@@ -127,7 +106,7 @@ b2Body.prototype.GetPosition = function() {
 b2Body.prototype.GetTransform = function() {
   b2Body_GetTransform(this.ptr, _transBuf.byteOffset);
   var result = new Float32Array(_transBuf.buffer, _transBuf.byteOffset, _transBuf.length);
-  var transform = new b2Transform(); 
+  var transform = new b2Transform();
   transform.FromFloat64Array(result);
   return transform;
 };
@@ -158,6 +137,10 @@ b2Body.prototype.SetAngularVelocity = function(angle) {
   b2Body_SetAngularVelocity(this.ptr, angle);
 };
 
+b2Body.prototype.SetAwake = function(flag) {
+  b2Body_SetAwake(this.ptr, flag);
+};
+
 b2Body.prototype.SetLinearVelocity = function(v) {
   b2Body_SetLinearVelocity(this.ptr, v.x, v.y);
 };
@@ -169,3 +152,27 @@ b2Body.prototype.SetTransform = function(v, angle) {
 b2Body.prototype.SetType = function(type) {
   b2Body_SetType(this.ptr, type);
 };
+
+// General body globals
+var b2_staticBody = 0;
+var b2_kinematicBody = 1;
+var b2_dynamicBody = 2;
+
+/** @constructor */
+function b2BodyDef() {
+  this.active = true;
+  this.allowSleep = true;
+  this.angle = 0;
+  this.angularVelocity = 0;
+  this.angularDamping = 0;
+  this.awake = true;
+  this.bullet = false;
+  this.fixedRotation = false;
+  this.gravityScale = 1.0;
+  this.linearDamping = 0;
+  this.linearVelocity = new b2Vec2();
+  this.position = new b2Vec2();
+  this.type = b2_staticBody;
+  this.userData = null;
+}
+

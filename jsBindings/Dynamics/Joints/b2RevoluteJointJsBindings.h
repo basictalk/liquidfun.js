@@ -2,6 +2,12 @@
 #define B2REVOLUTEJOINTJSBINDINGS_H
 
 extern "C" {
+void b2RevoluteJoint_EnableLimit(void* joint, double flag);
+void b2RevoluteJoint_EnableMotor(void* joint, double flag);
+double b2RevoluteJoint_IsLimitEnabled(void* joint);
+double b2RevoluteJoint_IsMotorEnabled(void* joint);
+void b2RevoluteJoint_SetMotorSpeed(void* joint, double speed);
+
 void* b2RevoluteJointDef_Create(
     void* world,
     //Joint def
@@ -21,7 +27,7 @@ void* b2RevoluteJointDef_InitializeAndCreate(
     double enableMotor, double lowerAngle, double maxMotorTorque,
     double motorSpeed, double upperAngle);
 
-void b2RevoluteJoint_SetMotorSpeed(void* joint, double speed);
+
 }
 
 #endif

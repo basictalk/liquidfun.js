@@ -7,6 +7,7 @@ extern "C" {
   extern void b2WorldEndContactBody(void* contactPtr);
   extern void b2WorldPreSolve(void* contactPtr, void* oldManifoldPtr);
   extern void b2WorldPostSolve(void* contactPtr, void* impulsePtr);
+  extern bool b2WorldQueryAABB(void* fixturePtr);
 }
 
 // internal classes
@@ -35,6 +36,15 @@ class b2WorldContactListener : public b2ContactListener
 
 b2WorldContactListener listener;
 
+class QueryAABBCallback : public b2QueryCallback
+{
+public:
+  bool ReportFixture(b2Fixture* fixture) {
+    return b2WorldQueryAABB((void*)fixture);
+  }
+};
+
+QueryAABBCallback queryAABBCallback;
 // b2World Exports
 void* b2World_Create(double x, double y) {
   return new b2World(b2Vec2(x, y));
@@ -110,6 +120,14 @@ void b2World_DestroyParticleSystem(void* world, void* particleSystem) {
   ((b2World*)world)->DestroyParticleSystem((b2ParticleSystem*)particleSystem);
 }
 
+void b2World_QueryAABB(void* world, double aabbLowerBoundX, double aabbLowerBoundY,
+                       double aabbUpperBoundX, double aabbUpperBoundY) {
+  b2AABB aabb;
+  aabb.lowerBound = b2Vec2(aabbLowerBoundX, aabbLowerBoundY);
+  aabb.upperBound = b2Vec2(aabbUpperBoundX, aabbUpperBoundY);
+  ((b2World*)world)->QueryAABB(&queryAABBCallback, aabb);
+}
+
 void b2World_SetContactListener(void* world) {
   ((b2World*)world)->SetContactListener(&listener);
 }
@@ -119,6 +137,5 @@ void b2World_SetGravity(void* world, double x, double y) {
 }
 
 void b2World_Step(void* world, float step, float vIterations, float pIterations) {
-
   ((b2World*)world)->Step(step, (int32)vIterations, (int32)pIterations, 3);
 }

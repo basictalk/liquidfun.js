@@ -1,3 +1,19 @@
+var b2RevoluteJoint_EnableLimit =
+  Module.cwrap('b2RevoluteJoint_EnableLimit', 'number',
+    ['number', 'number']);
+
+var b2RevoluteJoint_EnableMotor =
+  Module.cwrap('b2RevoluteJoint_EnableMotor', 'number',
+    ['number', 'number']);
+
+var b2RevoluteJoint_IsLimitEnabled =
+  Module.cwrap('b2RevoluteJoint_IsLimitEnabled', 'number',
+    ['number']);
+
+var b2RevoluteJoint_IsMotorEnabled =
+  Module.cwrap('b2RevoluteJoint_IsMotorEnabled', 'number',
+    ['number']);
+
 var b2RevoluteJoint_SetMotorSpeed =
   Module.cwrap('b2RevoluteJoint_SetMotorSpeed', 'number',
     ['number', 'number']);
@@ -14,8 +30,23 @@ function b2RevoluteJoint(revoluteJointDef) {
   this.ptr = null;
   this.upperAngle = revoluteJointDef.upperAngle;
   this.userData = revoluteJointDef.userData;
-
 }
+
+b2RevoluteJoint.prototype.EnableLimit = function(flag) {
+  b2RevoluteJoint_EnableLimit(this.ptr, flag);
+};
+
+b2RevoluteJoint.prototype.EnableMotor = function(flag) {
+  b2RevoluteJoint_EnableMotor(this.ptr, flag);
+};
+
+b2RevoluteJoint.prototype.IsLimitEnabled = function() {
+  return b2RevoluteJoint_IsLimitEnabled(this.ptr);
+};
+
+b2RevoluteJoint.prototype.IsMotorEnabled = function() {
+  return b2RevoluteJoint_IsMotorEnabled(this.ptr);
+};
 
 b2RevoluteJoint.prototype.SetMotorSpeed = function(speed) {
   b2RevoluteJoint_SetMotorSpeed(this.ptr, speed);

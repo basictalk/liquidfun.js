@@ -1,4 +1,18 @@
 #include <Box2D/Box2D.h>
+#include <stdio.h>
+
+void b2RevoluteJoint_EnableLimit(void* joint, double flag) {
+  ((b2RevoluteJoint*)joint)->EnableLimit(flag);
+}
+void b2RevoluteJoint_EnableMotor(void* joint, double flag) {
+  ((b2RevoluteJoint*)joint)->EnableMotor(flag);
+}
+double b2RevoluteJoint_IsLimitEnabled(void* joint) {
+  return ((b2RevoluteJoint*)joint)->IsLimitEnabled();
+}
+double b2RevoluteJoint_IsMotorEnabled(void* joint) {
+  return ((b2RevoluteJoint*)joint)->IsMotorEnabled();
+}
 
 void* b2RevoluteJointDef_Create(
     void* world,

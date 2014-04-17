@@ -62,14 +62,13 @@ b2ChainShape.prototype.drawInit = function(fixture, transform) {
     vertices = this.vertices;
 
   var v1 = vertices[0];
+  b2Vec2.Mul(transformedV, transform, v1);
+  geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y, 0));
   for (var i = 1, max = vertices.length; i < max; i++) {
-    b2Vec2.Mul(transformedV, transform, v1);
-    geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y, 0));
-
     var v2 = vertices[i];
     b2Vec2.Mul(transformedV, transform, v2);
     geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y, 0));
-    v1 = v1;
+    v1 = v2;
   }
 
   var line = new THREE.Line(geometry, material);
@@ -151,8 +150,7 @@ b2CircleShape.prototype.draw = function(fixture, transform) {
     circlePosition = this.position,
     center = new b2Vec2(circlePosition.x, circlePosition.y);
 
-  // this is a hack :(
-  line.rotation.z = Math.acos(transform.q.c);
+  line.rotation.z = fixture.body.GetAngle();
   b2Vec2.Mul(center, transform, center);
   line.position.x = center.x;
   line.position.y = center.y;

@@ -1,3 +1,4 @@
+/**@constructor*/
 function b2ParticleSystemDef() {
   // Initialize physical coefficients to the maximum values that
   // maintain numerical stability.
@@ -67,38 +68,38 @@ b2ParticleSystem.prototype.CreateParticle = function(pd) {
     pd.color.a, pd.flags, pd.group,
     pd.lifetime, pd.position.x, pd.position.y,
     pd.userData, pd.velocity.x, pd.velocity.y);
-}
+};
 
 b2ParticleSystem.prototype.CreateParticleGroup = function(pgd) {
   var particleGroup = new b2ParticleGroup();
   particleGroup.ptr = pgd.shape._CreateParticleGroup(this, pgd);
   this.particleGroups.push(particleGroup);
-}
+};
 
 b2ParticleSystem.prototype.GetColorBuffer = function() {
   var count = b2ParticleSystem_GetParticleCount(this.ptr) * 4;
   var offset = b2ParticleSystem_GetColorBuffer(this.ptr);
   var colors = new Uint8Array(Module.HEAPU8.buffer, offset, count);
   return colors;
-}
+};
 
 b2ParticleSystem.prototype.GetPositionBuffer = function() {
   var count = b2ParticleSystem_GetParticleCount(this.ptr) * 2;
   var offset = b2ParticleSystem_GetPositionBuffer(this.ptr);
   return new Float32Array(Module.HEAPU8.buffer, offset, count);
-}
+};
 
 b2ParticleSystem.prototype.SetDamping = function(damping) {
   this.dampingStrength = damping;
   b2ParticleSystem_SetDamping(this.ptr, damping);
-}
+};
 
 b2ParticleSystem.prototype.SetDensity = function(density) {
   this.density = density;
   b2ParticleSystem_SetDensity(this.ptr, density);
-}
+};
 
 b2ParticleSystem.prototype.SetRadius = function(radius) {
   this.radius = radius;
   b2ParticleSystem_SetRadius(this.ptr, radius);
-}
+};

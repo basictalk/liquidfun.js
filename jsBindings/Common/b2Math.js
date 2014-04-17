@@ -10,11 +10,6 @@ function b2Vec2(x, y) {
   this.y = y;
 }
 
-b2Vec2.prototype.Set = function(x, y) {
-  this.x = x;
-  this.y = y;
-};
-
 // static functions on b2Vec2
 b2Vec2.Add = function(out, a, b) {
   out.x = a.x + b.x;
@@ -35,7 +30,7 @@ b2Vec2.Mul = function(out, T, v) {
   var Tp = T.p;
   var Tqc = T.q.c;
   var Tqs = T.q.s;
-  
+
   var x = v.x;
   var y = v.y;
 
@@ -47,6 +42,19 @@ b2Vec2.Sub = function(out, input, subtract) {
   out.x = input.x - subtract.x;
   out.y = input.y - subtract.y;
 };
+
+b2Vec2.prototype.Set = function(x, y) {
+  this.x = x;
+  this.y = y;
+};
+
+b2Vec2.prototype.Length = function() {
+  var x = this.x;
+  var y = this.y;
+  return Math.sqrt(x * x + y * y);
+};
+
+
 
 /** @constructor */
 function b2Rot(radians) {

@@ -14,6 +14,7 @@ void* b2DistanceJointDef_Create(
 
   def.dampingRatio = dampingRatio;
   def.frequencyHz = frequencyHz;
+  def.length = length;
   def.localAnchorA = b2Vec2(localAnchorAx, localAnchorAy);
   def.localAnchorB = b2Vec2(localAnchorBx, localAnchorBy);
 

@@ -8,6 +8,7 @@ var timeStep = 1.0 / 60.0;
 var velocityIterations = 8;
 var positionIterations = 3;
 var test = null;
+var projector = new THREE.Projector();
 
 function InitTestbed() {
   scene = new THREE.Scene();
@@ -24,6 +25,7 @@ function InitTestbed() {
   camera.lookAt(scene.position);
   document.body.appendChild( this.renderer.domElement);
 
+  this.mouseJoint = null;
 
   // hack
   Testbed();
@@ -35,8 +37,12 @@ function Testbed(obj) {
   var gravity = new b2Vec2(0, -10);
   world = new b2World(gravity);
 
+  // setup ground body
+  var bd = new b2BodyDef;
+  this.groundBody = world.CreateBody(bd);
+
   //test = new obj;
-  test = new TestMobile();
+  test = new TestCollisionFiltering();
   // Init test
   //test = new TestAddPair();
   //test = new TestAntiPointy();
@@ -60,11 +66,73 @@ function Testbed(obj) {
   //test = new TestWaveMachine();
   
   //Init
+  var that = this;
   document.addEventListener('keypress', function(event) {
     if (test.Keyboard !== undefined) {
       test.Keyboard(String.fromCharCode(event.which) );
     }
   });
+
+  document.addEventListener('mousedown', function(event) {
+    var mouse = new THREE.Vector3();
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouse.z = 0.5;
+
+    projector.unprojectVector(mouse, camera);
+    var dir = mouse.sub(camera.position).normalize();
+    var distance = -camera.position.z / dir.z;
+    var pos = camera.position.clone().add(dir.multiplyScalar(distance));
+
+    var p = new b2Vec2(pos.x, pos.y);
+
+    var aabb = new b2AABB;
+    var d = new b2Vec2;
+
+    d.Set(0.001, 0.001);
+    b2Vec2.Sub(aabb.lowerBound, p, d);
+    b2Vec2.Add(aabb.upperBound, p, d);
+
+    var queryCallback = new QueryCallback(p);
+    world.QueryAABB(queryCallback, aabb);
+
+    if (queryCallback.fixture) {
+      var body = queryCallback.fixture.body;
+      var md = new b2MouseJointDef;
+      md.bodyA = that.groundBody;
+      md.bodyB = body;
+      md.target = p;
+      md.maxForce = 1000 * body.GetMass();
+      that.mouseJoint = world.CreateJoint(md);
+      body.SetAwake(true);
+    }
+  });
+
+  document.addEventListener('mousemove', function(event) {
+    var mouse = new THREE.Vector3();
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouse.z = 0.5;
+
+    projector.unprojectVector(mouse, camera);
+    var dir = mouse.sub(camera.position).normalize();
+    var distance = -camera.position.z / dir.z;
+    var pos = camera.position.clone().add(dir.multiplyScalar(distance));
+
+    var p = new b2Vec2(pos.x, pos.y);
+    if (that.mouseJoint) {
+      that.mouseJoint.SetTarget(p);
+    }
+  });
+
+  document.addEventListener('mouseup', function(event) {
+    if (that.mouseJoint) {
+      world.DestroyJoint(that.mouseJoint);
+      that.mouseJoint = null;
+    }
+  });
+
+
   init();
   render();
 }
@@ -81,7 +149,7 @@ var render = function() {
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);
-}
+};
 
 var ResetWorld = function() {
   if (world !== null) {
@@ -104,11 +172,28 @@ var ResetWorld = function() {
     obj = scene.children[i];
     scene.remove(obj);
   }
-  delete test;
   camera.position.z = 100;
-  delete world;
-}
+};
 
 var Step = function() {
   world.Step(timeStep, velocityIterations, positionIterations);
+};
+
+/**@constructor*/
+function QueryCallback(point) {
+  this.point = point;
+  this.fixture = null;
 }
+
+/**@return bool*/
+QueryCallback.prototype.ReportFixture = function(fixture) {
+  var body = fixture.body;;
+  if (body.GetType() === b2_dynamicBody) {
+    var inside = fixture.TestPoint(this.point);
+    if (inside) {
+      this.fixture = fixture;
+      return true;
+    }
+  }
+  return false;
+};

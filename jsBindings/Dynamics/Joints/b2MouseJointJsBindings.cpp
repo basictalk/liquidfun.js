@@ -1,4 +1,9 @@
 #include <Box2D/Box2D.h>
+#include <stdio.h>
+void b2MouseJoint_SetTarget(void* mouseJoint, double x, double y) {
+  ((b2MouseJoint*)mouseJoint)->SetTarget(b2Vec2(x, y));
+}
+
 void* b2MouseJointDef_Create(
     void* world,
     // joint def

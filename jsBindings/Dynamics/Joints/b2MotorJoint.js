@@ -1,3 +1,26 @@
+var b2MotorJoint_SetAngularOffset =
+  Module.cwrap('b2MotorJoint_SetAngularOffset', 'null', ['number', 'number']);
+
+var b2MotorJoint_SetLinearOffset =
+  Module.cwrap('b2MotorJoint_SetLinearOffset', 'null',
+    ['number', 'number', 'number']);
+
+/**@constructor*/
+function b2MotorJoint(def) {
+  this.bodyA = def.bodyA;
+  this.bodyB = def.bodyB;
+  this.ptr = null;
+  this.next = null;
+}
+
+b2MotorJoint.prototype.SetAngularOffset = function(angle) {
+  b2MotorJoint_SetAngularOffset(this.ptr, angle);
+};
+
+b2MotorJoint.prototype.SetLinearOffset = function(v) {
+  b2MotorJoint_SetLinearOffset(this.ptr, v.x, v.y);
+};
+
 var b2MotorJointDef_Create = Module.cwrap("b2MotorJointDef_Create",
   'number',
   ['number',
@@ -16,6 +39,7 @@ var b2MotorJointDef_InitializeAndCreate = Module.cwrap("b2MotorJointDef_Initiali
     // motor joint def
     'number', 'number', 'number']);
 
+/**@constructor*/
 function b2MotorJointDef() {
   // joint def
   this.bodyA = null;
@@ -57,10 +81,3 @@ b2MotorJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB) {
   b2World._Push(motorJoint, world.joints);
   return motorJoint;
 };
-
-function b2MotorJoint(def) {
-  this.bodyA = def.bodyA;
-  this.bodyB = def.bodyB;
-  this.ptr = null;
-  this.next = null;
-}

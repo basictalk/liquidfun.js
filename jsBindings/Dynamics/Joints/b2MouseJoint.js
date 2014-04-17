@@ -1,3 +1,17 @@
+var b2MouseJoint_SetTarget =
+  Module.cwrap('b2MouseJoint_SetTarget', 'null',
+    ['number', 'number', 'number']);
+
+/**@constructor*/
+function b2MouseJoint(def) {
+  this.ptr = null;
+  this.next = null;
+}
+
+b2MouseJoint.prototype.SetTarget = function(p) {
+  b2MouseJoint_SetTarget(this.ptr, p.x, p.y);
+};
+
 var b2MouseJointDef_Create = Module.cwrap("b2MouseJointDef_Create",
   'number',
   ['number',
@@ -7,6 +21,7 @@ var b2MouseJointDef_Create = Module.cwrap("b2MouseJointDef_Create",
     'number', 'number', 'number',
     'number', 'number']);
 
+/**@constructor*/
 function b2MouseJointDef() {
   // joint def
   this.bodyA = null;
@@ -14,9 +29,9 @@ function b2MouseJointDef() {
   this.collideConnected = false;
 
   // mouse joint def
-  this.dampingRatio = null;
-  this.frequencyHz = null;
-  this.maxForce = null;
+  this.dampingRatio = 0;
+  this.frequencyHz = 0;
+  this.maxForce = 0;
   this.target = new b2Vec2();
 }
 
@@ -30,9 +45,4 @@ b2MouseJointDef.prototype.Create = function(world) {
     this.dampingRatio, this.frequencyHz, this.maxForce,
     this.target.x, this.target.y);
   return mouseJoint;
-}
-
-function b2MouseJoint(def) {
-  this.ptr = null;
-  this.next = null;
-}
+};

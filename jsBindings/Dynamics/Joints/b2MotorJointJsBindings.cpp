@@ -1,4 +1,13 @@
 #include <Box2D/Box2D.h>
+
+void b2MotorJoint_SetAngularOffset(void* motorJoint, double angle) {
+  ((b2MotorJoint*)motorJoint)->SetAngularOffset(angle);
+}
+
+void b2MotorJoint_SetLinearOffset(void* motorJoint, double x, double y) {
+  ((b2MotorJoint*)motorJoint)->SetLinearOffset(b2Vec2(x, y));
+}
+
 void* b2MotorJointDef_Create(
     void* world,
     // joint def

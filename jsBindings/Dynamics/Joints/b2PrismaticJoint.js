@@ -22,6 +22,7 @@ var b2PrismaticJointDef_InitializeAndCreate = Module.cwrap("b2PrismaticJointDef_
     'number', 'number', 'number',
     'number', 'number', 'number']);
 
+/**@constructor*/
 function b2PrismaticJointDef() {
   // joint def
   this.bodyA = null;
@@ -54,7 +55,7 @@ b2PrismaticJointDef.prototype.Create = function(world) {
     this.maxMotorForce, this.motorSpeed, this.referenceAngle,
     this.upperTranslation);
   return prismaticJoint;
-}
+};
 
 b2PrismaticJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, anchor, axis) {
   this.bodyA = bodyA;
@@ -72,8 +73,9 @@ b2PrismaticJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, anch
     this.maxMotorForce, this.motorSpeed, this.upperTranslation);
   b2World._Push(prismaticJoint, world.joints);
   return prismaticJoint;
-}
+};
 
+/**@constructor*/
 function b2PrismaticJoint(def) {
   this.ptr = null;
   this.next = null;

@@ -78,6 +78,7 @@ B2BODY = \
 	'_b2Body_GetWorldPoint', \
 	'_b2Body_GetWorldVector', \
 	'_b2Body_SetAngularVelocity', \
+	'_b2Body_SetAwake', \
 	'_b2Body_SetLinearVelocity', \
 	'_b2Body_SetTransform', \
 	'_b2Body_SetType'
@@ -109,6 +110,9 @@ B2POLYGONSHAPE = \
 	'_b2PolygonShape_CreateFixture_6', \
 	'_b2PolygonShape_CreateParticleGroup_4'
 
+B2FIXTURE = \
+	'_b2Fixture_TestPoint'
+
 B2FRICTIONJOINT = \
 	'_b2FrictionJointDef_Create', \
 	'_b2FrictionJointDef_InitializeAndCreate' \
@@ -118,11 +122,14 @@ B2GEARJOINT = \
 	'_b2GearJointDef_InitializeAndCreate' \
 	
 B2MOTORJOINT = \
+	'_b2MotorJoint_SetAngularOffset', \
+	'_b2MotorJoint_SetLinearOffset', \
 	'_b2MotorJointDef_Create', \
 	'_b2MotorJointDef_InitializeAndCreate' \
 
 B2MOUSEJOINT = \
-	'_b2MouseJointDef_Create' \
+	'_b2MouseJoint_SetTarget', \
+	'_b2MouseJointDef_Create'
 	
 B2PRISMATICJOINT = \
 	'_b2PrismaticJointDef_Create', \
@@ -133,9 +140,13 @@ B2PULLEYJOINT = \
 	'_b2PulleyJointDef_InitializeAndCreate' \
 
 B2REVOLUTEJOINT = \
+	'_b2RevoluteJoint_EnableLimit', \
+	'_b2RevoluteJoint_EnableMotor', \
+	'_b2RevoluteJoint_IsLimitEnabled', \
+	'_b2RevoluteJoint_IsMotorEnabled', \
+	'_b2RevoluteJoint_SetMotorSpeed', \
 	'_b2RevoluteJointDef_Create', \
-	'_b2RevoluteJointDef_InitializeAndCreate', \
-	'_b2RevoluteJoint_SetMotorSpeed'
+	'_b2RevoluteJointDef_InitializeAndCreate'
 
 B2ROPEJOINT = \
 	'_b2RopeJointDef_Create'
@@ -167,6 +178,7 @@ B2WORLD = \
 	'_b2World_DestroyBody', \
 	'_b2World_DestroyJoint', \
 	'_b2World_DestroyParticleSystem', \
+	'_b2World_QueryAABB', \
 	'_b2World_SetContactListener', \
 	'_b2World_SetGravity', \
 	'_b2World_Step'
@@ -179,6 +191,7 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	$(B2CONTACT), \
 	$(B2EDGESHAPE), \
 	$(B2DISTANCEJOINT), \
+	$(B2FIXTURE), \
 	$(B2FRICTIONJOINT), \
 	$(B2GEARJOINT), \
 	$(B2MOTORJOINT), \

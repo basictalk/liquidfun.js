@@ -5,17 +5,6 @@ function b2Filter() {
   this.maskBits = 0xFFFF;
 }
 
-/**@constructor*/
-function b2FixtureDef() {
-  this.density = 0.0;
-  this.friction = 0.2;
-  this.isSensor = false;
-  this.restitution = 0.0;
-  this.shape = null;
-  this.userData = null;
-  this.filter = new b2Filter();
-}
-
 // fixture globals
 /**@constructor*/
 function b2Fixture() {
@@ -23,6 +12,9 @@ function b2Fixture() {
   this.ptr = null;
   this.shape = null;
 }
+
+var b2Fixture_TestPoint =
+  Module.cwrap('b2Fixture_TestPoint', 'number', ['number', 'number', 'number']);
 
 b2Fixture.prototype.FromFixtureDef = function(fixtureDef) {
   this.density = fixtureDef.density;
@@ -33,3 +25,18 @@ b2Fixture.prototype.FromFixtureDef = function(fixtureDef) {
   this.userData = fixtureDef.userData;
   this.vertices = [];
 };
+
+b2Fixture.prototype.TestPoint = function(p) {
+  return b2Fixture_TestPoint(this.ptr, p.x, p.y);
+};
+
+/**@constructor*/
+function b2FixtureDef() {
+  this.density = 0.0;
+  this.friction = 0.2;
+  this.isSensor = false;
+  this.restitution = 0.0;
+  this.shape = null;
+  this.userData = null;
+  this.filter = new b2Filter();
+}

@@ -7,6 +7,7 @@ var b2ChainShape_CreateFixture =
       // Chain vertices and count
       'number', 'number']);
 
+/**@constructor*/
 function b2ChainShape() {
   this.radius = b2_polygonRadius;
   this.vertices = [];
@@ -15,7 +16,7 @@ function b2ChainShape() {
 
 b2ChainShape.prototype.CreateLoop = function() {
    this.vertices.push(this.vertices[0]);
-}
+};
 
 // TODO Optimize this
 b2ChainShape.prototype._CreateFixture = function(body, fixtureDef) {
@@ -50,4 +51,4 @@ b2ChainShape.prototype._CreateFixture = function(body, fixtureDef) {
   // Free memory
   Module._free(dataHeap.byteOffset);
   return fixture;
-}
+};
