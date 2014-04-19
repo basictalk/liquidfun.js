@@ -35,6 +35,18 @@ void b2Body_GetLinearVelocity(void* body, float* arr) {
   arr[1] = linVelocity.y;
 }
 
+void b2Body_GetLocalPoint(void* body, double pointX, double pointY, float* arr) {
+  b2Vec2 localPoint = ((b2Body*)body)->GetLocalPoint(b2Vec2(pointX, pointY));
+  arr[0] = localPoint.x;
+  arr[1] = localPoint.y;
+}
+
+void b2Body_GetLocalVector(void* body, double vX, double vY, float* arr) {
+  b2Vec2 localVector = ((b2Body*)body)->GetLocalPoint(b2Vec2(vX, vY));
+  arr[0] = localVector.x;
+  arr[1] = localVector.y;
+}
+
 double b2Body_GetMass(void* body) {
   return ((b2Body*)body)->GetMass();
 }

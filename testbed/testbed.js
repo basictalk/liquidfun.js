@@ -1,4 +1,5 @@
 // shouldnt be a global :(
+var container;
 var world = null;
 var renderer;
 var camera;
@@ -9,20 +10,25 @@ var velocityIterations = 8;
 var positionIterations = 3;
 var test = null;
 var projector = new THREE.Projector();
+var planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+var windowWidth = window.innerWidth;
+var windowHeight = window.innerHeight;
 
 function InitTestbed() {
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(45
-    , window.innerWidth / window.innerHeight
-    , 0.1, 1000);
+  camera = new THREE.PerspectiveCamera(70
+    , windowWidth / windowHeight
+    , 1, 1000);
   renderer = new THREE.WebGLRenderer();
   renderer.setClearColor(0xEEEEEE);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(windowWidth, windowHeight);
 
   camera.position.x = 0;
   camera.position.y = 0;
   camera.position.z = 100;
+  scene = new THREE.Scene();
   camera.lookAt(scene.position);
+
   document.body.appendChild( this.renderer.domElement);
 
   this.mouseJoint = null;
@@ -40,9 +46,37 @@ function Testbed(obj) {
   // setup ground body
   var bd = new b2BodyDef;
   this.groundBody = world.CreateBody(bd);
+  var start = new Date().getTime();
+  for (var i = 0; i < 1000000; i++) {
+    this.groundBody.GetTransform();
+  }
+  var end = new Date().getTime();
+  var time = end - start;
+  console.log('Execution time: ' + time);
+
+  start = new Date().getTime();
+  for (var i = 0; i < 1000000; i++) {
+    this.groundBody.GetTransform_Test();
+  }
+  end = new Date().getTime();
+  time = end - start;
+  console.log('Execution time: ' + time);
+
+  var bGood = this.groundBody.GetTransform();
+  var bTest = this.groundBody.GetTransform_Test();
+  if (bGood.p.x === bTest.p.x && bGood.p.y === bTest.p.y &&
+    bGood.q.s === bTest.q.s && bTest.q.c === bGood.q.c) {
+    console.log("alright!");
+  }
 
   //test = new obj;
-  test = new TestCollisionFiltering();
+  //test = new TestCornerCase();
+  //test = new TestDominos();
+  //test = new TestDumpShell();
+  //test = new TestConveyorBelt();
+  //test = new TestConfined();
+  //test = new TestCollisionFiltering();
+  //test = new TestBreakable();
   // Init test
   //test = new TestAddPair();
   //test = new TestAntiPointy();
@@ -52,13 +86,25 @@ function Testbed(obj) {
   //test = new TestBullet();
   //test = new TestChain();
   //test = new TestDamBreak();
+  //test = new TestEdgeTest();
   //test = new TestElasticParticles();
+  //test = new TestGears();
   //test = new TestRigidParticles();
   //test = new TestRopeJoint();
-  //test = new TestHW();
+  test = new TestHW();
+  //test = new TestMobileBalanced();
   //test = new TestParticles();
+  //test = new TestPinball();
+  //test = new TestPrismatic();
+  //test = new TestPulley();
   //test = new TestPyramid();
+ // test = new TestSurfaceTension();
   //test = new TestRamp();
+  //test = new TestRope();
+  //test = new TestSensorTest();
+  //test = new TestShapeEditing();
+  //test = new TestSliderCrank();
+  //test = new TestTheoJansen();
   //test = new TestVaryingFriction();
   //test = new TestVaryingRestitution();
   //test = new TestVerticalStack();
@@ -72,11 +118,16 @@ function Testbed(obj) {
       test.Keyboard(String.fromCharCode(event.which) );
     }
   });
+  document.addEventListener('keyup', function(event) {
+    if (test.KeyboardUp !== undefined) {
+      test.KeyboardUp(String.fromCharCode(event.which) );
+    }
+  });
 
   document.addEventListener('mousedown', function(event) {
     var mouse = new THREE.Vector3();
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouse.x = (event.clientX / windowWidth) * 2 - 1;
+    mouse.y = -(event.clientY / windowHeight) * 2 + 1;
     mouse.z = 0.5;
 
     projector.unprojectVector(mouse, camera);
@@ -133,6 +184,8 @@ function Testbed(obj) {
   });
 
 
+  window.addEventListener( 'resize', onWindowResize, false );
+
   init();
   render();
 }
@@ -187,7 +240,7 @@ function QueryCallback(point) {
 
 /**@return bool*/
 QueryCallback.prototype.ReportFixture = function(fixture) {
-  var body = fixture.body;;
+  var body = fixture.body;
   if (body.GetType() === b2_dynamicBody) {
     var inside = fixture.TestPoint(this.point);
     if (inside) {
@@ -197,3 +250,12 @@ QueryCallback.prototype.ReportFixture = function(fixture) {
   }
   return false;
 };
+
+function onWindowResize() {
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize( window.innerWidth, window.innerHeight );
+
+}

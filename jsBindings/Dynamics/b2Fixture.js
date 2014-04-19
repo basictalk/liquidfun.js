@@ -6,15 +6,22 @@ function b2Filter() {
 }
 
 // fixture globals
+var b2Fixture_isSensor_offset = 38;
 /**@constructor*/
 function b2Fixture() {
   this.body = null;
+  this.buffer = null;
   this.ptr = null;
   this.shape = null;
 }
 
 var b2Fixture_TestPoint =
   Module.cwrap('b2Fixture_TestPoint', 'number', ['number', 'number', 'number']);
+
+b2Fixture.prototype._SetPtr = function(ptr) {
+  this.ptr = ptr;
+  this.buffer = new DataView(Module.HEAPU8.buffer, ptr);
+};
 
 b2Fixture.prototype.FromFixtureDef = function(fixtureDef) {
   this.density = fixtureDef.density;
@@ -24,6 +31,10 @@ b2Fixture.prototype.FromFixtureDef = function(fixtureDef) {
   this.shape = fixtureDef.shape;
   this.userData = fixtureDef.userData;
   this.vertices = [];
+};
+
+b2Fixture.prototype.SetSensor = function(flag) {
+  this.buffer.setUint32(b2Fixture_isSensor_offset, flag, true);
 };
 
 b2Fixture.prototype.TestPoint = function(p) {

@@ -1,3 +1,9 @@
+/**@constructor*/
+function b2PulleyJoint(def) {
+  this.ptr = null;
+  this.next = null;
+}
+
 var b2PulleyJointDef_Create = Module.cwrap("b2PulleyJointDef_Create",
   'number',
   ['number',
@@ -21,6 +27,7 @@ var b2PulleyJointDef_InitializeAndCreate = Module.cwrap("b2PulleyJointDef_Initia
     'number', 'number', 'number',
     'number', 'number', 'number']);
 
+/**@constructor*/
 function b2PulleyJointDef() {
   // joint def
   this.bodyA = null;
@@ -49,7 +56,7 @@ b2PulleyJointDef.prototype.Create = function(world) {
     this.localAnchorA.x, this.localAnchorA.y, this.localAnchorB.x,
     this.localAnchorB.y, this.ratio);
   return pulleyJoint;
-}
+};
 
 b2PulleyJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, groundAnchorA,
                                                            groundAnchorB, anchorA, anchorB,
@@ -68,9 +75,4 @@ b2PulleyJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, groundA
     this.collideConnected);
   b2World._Push(pulleyJoint, world.joints);
   return pulleyJoint;
-}
-
-function b2PulleyJoint(def) {
-  this.ptr = null;
-  this.next = null;
-}
+};

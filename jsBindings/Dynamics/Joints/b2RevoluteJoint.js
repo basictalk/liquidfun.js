@@ -6,6 +6,10 @@ var b2RevoluteJoint_EnableMotor =
   Module.cwrap('b2RevoluteJoint_EnableMotor', 'number',
     ['number', 'number']);
 
+var b2RevoluteJoint_GetJointAngle =
+  Module.cwrap('b2RevoluteJoint_GetJointAngle', 'number',
+    ['number']);
+
 var b2RevoluteJoint_IsLimitEnabled =
   Module.cwrap('b2RevoluteJoint_IsLimitEnabled', 'number',
     ['number']);
@@ -32,12 +36,18 @@ function b2RevoluteJoint(revoluteJointDef) {
   this.userData = revoluteJointDef.userData;
 }
 
+b2RevoluteJoint.prototype = new b2Joint;
+
 b2RevoluteJoint.prototype.EnableLimit = function(flag) {
   b2RevoluteJoint_EnableLimit(this.ptr, flag);
 };
 
 b2RevoluteJoint.prototype.EnableMotor = function(flag) {
   b2RevoluteJoint_EnableMotor(this.ptr, flag);
+};
+
+b2RevoluteJoint.prototype.GetJointAngle = function(flag) {
+  return b2RevoluteJoint_GetJointAngle(this.ptr);
 };
 
 b2RevoluteJoint.prototype.IsLimitEnabled = function() {

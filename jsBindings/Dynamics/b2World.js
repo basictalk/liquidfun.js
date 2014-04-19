@@ -3,6 +3,11 @@ b2World.BeginContactBody = function(contactPtr) {
   if (world.listener.BeginContactBody === undefined) {
     return;
   }
+  var contact = new b2Contact(contactPtr);
+  world.listener.BeginContactBody(contact);
+
+  //contact.GetFixtureA();
+  //contact.GetFixtureB();
   /*var fixLook = world.fixturesLookup;
   console.log(world.fixturesLookup[fixA].detail);
   console.log(world.fixturesLookup[fixB].detail);
@@ -13,6 +18,10 @@ b2World.EndContactBody = function(contactPtr) {
   if (world.listener.EndContactBody === undefined) {
     return;
   }
+  var contact = new b2Contact(contactPtr);
+  world.listener.EndContactBody(contact);
+  //contact.GetFixtureA();
+  //contact.GetFixtureB();
   /*var fixLook = world.fixturesLookup;
   console.log(world.fixturesLookup[fixA].detail);
   console.log(world.fixturesLookup[fixB].detail);

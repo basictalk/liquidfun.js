@@ -29,8 +29,8 @@ function b2MouseJointDef() {
   this.collideConnected = false;
 
   // mouse joint def
-  this.dampingRatio = 0;
-  this.frequencyHz = 0;
+  this.dampingRatio = 0.7;
+  this.frequencyHz = 5;
   this.maxForce = 0;
   this.target = new b2Vec2();
 }

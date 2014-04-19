@@ -56,7 +56,7 @@ void* b2World_CreateBody(
     double awake, double bullet, double fixedRotation,
     double gravityScale, double linearDamping, double linearVelocityX,
     double linearVelocityY, double positionX, double positionY,
-    double type, double userData) {
+    double type, void* userData) {
   b2BodyDef def;
   def.active = active;
   def.allowSleep = allowSleep;
@@ -71,8 +71,10 @@ void* b2World_CreateBody(
   def.linearVelocity.Set(linearVelocityX, linearVelocityY);
   def.position.Set(positionX, positionY);
   def.type = (b2BodyType)type;
-  def.userData = (void*)&userData;
-  return ((b2World*)world)->CreateBody(&def);
+  def.userData = userData;
+  b2Body* b = ((b2World*)world)->CreateBody(&def);
+  PrintOffsets(b);
+  return b;
 }
 
 void* b2World_CreateParticleSystem(

@@ -1,4 +1,5 @@
 #include <Box2D/Box2D.h>
+#include <stdio.h>
 void* b2DistanceJointDef_Create(
     void* world,
     //joint def
@@ -24,7 +25,8 @@ void* b2DistanceJointDef_Create(
 void* b2DistanceJointDef_InitializeAndCreate(
     void* world,
     // initialize args
-    void* bodyA, void* bodyB, double anchorAx, double anchorAy,
+    void* bodyA, void* bodyB,
+    double anchorAx, double anchorAy,
     double anchorBx, double anchorBy,
     // joint def
     double collideConnected,
@@ -35,7 +37,9 @@ void* b2DistanceJointDef_InitializeAndCreate(
 
   def.dampingRatio = dampingRatio;
   def.frequencyHz = frequencyHz;
-
+  printf("next\n");
+  printf("%f %f %f\n", def.dampingRatio, def.frequencyHz, collideConnected);
+  printf("%f %f, %f %f\n", anchorAx, anchorAy, anchorBx, anchorBy);
   def.Initialize((b2Body*)bodyA, (b2Body*)bodyB, b2Vec2(anchorAx, anchorAy),
                  b2Vec2(anchorBx, anchorBy));
 

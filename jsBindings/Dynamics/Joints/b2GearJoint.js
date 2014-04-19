@@ -1,3 +1,15 @@
+var b2GearJoint_GetRatio = Module.cwrap("b2GearJoint_GetRatio", 'number'
+  ['number']);
+
+function b2GearJoint(def) {
+  this.ptr = null;
+  this.next = null;
+}
+
+b2GearJoint.prototype.GetRatio = function() {
+  return b2GearJoint_GetRatio(this.ptr);
+};
+
 var b2GearJointDef_Create = Module.cwrap("b2GearJointDef_Create",
   'number',
   ['number',
@@ -6,6 +18,7 @@ var b2GearJointDef_Create = Module.cwrap("b2GearJointDef_Create",
     // gear joint def
     'number', 'number', 'number']);
 
+/**@constructor*/
 function b2GearJointDef() {
   this.bodyA = null;
   this.bodyB = null;
@@ -22,11 +35,6 @@ b2GearJointDef.prototype.Create = function(world) {
     // joint def
     this.bodyA.ptr, this.bodyB.ptr, this.collideConnected,
     //gear joint def
-    this.joint1, this.joint2, this.ratio);
+    this.joint1.ptr, this.joint2.ptr, this.ratio);
   return gearJoint;
 };
-
-function b2GearJoint(def) {
-  this.ptr = null;
-  this.next = null;
-}

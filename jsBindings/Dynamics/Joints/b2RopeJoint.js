@@ -1,3 +1,9 @@
+/**@constructor*/
+function b2RopeJoint(def) {
+  this.next = null;
+  this.ptr = null;
+}
+
 var b2RopeJointDef_Create = Module.cwrap("b2RopeJointDef_Create",
   'number',
   ['number',
@@ -7,6 +13,7 @@ var b2RopeJointDef_Create = Module.cwrap("b2RopeJointDef_Create",
     'number', 'number', 'number',
     'number', 'number']);
 
+/**@constructor*/
 function b2RopeJointDef() {
   // joint def
   this.bodyA = null;
@@ -30,8 +37,3 @@ b2RopeJointDef.prototype.Create = function(world) {
     this.localAnchorB.y, this.maxLength);
   return ropeJoint;
 };
-
-function b2RopeJoint(def) {
-  this.next = null;
-  this.ptr = null;
-}

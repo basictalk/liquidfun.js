@@ -1,3 +1,5 @@
+var FLT_EPSILON = 1.19209290E-07;
+
 /** @constructor */
 function b2Vec2(x, y) {
   if (x === undefined) {
@@ -38,9 +40,25 @@ b2Vec2.Mul = function(out, T, v) {
   out.y = (Tqs * x + Tqc * y) + Tp.y;
 };
 
+b2Vec2.Normalize = function(out, input) {
+  var length = input.Length();
+  if (length < FLT_EPSILON) {
+    out.x = 0;
+    out.y = 0;
+    return;
+  }
+  var invLength = 1.0 / length;
+  out.x = input.x * invLength;
+  out.y = input.y * invLength;
+};
+
 b2Vec2.Sub = function(out, input, subtract) {
   out.x = input.x - subtract.x;
   out.y = input.y - subtract.y;
+};
+
+b2Vec2.prototype.Clone = function() {
+  return new b2Vec2(this.x, this.y);
 };
 
 b2Vec2.prototype.Set = function(x, y) {
@@ -54,7 +72,11 @@ b2Vec2.prototype.Length = function() {
   return Math.sqrt(x * x + y * y);
 };
 
-
+b2Vec2.prototype.LengthSquared = function() {
+  var x = this.x;
+  var y = this.y;
+  return x * x + y * y;
+};
 
 /** @constructor */
 function b2Rot(radians) {

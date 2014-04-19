@@ -71,4 +71,7 @@ function TestSurfaceTension() {
   circle.position.Set(0, 8);
   circle.radius = 0.5;
   body.CreateFixtureFromShape(circle, 0.5);
+
+  // testbed specific
+  renderer.updateColorParticles = true;
 }

@@ -1,4 +1,8 @@
 #include <Box2D/Box2D.h>
+double b2GearJoint_GetRatio(void* joint) {
+  return ((b2GearJoint*)joint)->GetRatio();
+}
+
 void* b2GearJointDef_Create(
     void* world,
     // jointDef

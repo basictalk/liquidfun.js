@@ -7,6 +7,9 @@ void b2RevoluteJoint_EnableLimit(void* joint, double flag) {
 void b2RevoluteJoint_EnableMotor(void* joint, double flag) {
   ((b2RevoluteJoint*)joint)->EnableMotor(flag);
 }
+double b2RevoluteJoint_GetJointAngle(void* joint) {
+  return ((b2RevoluteJoint*)joint)->GetJointAngle();
+}
 double b2RevoluteJoint_IsLimitEnabled(void* joint) {
   return ((b2RevoluteJoint*)joint)->IsLimitEnabled();
 }

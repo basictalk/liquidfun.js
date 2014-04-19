@@ -2,6 +2,15 @@
 #define B2PRISMATICJOINTJSBINDINGS_H
 
 extern "C" {
+void b2PrismaticJoint_EnableLimit(void* joint, double flag);
+void b2PrismaticJoint_EnableMotor(void* joint, double flag);
+double b2PrismaticJoint_GetJointTranslation(void* joint);
+double b2PrismaticJoint_GetMotorSpeed(void* joint);
+double b2PrismaticJoint_GetMotorForce(void* joint, double hz);
+double b2PrismaticJoint_IsLimitEnabled(void* joint);
+double b2PrismaticJoint_IsMotorEnabled(void* joint);
+void b2PrismaticJoint_SetMotorSpeed(void* joint, double speed);
+
 void* b2PrismaticJointDef_Create(
     void* world,
     // joint def

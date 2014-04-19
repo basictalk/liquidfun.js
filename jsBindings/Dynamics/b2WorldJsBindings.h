@@ -10,7 +10,7 @@ void* b2World_CreateBody(
     double awake, double bullet, double fixedRotation,
     double gravityScale, double linearDamping, double linearVelocityX,
     double linearVelocityY, double positionX, double positionY,
-    double type, double userData);
+    double type, void* userData);
 
 void* b2World_CreateParticleSystem(
     void* world, double colorMixingStrength, double dampingStrength,

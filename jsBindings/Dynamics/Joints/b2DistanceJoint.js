@@ -20,8 +20,9 @@ var b2DistanceJointDef_InitializeAndCreate = Module.cwrap("b2DistanceJointDef_In
   'number',
   ['number',
     // initialize args
-    'number', 'number', 'number',
-    'number', 'number', 'number',
+    'number', 'number',
+    'number', 'number',
+    'number', 'number',
     // distance joint def
     'number', 'number', 'number']);
 
@@ -50,15 +51,16 @@ b2DistanceJointDef.prototype.Create = function(world) {
   return distanceJoint;
 };
 
-b2DistanceJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, anchor) {
+b2DistanceJointDef.prototype.InitializeAndCreate  = function(bodyA, bodyB, anchorA, anchorB) {
   this.bodyA = bodyA;
   this.bodyB = bodyB;
   var distanceJoint = new b2DistanceJoint(this);
   distanceJoint.ptr = b2DistanceJointDef_InitializeAndCreate(
     world.ptr,
     // InitializeArgs
-    this.bodyA.ptr, this.bodyB.ptr, anchor.x,
-    anchor.y,
+    this.bodyA.ptr, this.bodyB.ptr,
+    anchorA.x, anchorA.y,
+    anchorB.x, anchorB.y,
     // joint def
     this.collideConnected,
     //distance joint def

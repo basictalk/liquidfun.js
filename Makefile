@@ -70,6 +70,8 @@ B2BODY = \
 	'_b2Body_GetAngularVelocity', \
 	'_b2Body_GetInertia', \
 	'_b2Body_GetLinearVelocity', \
+	'_b2Body_GetLocalPoint', \
+	'_b2Body_GetLocalVector', \
 	'_b2Body_GetMass', \
 	'_b2Body_GetPosition', \
 	'_b2Body_GetTransform', \
@@ -118,20 +120,33 @@ B2FRICTIONJOINT = \
 	'_b2FrictionJointDef_InitializeAndCreate' \
 	
 B2GEARJOINT = \
+	'_b2GearJoint_GetRatio', \
 	'_b2GearJointDef_Create', \
-	'_b2GearJointDef_InitializeAndCreate' \
-	
+	'_b2GearJointDef_InitializeAndCreate'
+
+B2JOINT = \
+	'_b2Joint_GetBodyA', \
+	'_b2Joint_GetBodyB'
+
 B2MOTORJOINT = \
 	'_b2MotorJoint_SetAngularOffset', \
 	'_b2MotorJoint_SetLinearOffset', \
 	'_b2MotorJointDef_Create', \
-	'_b2MotorJointDef_InitializeAndCreate' \
+	'_b2MotorJointDef_InitializeAndCreate'
 
 B2MOUSEJOINT = \
 	'_b2MouseJoint_SetTarget', \
 	'_b2MouseJointDef_Create'
 	
 B2PRISMATICJOINT = \
+	'_b2PrismaticJoint_EnableLimit', \
+	'_b2PrismaticJoint_EnableMotor', \
+	'_b2PrismaticJoint_GetJointTranslation', \
+	'_b2PrismaticJoint_GetMotorSpeed', \
+	'_b2PrismaticJoint_GetMotorForce', \
+	'_b2PrismaticJoint_IsLimitEnabled', \
+	'_b2PrismaticJoint_IsMotorEnabled', \
+	'_b2PrismaticJoint_SetMotorSpeed', \
 	'_b2PrismaticJointDef_Create', \
 	'_b2PrismaticJointDef_InitializeAndCreate' \
 
@@ -142,6 +157,7 @@ B2PULLEYJOINT = \
 B2REVOLUTEJOINT = \
 	'_b2RevoluteJoint_EnableLimit', \
 	'_b2RevoluteJoint_EnableMotor', \
+	'_b2RevoluteJoint_GetJointAngle', \
 	'_b2RevoluteJoint_IsLimitEnabled', \
 	'_b2RevoluteJoint_IsMotorEnabled', \
 	'_b2RevoluteJoint_SetMotorSpeed', \
@@ -194,6 +210,7 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	$(B2FIXTURE), \
 	$(B2FRICTIONJOINT), \
 	$(B2GEARJOINT), \
+	$(B2JOINT), \
 	$(B2MOTORJOINT), \
 	$(B2MOUSEJOINT), \
 	$(B2PARTICLESYSTEM), \
@@ -208,5 +225,5 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	]"
 
 bindings.js:
-	$(EMSCRIPTEN)/emcc -IBox2D -o hello_world.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O1 --js-library callbacks.js
+	$(EMSCRIPTEN)/emcc -IBox2D -o hello_world.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O3 --js-library callbacks.js
 

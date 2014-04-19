@@ -13,6 +13,10 @@ var b2Body_GetAngularVelocity =
 var b2Body_GetInertia = Module.cwrap('b2Body_GetInertia', 'number', ['number']);
 var b2Body_GetLinearVelocity =
   Module.cwrap('b2Body_GetLinearVelocity', 'null', ['number', 'number']);
+var b2Body_GetLocalPoint = Module.cwrap('b2Body_GetLocalPoint', 'null',
+  ['number', 'number', 'number', 'number']);
+var b2Body_GetLocalVector = Module.cwrap('b2Body_GetLocalVector', 'null',
+  ['number', 'number', 'number', 'number']);
 var b2Body_GetMass = Module.cwrap('b2Body_GetMass', 'number', ['number']);
 var b2Body_GetPosition = Module.cwrap('b2Body_GetPosition', 'null', ['number', 'number']);
 var b2Body_GetTransform = Module.cwrap('b2Body_GetTransform', 'null',
@@ -35,10 +39,16 @@ var b2Body_SetTransform =
 var b2Body_SetType =
   Module.cwrap('b2Body_SetType', 'null', ['number', 'number']);
 
+
+// memory offsets -- FRAGILE
+var b2Body_xf_offset = Offsets.b2Body.xf;
+var b2Body_userData_offset = Offsets.b2Body.userData;
 /**@constructor*/
 function b2Body(ptr) {
+  this.buffer = new DataView(Module.HEAPU8.buffer, ptr);
   this.ptr = ptr;
   this.fixtures = [];
+  console.log();
 }
 
 b2Body.prototype.ApplyAngularImpulse = function(force, wake) {
@@ -56,7 +66,7 @@ b2Body.prototype.ApplyTorque = function(force, wake) {
 b2Body.prototype.CreateFixtureFromDef = function(fixtureDef) {
   var fixture = new b2Fixture();
   fixture.FromFixtureDef(fixtureDef);
-  fixture.ptr = fixtureDef.shape._CreateFixture(this, fixtureDef);
+  fixture._SetPtr(fixtureDef.shape._CreateFixture(this, fixtureDef));
   fixture.body = this;
   b2World._Push(fixture, this.fixtures);
   world.fixturesLookup[fixture.ptr] = fixture;
@@ -97,6 +107,19 @@ b2Body.prototype.GetLinearVelocity = function() {
   return new b2Vec2(result[0], result[1]);
 };
 
+b2Body.prototype.GetLocalPoint = function(vec) {
+  b2Body_GetLocalPoint(this.ptr, vec.x, vec.y, _vec2Buf.byteOffset);
+  var result = new Float32Array(_vec2Buf.buffer, _vec2Buf.byteOffset, _vec2Buf.length);
+  return new b2Vec2(result[0], result[1]);
+};
+
+b2Body.prototype.GetLocalVector = function(vec) {
+  b2Body_GetLocalVector(this.ptr, vec.x, vec.y, _vec2Buf.byteOffset);
+  var result = new Float32Array(_vec2Buf.buffer, _vec2Buf.byteOffset, _vec2Buf.length);
+  return new b2Vec2(result[0], result[1]);
+};
+
+
 b2Body.prototype.GetPosition = function() {
   b2Body_GetPosition(this.ptr, _vec2Buf.byteOffset);
   var result = new Float32Array(_vec2Buf.buffer, _vec2Buf.byteOffset, _vec2Buf.length);
@@ -111,9 +134,22 @@ b2Body.prototype.GetTransform = function() {
   return transform;
 };
 
+b2Body.prototype.GetTransform_Test = function() {
+  var transform = new b2Transform();
+  transform.p.x = this.buffer.getFloat32(b2Body_xf_offset, true);
+  transform.p.y = this.buffer.getFloat32(b2Body_xf_offset+4, true);
+  transform.q.s = this.buffer.getFloat32(b2Body_xf_offset+8, true);
+  transform.q.c = this.buffer.getFloat32(b2Body_xf_offset+12, true);
+  return transform;
+}
+
 b2Body.prototype.GetType = function() {
   return b2Body_GetType(this.ptr);
 };
+
+b2Body.prototype.GetUserData = function() {
+  return this.buffer.getUint32(b2Body_userData_offset, true);
+}
 
 b2Body.prototype.GetWorldCenter = function() {
   b2Body_GetWorldCenter(this.ptr, _vec2Buf.byteOffset);
