@@ -40,6 +40,9 @@ var b2ParticleSystem_GetParticleCount =
 var b2ParticleSystem_GetPositionBuffer =
   Module.cwrap('b2ParticleSystem_GetPositionBuffer', 'number', ['number']);
 
+var b2ParticleSystem_GetVelocityBuffer =
+  Module.cwrap('b2ParticleSystem_GetVelocityBuffer', 'number', ['number']);
+
 var b2ParticleSystem_SetDamping =
   Module.cwrap('b2ParticleSystem_SetDamping', 'null', ['number', 'number']);
 
@@ -71,16 +74,24 @@ b2ParticleSystem.prototype.CreateParticle = function(pd) {
 };
 
 b2ParticleSystem.prototype.CreateParticleGroup = function(pgd) {
-  var particleGroup = new b2ParticleGroup();
-  particleGroup.ptr = pgd.shape._CreateParticleGroup(this, pgd);
+  var particleGroup = new b2ParticleGroup(pgd.shape._CreateParticleGroup(this, pgd));
   this.particleGroups.push(particleGroup);
+  return particleGroup;
+};
+
+b2ParticleSystem.prototype.DestroyParticlesInShape = function(shape, xf) {
+  return shape._DestroyParticlesInShape(this, xf);
 };
 
 b2ParticleSystem.prototype.GetColorBuffer = function() {
   var count = b2ParticleSystem_GetParticleCount(this.ptr) * 4;
   var offset = b2ParticleSystem_GetColorBuffer(this.ptr);
-  var colors = new Uint8Array(Module.HEAPU8.buffer, offset, count);
-  return colors;
+  return new Uint8Array(Module.HEAPU8.buffer, offset, count);
+};
+
+/**@return number*/
+b2ParticleSystem.prototype.GetParticleCount = function() {
+  return b2ParticleSystem_GetParticleCount(this.ptr) * 2;
 };
 
 b2ParticleSystem.prototype.GetPositionBuffer = function() {
@@ -88,6 +99,13 @@ b2ParticleSystem.prototype.GetPositionBuffer = function() {
   var offset = b2ParticleSystem_GetPositionBuffer(this.ptr);
   return new Float32Array(Module.HEAPU8.buffer, offset, count);
 };
+
+b2ParticleSystem.prototype.GetVelocityBuffer = function() {
+  var count = b2ParticleSystem_GetParticleCount(this.ptr) * 2;
+  var offset = b2ParticleSystem_GetVelocityBuffer(this.ptr);
+  return new Float32Array(Module.HEAPU8.buffer, offset, count);
+};
+
 
 b2ParticleSystem.prototype.SetDamping = function(damping) {
   this.dampingStrength = damping;

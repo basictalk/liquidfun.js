@@ -10,6 +10,7 @@ double b2ParticleSystem_CreateParticle(void* particleSystem,
 void* b2ParticleSystem_GetColorBuffer(void* particleSystem);
 double b2ParticleSystem_GetParticleCount(void* particleSystem);
 void* b2ParticleSystem_GetPositionBuffer(void* particleSystem);
+void* b2ParticleSystem_GetVelocityBuffer(void* particleSystem);
 
 void b2ParticleSystem_SetDamping(void* particleSystem, double damping);
 void b2ParticleSystem_SetDensity(void* particleSystem, double density);

@@ -1,6 +1,7 @@
 // shouldnt be a global :(
 var container;
 var world = null;
+var threeRenderer;
 var renderer;
 var camera;
 var scene;
@@ -15,13 +16,15 @@ var planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 var windowWidth = window.innerWidth;
 var windowHeight = window.innerHeight;
 
+var GenerateOffsets = Module.cwrap("GenerateOffsets", 'null');
+
 function InitTestbed() {
   camera = new THREE.PerspectiveCamera(70
     , windowWidth / windowHeight
     , 1, 1000);
-  renderer = new THREE.WebGLRenderer();
-  renderer.setClearColor(0xEEEEEE);
-  renderer.setSize(windowWidth, windowHeight);
+  threeRenderer = new THREE.WebGLRenderer();
+  threeRenderer.setClearColor(0xEEEEEE);
+  threeRenderer.setSize(windowWidth, windowHeight);
 
   camera.position.x = 0;
   camera.position.y = 0;
@@ -29,26 +32,32 @@ function InitTestbed() {
   scene = new THREE.Scene();
   camera.lookAt(scene.position);
 
-  document.body.appendChild( this.renderer.domElement);
+  document.body.appendChild( this.threeRenderer.domElement);
 
   this.mouseJoint = null;
 
   // hack
-  Testbed();
+  renderer = new Renderer();
+  var gravity = new b2Vec2(0, -10);
+  world = new b2World(gravity);
+ // Testbed();
 }
 
 function Testbed(obj) {
   // Init world
   ResetWorld();
-  var gravity = new b2Vec2(0, -10);
-  world = new b2World(gravity);
+  world.SetGravity(new b2Vec2(0, -10));
+
+  //GenerateOffsets();
 
   // setup ground body
+
+
   var bd = new b2BodyDef;
   this.groundBody = world.CreateBody(bd);
-  var start = new Date().getTime();
+  /*var start = new Date().getTime();
   for (var i = 0; i < 1000000; i++) {
-    this.groundBody.GetTransform();
+    this.groundBody.ApplyForce(new b2Vec2(10, 30), new b2Vec2(10, 30), true);
   }
   var end = new Date().getTime();
   var time = end - start;
@@ -67,9 +76,10 @@ function Testbed(obj) {
   if (bGood.p.x === bTest.p.x && bGood.p.y === bTest.p.y &&
     bGood.q.s === bTest.q.s && bTest.q.c === bGood.q.c) {
     console.log("alright!");
-  }
+  }*/
 
-  //test = new obj;
+  test = new obj;
+  //test = new TestAddPair();
   //test = new TestCornerCase();
   //test = new TestDominos();
   //test = new TestDumpShell();
@@ -78,33 +88,40 @@ function Testbed(obj) {
   //test = new TestCollisionFiltering();
   //test = new TestBreakable();
   // Init test
-  //test = new TestAddPair();
   //test = new TestAntiPointy();
   //test = new TestApplyForce();
   //test = new TestBodyTypes();
   //test = new TestBridge();
   //test = new TestBullet();
   //test = new TestChain();
+ // test = new TestConvexHull();
   //test = new TestDamBreak();
+  //test = new TestDrawingParticles();
+  //test = new TestEdgeShape();
   //test = new TestEdgeTest();
   //test = new TestElasticParticles();
   //test = new TestGears();
   //test = new TestRigidParticles();
   //test = new TestRopeJoint();
-  test = new TestHW();
+  //test = new TestHW();
+  //test = new TestImpulse();
   //test = new TestMobileBalanced();
   //test = new TestParticles();
   //test = new TestPinball();
+  //test = new TestPointy();
   //test = new TestPrismatic();
   //test = new TestPulley();
-  //test = new TestPyramid();
- // test = new TestSurfaceTension();
+ // test = new TestPyramid();
+ // test = new TestSoup();
+  //test = new TestSurfaceTension();
   //test = new TestRamp();
-  //test = new TestRope();
   //test = new TestSensorTest();
   //test = new TestShapeEditing();
   //test = new TestSliderCrank();
+  //test = new TestSparky();
   //test = new TestTheoJansen();
+  //test = new TestTiles();
+  //test = new TestTumbler();
   //test = new TestVaryingFriction();
   //test = new TestVaryingRestitution();
   //test = new TestVerticalStack();
@@ -125,18 +142,7 @@ function Testbed(obj) {
   });
 
   document.addEventListener('mousedown', function(event) {
-    var mouse = new THREE.Vector3();
-    mouse.x = (event.clientX / windowWidth) * 2 - 1;
-    mouse.y = -(event.clientY / windowHeight) * 2 + 1;
-    mouse.z = 0.5;
-
-    projector.unprojectVector(mouse, camera);
-    var dir = mouse.sub(camera.position).normalize();
-    var distance = -camera.position.z / dir.z;
-    var pos = camera.position.clone().add(dir.multiplyScalar(distance));
-
-    var p = new b2Vec2(pos.x, pos.y);
-
+    var p = getMouseCoords(event);
     var aabb = new b2AABB;
     var d = new b2Vec2;
 
@@ -157,22 +163,19 @@ function Testbed(obj) {
       that.mouseJoint = world.CreateJoint(md);
       body.SetAwake(true);
     }
+    if (test.MouseDown !== undefined) {
+      test.MouseDown(p);
+    }
+
   });
 
   document.addEventListener('mousemove', function(event) {
-    var mouse = new THREE.Vector3();
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    mouse.z = 0.5;
-
-    projector.unprojectVector(mouse, camera);
-    var dir = mouse.sub(camera.position).normalize();
-    var distance = -camera.position.z / dir.z;
-    var pos = camera.position.clone().add(dir.multiplyScalar(distance));
-
-    var p = new b2Vec2(pos.x, pos.y);
+    var p = getMouseCoords(event);
     if (that.mouseJoint) {
       that.mouseJoint.SetTarget(p);
+    }
+    if (test.MouseMove !== undefined) {
+      test.MouseMove(p);
     }
   });
 
@@ -181,26 +184,29 @@ function Testbed(obj) {
       world.DestroyJoint(that.mouseJoint);
       that.mouseJoint = null;
     }
+    if (test.MouseUp !== undefined) {
+      test.MouseUp(getMouseCoords(event));
+    }
   });
 
 
   window.addEventListener( 'resize', onWindowResize, false );
 
-  init();
   render();
 }
 
 var render = function() {
   // bring objects into world
-
+  renderer.currentVertex = 0;
   if (test.Step !== undefined) {
     test.Step();
   } else {
     Step();
   }
-  draw();
+  renderer.draw();
 
-  renderer.render(scene, camera);
+
+  threeRenderer.render(scene, camera);
   requestAnimationFrame(render);
 };
 
@@ -217,13 +223,6 @@ var ResetWorld = function() {
     while (world.particleSystems.length > 0) {
       world.DestroyParticleSystem(world.particleSystems[0]);
     }
-  }
-
-  // clear three.js
-  var obj, i;
-  for ( i = scene.children.length - 1; i >= 0 ; i -- ) {
-    obj = scene.children[i];
-    scene.remove(obj);
   }
   camera.position.z = 100;
 };
@@ -252,10 +251,21 @@ QueryCallback.prototype.ReportFixture = function(fixture) {
 };
 
 function onWindowResize() {
-
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
+  threeRenderer.setSize( window.innerWidth, window.innerHeight );
+}
 
-  renderer.setSize( window.innerWidth, window.innerHeight );
+function getMouseCoords(event) {
+  var mouse = new THREE.Vector3();
+  mouse.x = (event.clientX / windowWidth) * 2 - 1;
+  mouse.y = -(event.clientY / windowHeight) * 2 + 1;
+  mouse.z = 0.5;
 
+  projector.unprojectVector(mouse, camera);
+  var dir = mouse.sub(camera.position).normalize();
+  var distance = -camera.position.z / dir.z;
+  var pos = camera.position.clone().add(dir.multiplyScalar(distance));
+  var p = new b2Vec2(pos.x, pos.y);
+  return p;
 }

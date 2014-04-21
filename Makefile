@@ -82,6 +82,7 @@ B2BODY = \
 	'_b2Body_SetAngularVelocity', \
 	'_b2Body_SetAwake', \
 	'_b2Body_SetLinearVelocity', \
+	'_b2Body_SetMassData', \
 	'_b2Body_SetTransform', \
 	'_b2Body_SetType'
 	
@@ -90,13 +91,15 @@ B2CHAINSHAPE = \
 	
 B2CIRCLESHAPE = \
 	'_b2CircleShape_CreateFixture', \
-	'_b2CircleShape_CreateParticleGroup'
+	'_b2CircleShape_CreateParticleGroup', \
+	'_b2CircleShape_DestroyParticlesInShape'
 
 B2COLLISION = \
 	'_b2Manifold_GetPointCount'
 
 B2CONTACT = \
-	'_b2Contact_GetManifold'
+	'_b2Contact_GetManifold', \
+	'_b2Contact_GetWorldManifold'
 
 B2DISTANCEJOINT = \
 	'_b2DistanceJointDef_Create', \
@@ -104,13 +107,6 @@ B2DISTANCEJOINT = \
 
 B2EDGESHAPE = \
 	'_b2EdgeShape_CreateFixture'
-
-B2POLYGONSHAPE = \
-	'_b2PolygonShape_CreateFixture_3', \
-	'_b2PolygonShape_CreateFixture_4', \
-	'_b2PolygonShape_CreateFixture_5', \
-	'_b2PolygonShape_CreateFixture_6', \
-	'_b2PolygonShape_CreateParticleGroup_4'
 
 B2FIXTURE = \
 	'_b2Fixture_TestPoint'
@@ -137,6 +133,33 @@ B2MOTORJOINT = \
 B2MOUSEJOINT = \
 	'_b2MouseJoint_SetTarget', \
 	'_b2MouseJointDef_Create'
+	
+B2PARTICLEGROUP = \
+	'_b2ParticleGroup_ApplyForce', \
+	'_b2ParticleGroup_ApplyLinearImpulse', \
+	'_b2ParticleGroup_DestroyParticles', \
+	'_b2ParticleGroup_GetParticleCount', \
+	'_b2ParticleGroup_GetBufferIndex'
+	
+B2PARTICLESYSTEM = \
+	'_b2ParticleSystem_CreateParticle', \
+	'_b2ParticleSystem_GetColorBuffer', \
+	'_b2ParticleSystem_GetParticleCount', \
+	'_b2ParticleSystem_GetPositionBuffer', \
+	'_b2ParticleSystem_GetVelocityBuffer', \
+	'_b2ParticleSystem_SetDamping', \
+	'_b2ParticleSystem_SetDensity', \
+	'_b2ParticleSystem_SetRadius'
+
+B2POLYGONSHAPE = \
+	'_b2PolygonShape_CreateFixture_3', \
+	'_b2PolygonShape_CreateFixture_4', \
+	'_b2PolygonShape_CreateFixture_5', \
+	'_b2PolygonShape_CreateFixture_6', \
+	'_b2PolygonShape_CreateFixture_7', \
+  '_b2PolygonShape_CreateFixture_8', \
+	'_b2PolygonShape_CreateParticleGroup_4', \
+	'_b2PolygonShape_DestroyParticlesInShape_4'
 	
 B2PRISMATICJOINT = \
 	'_b2PrismaticJoint_EnableLimit', \
@@ -167,15 +190,6 @@ B2REVOLUTEJOINT = \
 B2ROPEJOINT = \
 	'_b2RopeJointDef_Create'
 
-B2PARTICLESYSTEM = \
-	'_b2ParticleSystem_CreateParticle', \
-	'_b2ParticleSystem_GetColorBuffer', \
-	'_b2ParticleSystem_GetParticleCount', \
-	'_b2ParticleSystem_GetPositionBuffer', \
-	'_b2ParticleSystem_SetDamping', \
-	'_b2ParticleSystem_SetDensity', \
-	'_b2ParticleSystem_SetRadius'
-	
 B2WELDJOINT = \
 	'_b2WeldJointDef_Create', \
 	'_b2WeldJointDef_InitializeAndCreate' \
@@ -195,11 +209,13 @@ B2WORLD = \
 	'_b2World_DestroyJoint', \
 	'_b2World_DestroyParticleSystem', \
 	'_b2World_QueryAABB', \
+	'_b2World_RayCast', \
 	'_b2World_SetContactListener', \
 	'_b2World_SetGravity', \
 	'_b2World_Step'
 	
 EXPORTS = EXPORTED_FUNCTIONS="[ \
+	'_GenerateOffsets', \
 	$(B2BODY), \
 	$(B2CHAINSHAPE), \
 	$(B2CIRCLESHAPE), \
@@ -213,6 +229,7 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	$(B2JOINT), \
 	$(B2MOTORJOINT), \
 	$(B2MOUSEJOINT), \
+	$(B2PARTICLEGROUP), \
 	$(B2PARTICLESYSTEM), \
 	$(B2POLYGONSHAPE), \
 	$(B2PRISMATICJOINT), \
@@ -225,5 +242,5 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	]"
 
 bindings.js:
-	$(EMSCRIPTEN)/emcc -IBox2D -o hello_world.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O3 --js-library callbacks.js
+	$(EMSCRIPTEN)/emcc -IBox2D -o hello_world.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O1 --js-library callbacks.js
 

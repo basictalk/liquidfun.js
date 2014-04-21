@@ -27,6 +27,8 @@ void b2World_DestroyJoint(void* world, void* joint);
 void b2World_DestroyParticleSystem(void* world, void* particleSystem);
 void b2World_QueryAABB(void* world, double aabbLowerBoundX, double aabbLowerBoundY,
                        double aabbUpperBoundX, double aabbUpperBoundY);
+void b2World_RayCast(void* world, double point1X, double point1Y,
+                     double point2X, double point2Y);
 void b2World_SetContactListener(void* world);
 void b2World_SetGravity(void* world, double x, double y);
 void b2World_Step(void* world, float step, float vIterations, float pIterations);

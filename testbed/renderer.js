@@ -1,69 +1,45 @@
-/**
- * Created by joshualitt on 4/11/14.
- */
+var inv255 = .003921569;
 
-// TODO I can do a much better job reusing geometry by attaching it to a given shape
-// todo circles don't take into account their center
-// todo rotate
+function Renderer() {
+  // init large buffer geometry
+  this.maxVertices = 31000;
+  var geometry = new THREE.BufferGeometry();
+  geometry.dynamic = true;
+  geometry.addAttribute('position', Float32Array, this.maxVertices, 3);
+  geometry.addAttribute('color', Float32Array, this.maxVertices, 3);
+  this.positions = geometry.attributes.position.array;
+  this.colors = geometry.attributes.color.array;
+  this.currentVertex = 0;
+  this.buffer = new THREE.Line(geometry,
+    new THREE.LineBasicMaterial({ vertexColors: true }), THREE.LinePieces);
 
-function initUnitCircle() {
-  var resolution = 8,
-    radius = 1,
-    size = 360 / resolution,
-    geometry = new THREE.Geometry();
-  for(var i = 0; i <= resolution; i++) {
-    var segment = ( i * size ) * Math.PI / 180;
-    var vertex = new THREE.Vector3(Math.cos( segment ) * radius, Math.sin( segment ) * radius, 0);
-    geometry.vertices.push(vertex);
-  }
-  geometry.vertices.push(new THREE.Vector3(0, 0, 0));
-  return geometry;
+  this.circleVertices = [];
+  this.circleResolution = 5;
+  this.initCircleVertices(this.circleVertices, this.circleResolution);
+
+  this.particleVertices = [];
+  this.particleResolution = 3;
+  this.initCircleVertices(this.particleVertices, this.particleResolution);
+
+  scene.add(this.buffer);
 }
 
-function init() {
-  this.updateColorParticles = false;
-  world.unitCircle = initUnitCircle();
+Renderer.prototype.collapseBuffer = function() {
+  var i = this.currentVertex * 3;
+  for (; i < this.maxVertices * 3; i++) {
+    this.positions[i] = 0;
+    this.colors[i] = 0;
+  }
+};
+
+Renderer.prototype.draw = function() {
   for (var i = 0, max = world.bodies.length; i < max; i++) {
     var body = world.bodies[i];
     var maxFixtures = body.fixtures.length;
-    var transform = body.GetTransform_Test();
-    //test code TODo REMOVE
-    var bGood = body.GetTransform();
-    var bTest = body.GetTransform_Test();
-    if (bGood.p.x === bTest.p.x && bGood.p.y === bTest.p.y &&
-      bGood.q.s === bTest.q.s && bTest.q.c === bGood.q.c) {
-      //console.log("alright!");
-    } else {
-      console.log("not good")
-    }
+    var transform = body.GetTransform();
     for (var j = 0; j < maxFixtures; j++) {
       var fixture = body.fixtures[j];
-      fixture.shape.drawInit(fixture, transform);
-    }
-  }
-
-  // draw particle systems
-  for (var i = 0, max = world.particleSystems.length; i < max; i++) {
-    initParticleSystem(world.particleSystems[i]);
-  }
-}
-function draw() {
-  for (var i = 0, max = world.bodies.length; i < max; i++) {
-    var body = world.bodies[i];
-    var maxFixtures = body.fixtures.length;
-    var transform = body.GetTransform_Test();
-    //test code TODo REMOVE
-    var bGood = body.GetTransform();
-    var bTest = body.GetTransform_Test();
-    if (bGood.p.x === bTest.p.x && bGood.p.y === bTest.p.y &&
-      bGood.q.s === bTest.q.s && bTest.q.c === bGood.q.c) {
-      //console.log("alright!");
-    } else {
-      console.log("not good")
-    }
-    for (var j = 0; j < maxFixtures; j++) {
-      var fixture = body.fixtures[j];
-      fixture.shape.draw(fixture, transform);
+      fixture.shape.draw(transform);
     }
   }
 
@@ -71,206 +47,133 @@ function draw() {
   for (var i = 0, max = world.particleSystems.length; i < max; i++) {
     drawParticleSystem(world.particleSystems[i]);
   }
-}
+  this.collapseBuffer();
 
-// geometry init code
-b2ChainShape.prototype.drawInit = function(fixture, transform) {
-  var geometry = new THREE.Geometry(),
-    material =  new THREE.LineBasicMaterial({color: 0x000000}),
-    transformedV = new b2Vec2(),
-    vertices = this.vertices;
-
-  var v1 = vertices[0];
-  b2Vec2.Mul(transformedV, transform, v1);
-  geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y, 0));
-  for (var i = 1, max = vertices.length; i < max; i++) {
-    var v2 = vertices[i];
-    b2Vec2.Mul(transformedV, transform, v2);
-    geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y, 0));
-    v1 = v2;
-  }
-
-  var line = new THREE.Line(geometry, material);
-  fixture.graphic = line;
-  scene.add(line);
+  this.buffer.geometry.attributes.position.needsUpdate = true;
+  this.buffer.geometry.attributes.color.needsUpdate = true;
 };
 
-// todo this should se the transform
-b2CircleShape.prototype.drawInit = function(fixture, transform) {
-  var radius = this.radius,
-    material = new THREE.LineBasicMaterial( { color: 0x0000ff });
+Renderer.prototype.insertLine = function(x1, y1, x2, y2, r, g, b) {
+  var i = this.currentVertex;
+  var threeI = i * 3;
+  this.positions[threeI] = x1;
+  this.positions[threeI + 1] = y1;
+  this.positions[threeI + 2] = 0;
+  this.colors[threeI] = r;
+  this.colors[threeI + 1] = g;
+  this.colors[threeI + 2] = b;
 
-  // draw line from midpoint out
-  var line = new THREE.Line(world.unitCircle, material);
-  line.scale.x = radius;
-  line.scale.y = radius;
-  line.scale.z = radius;
-  fixture.graphic = line;
-  scene.add(line);
+  i++;
+  threeI = i * 3;
+  this.positions[threeI] = x2;
+  this.positions[threeI + 1] = y2;
+  this.positions[threeI + 2] = 0;
+  this.colors[threeI] = r;
+  this.colors[threeI + 1] = g;
+  this.colors[threeI + 2] = b;
+  this.currentVertex += 2;
 };
 
-b2EdgeShape.prototype.drawInit = function(fixture, transform) {
-  var geometry = new THREE.Geometry(),
-    material =  new THREE.LineBasicMaterial({color: 0x000000}),
-    transformedV = new b2Vec2();
+// TODO remove one of the muls
+Renderer.prototype.insertCircleVertices = function(transform, radius, x, y, r, g, b) {
+  var vertices = this.circleVertices;
+  for (var i = 0; i < this.circleResolution; i++) {
+    var i4 = i * 4;
+    var v1 = new b2Vec2(vertices[i4] * radius + x, vertices[i4 + 1] * radius + y);
+    var v2 = new b2Vec2(vertices[i4 + 2] * radius + x, vertices[i4 + 3] * radius + y);
 
-  b2Vec2.Mul(transformedV, transform, this.vertex1);
-  geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y, 0));
+    b2Vec2.Mul(v1, transform, v1);
+    b2Vec2.Mul(v2, transform, v2);
 
-  b2Vec2.Mul(transformedV, transform, this.vertex2);
-  geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y, 0));
-
-  var line = new THREE.Line(geometry, material);
-  fixture.graphic = line;
-  scene.add(line);
+    this.insertLine(v1.x, v1.y, v2.x, v2.y, r, g, b);
+  }
 };
 
-b2PolygonShape.prototype.drawInit = function(fixture, transform) {
-  var vertexCount = this.vertices.length,
-    geometry, material,
-    transformedV = new b2Vec2();
+Renderer.prototype.insertParticleVertices = function(radius, x, y, r, g, b) {
+  var vertices = this.particleVertices;
+  for (var i = 0; i < this.particleResolution; i++) {
+    var i4 = i * 4;
+    var x1 = vertices[i4] * radius + x;
+    var y1 = vertices[i4 + 1] * radius + y;
+    var x2 = vertices[i4 + 2] * radius + x;
+    var y2 = vertices[i4 + 3] * radius + y;
 
-  geometry = new THREE.Geometry();
-  material = new THREE.LineBasicMaterial({color: 0x000000})
-  for (var i = 0; i < vertexCount; i++) {
-    var vertex = this.vertices[i];
-    b2Vec2.Mul(transformedV, transform, vertex);
-    geometry.vertices.push(new THREE.Vector3(transformedV.x, transformedV.y, 0));
+    this.insertLine(x1, y1, x2, y2, r, g, b);
   }
-  // Create a loop
-  geometry.vertices.push(geometry.vertices[0]);
-
-  var line = new THREE.Line(geometry, material);
-  fixture.graphic = line;
-  scene.add(line);
 };
 
-function initParticleSystem(system) {
-  var particles = system.GetPositionBuffer(),
-    maxParticles = particles.length;
-  var color = system.GetColorBuffer();
+Renderer.prototype.initCircleVertices = function(v, resolution) {
+  var size = 360 / resolution;
 
-  for (var i = 0, c = 0; i < maxParticles; i += 2, c += 4) {
-    var col = new THREE.Color("rgb(" + color[c] + "," + color[c+1] + "," + color[c+2] +")");
-    var material = new THREE.LineBasicMaterial( { color: col } );
-    material.color = col;
-    var line = new THREE.Line(world.unitCircle, material);
-    line.position.x = particles[i];
-    line.position.y = particles[i + 1];
-    line.scale.x = system.radius;
-    system.graphics.push(line);
-    scene.add(line);
+  for (var i = 0; i < resolution; i++) {
+    var s1 = (i * size) * Math.PI / 180;
+    var s2 = ((i + 1) * size) * Math.PI / 180;
+    v.push(Math.cos(s1));
+    v.push(Math.sin(s1));
+    v.push(Math.cos(s2));
+    v.push(Math.sin(s2));
   }
-}
+};
 
-b2CircleShape.prototype.draw = function(fixture, transform) {
-  var line = fixture.graphic;
-  if (line === undefined) {
-    this.drawInit(fixture, transform);
-    return;
+
+Renderer.prototype.transformAndInsert = function(v1, v2, transform, r, g, b) {
+  var transformedV1 = new b2Vec2(),
+    transformedV2 = new b2Vec2();
+
+  b2Vec2.Mul(transformedV1, transform, v1);
+  b2Vec2.Mul(transformedV2, transform, v2);
+  renderer.insertLine(transformedV1.x, transformedV1.y,
+    transformedV2.x, transformedV2.y,
+    r, g, b);
+};
+
+Renderer.prototype.transformVerticesAndInsert = function(vertices, transform, r, g, b) {
+  var vertexCount = vertices.length;
+
+  for (var i = 1; i < vertexCount; i++) {
+    renderer.transformAndInsert(vertices[i - 1], vertices[i], transform,
+      r, g, b);
   }
-  var geometry = line.geometry,
-    circlePosition = this.position,
+};
+
+b2CircleShape.prototype.draw = function(transform) {
+  var circlePosition = this.position,
     center = new b2Vec2(circlePosition.x, circlePosition.y);
-
-  line.rotation.z = fixture.body.GetAngle();
-  b2Vec2.Mul(center, transform, center);
-  line.position.x = center.x;
-  line.position.y = center.y;
-
-  geometry.verticesNeedUpdate = true;
+ // b2Vec2.Mul(center, transform, center);
+  renderer.insertCircleVertices(transform, this.radius, center.x, center.y, 0, 0, 0, 5);
 };
 
-b2ChainShape.prototype.draw = function(fixture, transform) {
-  var transformedV = new b2Vec2(),
-    chainVertices = this.vertices,
-    line = fixture.graphic;
-  if (line === undefined) {
-    this.drawInit(fixture, transform);
-    return;
-  }
-  var geometry = line.geometry,
-    vertices = geometry.vertices,
-    vertexCount = chainVertices.length;
+b2ChainShape.prototype.draw = function(transform) {
+  renderer.transformVerticesAndInsert(this.vertices, transform, 0, 0, 0);
+};
 
-  for(var i = 0; i < vertexCount; i++) {
-    var vertex = chainVertices[i];
-    b2Vec2.Mul(transformedV, transform, vertex);
-    vertices[i].x = transformedV.x;
-    vertices[i].y = transformedV.y;
-  }
-  geometry.verticesNeedUpdate = true;
-}
 
-b2EdgeShape.prototype.draw = function(fixture, transform) {
-  var transformedV = new b2Vec2(),
-    line = fixture.graphic,
-    geometry = line.geometry;
+b2EdgeShape.prototype.draw = function(transform) {
+  renderer.transformAndInsert(this.vertex1, this.vertex2, transform, 0, 0, 0);
+};
 
-  b2Vec2.Mul(transformedV, transform, this.vertex1);
-  geometry.vertices[0].x = transformedV.x;
-  geometry.vertices[0].y = transformedV.y;
+b2PolygonShape.prototype.draw = function(transform) {
+  var zPosition = renderer.currentVertex * 3;
 
-  b2Vec2.Mul(transformedV, transform, this.vertex2);
-  geometry.vertices[1].x = transformedV.x;
-  geometry.vertices[1].y = transformedV.y;
-  geometry.verticesNeedUpdate = true;
-}
+  renderer.transformVerticesAndInsert(this.vertices, transform, 0, 0, 0);
 
-b2PolygonShape.prototype.draw = function(fixture, transform) {
-  var vertexCount = this.vertices.length,
-    transformedV = new b2Vec2(),
-    line = fixture.graphic;
-  if (line === undefined) {
-    this.drawInit(fixture, transform);
-    return;
-  }
-  var geometry = line.geometry;
-
-  for (var i = 0; i < vertexCount; i++) {
-    var vertex = this.vertices[i];
-    b2Vec2.Mul(transformedV, transform, vertex);
-    geometry.vertices[i].x = transformedV.x;
-    geometry.vertices[i].y = transformedV.y;
-  }
-  geometry.vertices[vertexCount] = geometry.vertices[0];
-  geometry.verticesNeedUpdate = true;
-}
+  // create a loop
+  var positions = renderer.positions;
+  var last = (renderer.currentVertex - 1) * 3;
+  renderer.insertLine(positions[last], positions[last + 1],
+                      positions[zPosition], positions[zPosition + 1],
+                      0, 0, 0);
+};
 
 function drawParticleSystem(system) {
   var particles = system.GetPositionBuffer();
   var color = system.GetColorBuffer();
-  var maxParticles = particles.length;
+  var maxParticles = particles.length,
+    transform = new b2Transform();
+  transform.SetIdentity();
 
-  if (system.graphics === undefined) {
-    initParticleSystem(system);
-  }
-
-  for (var i = 0, j = 0, c = 0; i < maxParticles; i += 2, j++, c+=4) {
-    var index = j;
-    if (system.graphics[index] == undefined) {
-      var material = new THREE.LineBasicMaterial({ color: 0x0000ff });
-      for (; i < maxParticles; i += 2, j++) {
-        index = j;
-        var line = new THREE.Line(world.unitCircle, material);
-        line.position.x = particles[i];
-        line.position.y = particles[i + 1];
-        line.scale.x = system.radius;
-        line.scale.y = system.radius;
-        line.scale.z = system.radius;
-        system.graphics.push(line);
-        scene.add(line);
-      }
-      return;
-    }
-    var line = system.graphics[index];
-    line.position.x = particles[i];
-    line.position.y = particles[i + 1];
-    line.scale.x = system.radius;
-    line.scale.y = system.radius;
-    line.scale.z = system.radius;
-    if (renderer.updateColorParticles) {
-    line.material.color = new THREE.Color("rgb(" + color[c] + "," + color[c + 1] + "," + color[c + 2] + ")");
-    }
+  for (var i = 0, c = 0; i < maxParticles; i += 2, c += 4) {
+    renderer.insertParticleVertices(system.radius, particles[i],
+      particles[i + 1], color[c] * inv255, color[c + 1] * inv255, color[c + 2] * inv255, 3);
   }
 }

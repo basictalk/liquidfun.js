@@ -24,5 +24,13 @@ void* b2CircleShape_CreateParticleGroup(
     // Circle
     double px, double py,
     double radius);
+
+double b2CircleShape_DestroyParticlesInShape(
+    void* particleSystem,
+    // circle
+    double px, double py, double radius,
+    // xf
+    double xfpX, double xfpY, double xfqS,
+    double xfqC);
 }
 #endif

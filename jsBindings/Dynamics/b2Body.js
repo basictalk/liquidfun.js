@@ -34,13 +34,16 @@ var b2Body_SetAwake =
   Module.cwrap('b2Body_SetAwake', 'number',['number', 'number']);
 var b2Body_SetLinearVelocity = Module.cwrap('b2Body_SetLinearVelocity', 'null',
   ['number', 'number', 'number']);
+var b2Body_SetMassData = Module.cwrap('b2Body_SetMassData', 'null',
+  ['number', 'number', 'number',
+   'number', 'number']);
 var b2Body_SetTransform =
   Module.cwrap('b2Body_SetTransform', 'null', ['number', 'number', 'number']);
 var b2Body_SetType =
   Module.cwrap('b2Body_SetType', 'null', ['number', 'number']);
 
 
-// memory offsets -- FRAGILE
+// memory offsets
 var b2Body_xf_offset = Offsets.b2Body.xf;
 var b2Body_userData_offset = Offsets.b2Body.userData;
 /**@constructor*/
@@ -48,7 +51,6 @@ function b2Body(ptr) {
   this.buffer = new DataView(Module.HEAPU8.buffer, ptr);
   this.ptr = ptr;
   this.fixtures = [];
-  console.log();
 }
 
 b2Body.prototype.ApplyAngularImpulse = function(force, wake) {
@@ -127,21 +129,13 @@ b2Body.prototype.GetPosition = function() {
 };
 
 b2Body.prototype.GetTransform = function() {
-  b2Body_GetTransform(this.ptr, _transBuf.byteOffset);
-  var result = new Float32Array(_transBuf.buffer, _transBuf.byteOffset, _transBuf.length);
-  var transform = new b2Transform();
-  transform.FromFloat64Array(result);
-  return transform;
-};
-
-b2Body.prototype.GetTransform_Test = function() {
   var transform = new b2Transform();
   transform.p.x = this.buffer.getFloat32(b2Body_xf_offset, true);
   transform.p.y = this.buffer.getFloat32(b2Body_xf_offset+4, true);
   transform.q.s = this.buffer.getFloat32(b2Body_xf_offset+8, true);
   transform.q.c = this.buffer.getFloat32(b2Body_xf_offset+12, true);
   return transform;
-}
+};
 
 b2Body.prototype.GetType = function() {
   return b2Body_GetType(this.ptr);
@@ -149,7 +143,7 @@ b2Body.prototype.GetType = function() {
 
 b2Body.prototype.GetUserData = function() {
   return this.buffer.getUint32(b2Body_userData_offset, true);
-}
+};
 
 b2Body.prototype.GetWorldCenter = function() {
   b2Body_GetWorldCenter(this.ptr, _vec2Buf.byteOffset);
@@ -179,6 +173,10 @@ b2Body.prototype.SetAwake = function(flag) {
 
 b2Body.prototype.SetLinearVelocity = function(v) {
   b2Body_SetLinearVelocity(this.ptr, v.x, v.y);
+};
+
+b2Body.prototype.SetMassData = function(massData) {
+  b2Body_SetMassData(this.ptr, massData.mass, massData.center.x, massData.center.y, massData.I);
 };
 
 b2Body.prototype.SetTransform = function(v, angle) {

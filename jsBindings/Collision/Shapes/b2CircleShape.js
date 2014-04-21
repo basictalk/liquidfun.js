@@ -23,6 +23,14 @@ var b2CircleShape_CreateParticleGroup =
       'number', 'number', 'number'
     ]);
 
+var b2CircleShape_DestroyParticlesInShape =
+  Module.cwrap('b2CircleShape_DestroyParticlesInShape', 'number',
+    ['number',
+    //circle
+     'number', 'number', 'number',
+     // transform
+     'number', 'number', 'number', 'number']);
+
 /**@constructor*/
 function b2CircleShape() {
   this.position = new b2Vec2();
@@ -39,10 +47,10 @@ b2CircleShape.prototype._CreateFixture = function(body, fixtureDef) {
     fixtureDef.filter.categoryBits, fixtureDef.filter.groupIndex, fixtureDef.filter.maskBits,
     // circle data
     this.position.x, this.position.y, this.radius);
-}
+};
 
 b2CircleShape.prototype._CreateParticleGroup = function(particleSystem, pgd) {
-  var pg = new b2ParticleGroup(b2CircleShape_CreateParticleGroup(
+  return b2CircleShape_CreateParticleGroup(
     particleSystem.ptr,
     // particle group def
     pgd.angle,  pgd.angularVelocity, pgd.color.r,
@@ -53,6 +61,13 @@ b2CircleShape.prototype._CreateParticleGroup = function(particleSystem, pgd) {
     pgd.particleCount, pgd.strength, pgd.stride,
     pgd.userData,
     // circle
-    this.position.x, this.position.y, this.radius));
-  return pg;
-}
+    this.position.x, this.position.y, this.radius);
+};
+
+b2CircleShape.prototype._DestroyParticlesInShape = function(ps, xf) {
+  return b2CircleShape_DestroyParticlesInShape(ps.ptr,
+    // circle
+    this.position.x, this.position.y, this.radius,
+    // transform
+    xf.p.x, xf.p.y, xf.q.s, xf.q.c);
+};

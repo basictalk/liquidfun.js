@@ -5,13 +5,6 @@ b2World.BeginContactBody = function(contactPtr) {
   }
   var contact = new b2Contact(contactPtr);
   world.listener.BeginContactBody(contact);
-
-  //contact.GetFixtureA();
-  //contact.GetFixtureB();
-  /*var fixLook = world.fixturesLookup;
-  console.log(world.fixturesLookup[fixA].detail);
-  console.log(world.fixturesLookup[fixB].detail);
-  this.listener.BeginContact(fixLook[fixA], fixLook[fixB]);*/
 };
 
 b2World.EndContactBody = function(contactPtr) {
@@ -20,12 +13,6 @@ b2World.EndContactBody = function(contactPtr) {
   }
   var contact = new b2Contact(contactPtr);
   world.listener.EndContactBody(contact);
-  //contact.GetFixtureA();
-  //contact.GetFixtureB();
-  /*var fixLook = world.fixturesLookup;
-  console.log(world.fixturesLookup[fixA].detail);
-  console.log(world.fixturesLookup[fixB].detail);
-  this.listener.EndContact(fixLook[fixA], fixLook[fixB]);*/
 };
 
 b2World.PreSolve = function(contactPtr, oldManifoldPtr) {
@@ -44,7 +31,12 @@ b2World.PostSolve = function(contactPtr, impulsePtr) {
 };
 
 b2World.QueryAABB = function(fixturePtr) {
-  world.queryAABBCallback.ReportFixture(world.fixturesLookup[fixturePtr]);
+  return world.queryAABBCallback.ReportFixture(world.fixturesLookup[fixturePtr]);
+};
+
+b2World.RayCast = function(fixturePtr, pointX, pointY, normalX, normalY, fraction) {
+  return world.rayCastCallback.ReportFixture(world.fixturesLookup[fixturePtr],
+    new b2Vec2(pointX, pointY), new b2Vec2(normalX, normalY), fraction);
 };
 
 // Emscripten exports
@@ -80,6 +72,10 @@ var b2World_QueryAABB =
   Module.cwrap('b2World_QueryAABB', 'null',
     ['number', 'number', 'number' ,'number' ,'number']);
 
+var b2World_RayCast =
+  Module.cwrap('b2World_RayCast', 'null',
+    ['number', 'number', 'number' ,'number' ,'number']);
+
 var b2World_SetContactListener = Module.cwrap('b2World_SetContactListener', 'null', ['number']);
 var b2World_SetGravity = Module.cwrap('b2World_SetGravity', 'null', 
   ['number', 'number', 'number']);
@@ -98,7 +94,10 @@ function b2World(gravity) {
   this.listener = null;
   this.particleSystems = [];
   this.ptr = b2World_Create(gravity.x, gravity.y);
-  this.queryCallback = null;
+  this.queryAABBCallback = null;
+  this.rayCastCallback = null;
+
+  this.buffer = new DataView(Module.HEAPU8.buffer, this.ptr);
 
 
   // preallocate some buffers to prevent having to constantly reuse
@@ -180,6 +179,11 @@ b2World.prototype.QueryAABB = function(callback, aabb) {
   this.queryAABBCallback = callback;
   b2World_QueryAABB(this.ptr, aabb.lowerBound.x, aabb.lowerBound.y,
     aabb.upperBound.x, aabb.upperBound.y);
+};
+
+b2World.prototype.RayCast = function(callback, point1, point2) {
+  this.rayCastCallback = callback;
+  b2World_RayCast(this.ptr, point1.x, point1.y, point2.x, point2.y);
 };
 
 b2World.prototype.SetContactListener = function(listener) {

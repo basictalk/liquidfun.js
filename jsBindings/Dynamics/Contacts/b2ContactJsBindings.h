@@ -3,5 +3,6 @@
 
 extern "C" {
 void* b2Contact_GetManifold(void* contact);
+void* b2Contact_GetWorldManifold(void* contact);
 }
 #endif

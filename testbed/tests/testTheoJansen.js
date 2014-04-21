@@ -1,4 +1,3 @@
-//todo this guy is not working yet 100%
 function TestTheoJansen() {
   this.offset = new b2Vec2(0.0, 8.0);
   this.motorSpeed = 2.0;
@@ -172,10 +171,9 @@ TestTheoJansen.prototype.CreateLeg = function(s, wheelAnchor) {
 
   b2Vec2.Add(temp, p6, this.offset);
   b2Vec2.Add(temp2, wheelAnchor, this.offset);
-  djd.InitializeAndCreate(body1, this.wheel, temp, temp2);
+  djd.InitializeAndCreate(body2, this.wheel, temp, temp2);
 
   var rjd = new b2RevoluteJointDef;
-  rjd.enableLimit = false;
   b2Vec2.Add(temp, p4, this.offset);
   rjd.InitializeAndCreate(body2, this.chassis, temp);
 };

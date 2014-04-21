@@ -69,8 +69,9 @@ b2ParticleColor.prototype.Set = function(r, g, b, a) {
   this.g = g;
   this.b = b;
   this.a = a;
-}
+};
 
+/**@constructor*/
 function b2ParticleDef() {
   this.color = new b2Vec2();
   this.flags = 0;

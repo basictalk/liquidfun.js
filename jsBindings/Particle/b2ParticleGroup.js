@@ -12,6 +12,55 @@ var b2_particleGroupInternalMask =
     b2_particleGroupWillBeDestroyed |
     b2_particleGroupNeedsUpdateDepth;
 
+
+var b2ParticleGroup_ApplyForce =
+  Module.cwrap('b2ParticleGroup_ApplyForce', 'null',
+    ['number', 'number', 'number']);
+var b2ParticleGroup_ApplyLinearImpulse =
+  Module.cwrap('b2ParticleGroup_ApplyLinearImpulse', 'null',
+    ['number', 'number', 'number']);
+var b2ParticleGroup_DestroyParticles =
+  Module.cwrap('b2ParticleGroup_DestroyParticles', 'null',
+    ['number', 'number']);
+var b2ParticleGroup_GetBufferIndex =
+  Module.cwrap('b2ParticleGroup_GetBufferIndex', 'number',
+    ['number']);
+var b2ParticleGroup_GetParticleCount =
+  Module.cwrap('b2ParticleGroup_GetParticleCount', 'number',
+    ['number']);
+
+var b2ParticleGroup_groupFlags_offset = Offsets.b2ParticleGroup.groupFlags;
+
+/** @constructor */
+function b2ParticleGroup(ptr) {
+  this.buffer = new DataView(Module.HEAPU8.buffer, ptr);
+  this.ptr = ptr;
+}
+
+b2ParticleGroup.prototype.ApplyForce = function(force) {
+  b2ParticleGroup_ApplyForce(this.ptr, force.x, force.y);
+};
+
+b2ParticleGroup.prototype.ApplyLinearImpulse = function(impulse) {
+  b2ParticleGroup_ApplyLinearImpulse(this.ptr, impulse.x, impulse.y);
+};
+
+b2ParticleGroup.prototype.DestroyParticles = function(flag) {
+  b2ParticleGroup_DestroyParticles(this.ptr, flag);
+};
+
+b2ParticleGroup.prototype.GetBufferIndex = function() {
+  return b2ParticleGroup_GetBufferIndex(this.ptr);
+};
+
+b2ParticleGroup.prototype.GetGroupFlags = function() {
+  return this.buffer.getUint32(b2ParticleGroup_groupFlags_offset, true);
+};
+
+b2ParticleGroup.prototype.GetParticleCount = function() {
+  return b2ParticleGroup_GetParticleCount(this.ptr);
+};
+
 /**@constructor*/
 function b2ParticleGroupDef() {
   this.angle = 0;
@@ -31,9 +80,4 @@ function b2ParticleGroupDef() {
   this.strength = 1;
   this.stride = 0;
   this.userData = null;
-}
-
-/** @constructor */
-function b2ParticleGroup(ptr) {
-  this.ptr = ptr;
 }

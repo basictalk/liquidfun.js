@@ -20,3 +20,21 @@ function TestRope() {
   this.angle = 0.0;
   this.rope.SetAngle(this.angle);
 }
+
+TestRope.prototype.Keyboard = function(key) {
+  switch (key) {
+    case 'q':
+      this.angle = Math.max(-Math.PI, this.angle - 0.5 * Math.PI);
+      this.rope.SetAngle(this.angle);
+      break;
+    case 'e':
+      this.angle = Math.min(Math.PI, this.angle + 0.5 * Math.PI);
+      this.rope.SetAngle(this.angle);
+      break;
+  }
+};
+
+TestRope.prototype.Step = function() {
+  this.rope.Step(1/60, 1);
+  Step();
+};

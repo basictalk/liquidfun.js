@@ -67,3 +67,21 @@ void* b2CircleShape_CreateParticleGroup(
 
   return ((b2ParticleSystem*)particleSystem)->CreateParticleGroup(def);
 }
+
+double b2CircleShape_DestroyParticlesInShape(
+    void* particleSystem,
+    // circle
+    double px, double py, double radius,
+    // xf
+    double xfpX, double xfpY, double xfqS,
+    double xfqC) {
+  b2CircleShape circle;
+  circle.m_p.Set(px, py);
+  circle.m_radius = radius;
+
+  b2Transform xf;
+  xf.p.Set(xfpX, xfpY);
+  xf.q.s = xfqS;
+  xf.q.c = xfqC;
+  return ((b2ParticleSystem*)particleSystem)->DestroyParticlesInShape(circle, xf);
+}

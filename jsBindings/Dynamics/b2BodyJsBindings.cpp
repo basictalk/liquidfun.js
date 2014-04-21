@@ -100,6 +100,15 @@ void b2Body_SetLinearVelocity(void* body, double x, double y) {
   ((b2Body*)body)->SetLinearVelocity(b2Vec2(x, y));
 }
 
+void b2Body_SetMassData(void* body, double mass, double centerX,
+                        double centerY, double inertia) {
+  b2MassData m;
+  m.mass = mass;
+  m.center.Set(centerX, centerY);
+  m.I = inertia;
+  ((b2Body*)body)->SetMassData(&m);
+}
+
 void b2Body_SetTransform(void* body, double x, double y, double angle) {
   ((b2Body*)body)->SetTransform(b2Vec2(x, y), angle);
 }

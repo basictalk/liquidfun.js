@@ -1,5 +1,18 @@
 var FLT_EPSILON = 1.19209290E-07;
 
+function b2Max(a ,b) {
+  return new b2Vec2(Math.max(a.x, b.x), Math.max(a.y, b.y));
+}
+
+function b2Min(a, b) {
+  return new b2Vec2(Math.min(a.x, b.x), Math.min(a.y, b.y));
+}
+
+function b2Clamp(a, low, high) {
+  return b2Max(low, b2Min(a, high));
+}
+
+
 /** @constructor */
 function b2Vec2(x, y) {
   if (x === undefined) {
@@ -21,6 +34,10 @@ b2Vec2.Add = function(out, a, b) {
 b2Vec2.CrossScalar = function(output, input, scalar) {
   output.x = -scalar * input.y;
   output.y =  scalar * input.x;
+};
+
+b2Vec2.Cross = function(a, b) {
+  return a.x * b.y - a.y * b.x;
 };
 
 b2Vec2.MulScalar = function(out, input, scalar) {
@@ -92,6 +109,11 @@ b2Rot.prototype.Set = function(radians) {
   this.c = Math.cos(radians);
 };
 
+b2Rot.prototype.SetIdentity = function() {
+  this.s = 0;
+  this.c = 1;
+};
+
 b2Rot.prototype.GetXAxis = function() {
   return new b2Vec2(this.c, this.s);
 };
@@ -115,4 +137,9 @@ b2Transform.prototype.FromFloat64Array = function(arr) {
   p.y = arr[1];
   q.s = arr[2];
   q.c = arr[3];
+};
+
+b2Transform.prototype.SetIdentity = function() {
+  this.p.Set(0, 0);
+  this.q.SetIdentity();
 };

@@ -31,7 +31,9 @@ double b2ParticleSystem_GetParticleCount(void* particleSystem) {
 void* b2ParticleSystem_GetPositionBuffer(void* particleSystem) {
   return ((b2ParticleSystem*)particleSystem)->GetPositionBuffer();
 }
-
+void* b2ParticleSystem_GetVelocityBuffer(void* particleSystem) {
+  return ((b2ParticleSystem*)particleSystem)->GetVelocityBuffer();
+}
 void b2ParticleSystem_SetDamping(void* particleSystem, double damping) {
   ((b2ParticleSystem*)particleSystem)->SetDamping(damping);
 }

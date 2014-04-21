@@ -8,6 +8,8 @@ extern "C" {
   extern void b2WorldPreSolve(void* contactPtr, void* oldManifoldPtr);
   extern void b2WorldPostSolve(void* contactPtr, void* impulsePtr);
   extern bool b2WorldQueryAABB(void* fixturePtr);
+  extern float32 b2WorldRayCastCallback(void* fixturePtr, double pointX, double pointY,
+                                       double normalX, double normalY, double fraction);
 }
 
 // internal classes
@@ -36,8 +38,7 @@ class b2WorldContactListener : public b2ContactListener
 
 b2WorldContactListener listener;
 
-class QueryAABBCallback : public b2QueryCallback
-{
+class QueryAABBCallback : public b2QueryCallback {
 public:
   bool ReportFixture(b2Fixture* fixture) {
     return b2WorldQueryAABB((void*)fixture);
@@ -45,6 +46,17 @@ public:
 };
 
 QueryAABBCallback queryAABBCallback;
+
+class RayCastCallback : public b2RayCastCallback {
+  float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point,
+                    const b2Vec2& normal, float32 fraction) {
+    return b2WorldRayCastCallback(fixture, point.x, point.y,
+                                  normal.x, normal.y, fraction);
+  }
+};
+
+RayCastCallback rayCastCallback;
+
 // b2World Exports
 void* b2World_Create(double x, double y) {
   return new b2World(b2Vec2(x, y));
@@ -72,9 +84,7 @@ void* b2World_CreateBody(
   def.position.Set(positionX, positionY);
   def.type = (b2BodyType)type;
   def.userData = userData;
-  b2Body* b = ((b2World*)world)->CreateBody(&def);
-  PrintOffsets(b);
-  return b;
+  return ((b2World*)world)->CreateBody(&def);
 }
 
 void* b2World_CreateParticleSystem(
@@ -128,6 +138,12 @@ void b2World_QueryAABB(void* world, double aabbLowerBoundX, double aabbLowerBoun
   aabb.lowerBound = b2Vec2(aabbLowerBoundX, aabbLowerBoundY);
   aabb.upperBound = b2Vec2(aabbUpperBoundX, aabbUpperBoundY);
   ((b2World*)world)->QueryAABB(&queryAABBCallback, aabb);
+}
+
+void b2World_RayCast(void* world, double point1X, double point1Y,
+                     double point2X, double point2Y) {
+  ((b2World*)world)->RayCast(&rayCastCallback, b2Vec2(point1X, point1Y),
+                             b2Vec2(point2X, point2Y));
 }
 
 void b2World_SetContactListener(void* world) {

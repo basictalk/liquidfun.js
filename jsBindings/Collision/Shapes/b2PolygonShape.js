@@ -49,6 +49,37 @@ var b2PolygonShape_CreateFixture_6 =
       'number', 'number',
       'number', 'number']);
 
+var b2PolygonShape_CreateFixture_7 =
+  Module.cwrap('b2PolygonShape_CreateFixture_7', 'number',
+    ['number',
+      // Fixture defs
+      'number', 'number', 'number',
+      'number', 'number',
+      // b2Vec2
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number']);
+
+var b2PolygonShape_CreateFixture_8 =
+  Module.cwrap('b2PolygonShape_CreateFixture_8', 'number',
+    ['number',
+      // Fixture defs
+      'number', 'number', 'number',
+      'number', 'number',
+      // b2Vec2
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'number', 'number',
+      'numbre', 'number']);
+
 // particle group creation wrappers
 var b2PolygonShape_CreateParticleGroup_4 =
   Module.cwrap('b2PolygonShape_CreateParticleGroup_4', 'number',
@@ -67,6 +98,19 @@ var b2PolygonShape_CreateParticleGroup_4 =
       'number', 'number',
       'number', 'number'
     ]);
+
+// particle group destruction wrappers
+var b2PolygonShape_DestroyParticlesInShape_4 =
+  Module.cwrap('b2PolygonShape_DestroyParticlesInShape_4', 'number',
+    ['number',
+     //polygon shape
+     'number', 'number',
+     'number', 'number',
+     'number', 'number',
+     'number', 'number',
+     // xf
+     'number', 'number', 'number',
+     'number']);
 
 /** @constructor */
 function b2PolygonShape() {
@@ -172,6 +216,55 @@ b2PolygonShape.prototype._CreateFixture = function(body, fixtureDef) {
         v4.x, v4.y,
         v5.x, v5.y);
       break;
+    case 7:
+      var v0 = vertices[0];
+      var v1 = vertices[1];
+      var v2 = vertices[2];
+      var v3 = vertices[3];
+      var v4 = vertices[4];
+      var v5 = vertices[5];
+      var v6 = vertices[6];
+      return b2PolygonShape_CreateFixture_7(body.ptr,
+        // fixture Def
+        fixtureDef.density, fixtureDef.friction, fixtureDef.isSensor,
+        fixtureDef.restitution, fixtureDef.userData,
+        // filter def
+        fixtureDef.filter.categoryBits, fixtureDef.filter.groupIndex, fixtureDef.filter.maskBits,
+        // points
+        v0.x, v0.y,
+        v1.x, v1.y,
+        v2.x, v2.y,
+        v3.x, v3.y,
+        v4.x, v4.y,
+        v5.x, v5.y,
+        v6.x, v6.y);
+      break;
+    case 8:
+      var v0 = vertices[0];
+      var v1 = vertices[1];
+      var v2 = vertices[2];
+      var v3 = vertices[3];
+      var v4 = vertices[4];
+      var v5 = vertices[5];
+      var v6 = vertices[6];
+      var v7 = vertices[7];
+      return b2PolygonShape_CreateFixture_8(body.ptr,
+        // fixture Def
+        fixtureDef.density, fixtureDef.friction, fixtureDef.isSensor,
+        fixtureDef.restitution, fixtureDef.userData,
+        // filter def
+        fixtureDef.filter.categoryBits, fixtureDef.filter.groupIndex, fixtureDef.filter.maskBits,
+        // points
+        v0.x, v0.y,
+        v1.x, v1.y,
+        v2.x, v2.y,
+        v3.x, v3.y,
+        v4.x, v4.y,
+        v5.x, v5.y,
+        v6.x, v6.y,
+        v6.x, v7.y);
+      break;
+
   }
 };
 
@@ -181,7 +274,7 @@ b2PolygonShape.prototype._CreateParticleGroup = function(particleSystem, pgd) {
     case 3:
       break;
     case 4:
-      var pg = new b2ParticleGroup(b2PolygonShape_CreateParticleGroup_4(
+      return b2PolygonShape_CreateParticleGroup_4(
         particleSystem.ptr,
         // particle group def
         pgd.angle,  pgd.angularVelocity, pgd.color.r,
@@ -195,8 +288,54 @@ b2PolygonShape.prototype._CreateParticleGroup = function(particleSystem, pgd) {
         v[0].x, v[0].y,
         v[1].x, v[1].y,
         v[2].x, v[2].y,
-        v[3].x, v[3].y));
-      return pg;
+        v[3].x, v[3].y);
       break;
   }
 };
+
+b2PolygonShape.prototype._DestroyParticlesInShape = function(ps, xf) {
+  var v = this.vertices;
+  switch (v.length) {
+    case 3:
+      break;
+    case 4:
+      return b2PolygonShape_DestroyParticlesInShape_4(
+        ps.ptr,
+        // polygon
+        v[0].x, v[0].y,
+        v[1].x, v[1].y,
+        v[2].x, v[2].y,
+        v[3].x, v[3].y,
+        // xf
+        xf.p.x, xf.p.y,
+        xf.q.s, xf.q.c);
+      break;
+  }
+};
+
+/**@return bool*/
+b2PolygonShape.prototype.Validate = function() {
+  for (var i = 0, max = this.vertices.length; i < max; ++i) {
+    var i1 = i;
+    var i2 = i < max - 1 ? i1 + 1 : 0;
+    var p = this.vertices[i1];
+    var e = this.vertices[i2];
+    var eSubP = new b2Vec2();
+    b2Vec2.Sub(eSubP, e, p);
+
+    for (var j = 0; j < max; ++j) {
+      if (j == i1 || j == i2) {
+        continue;
+      }
+
+      var v = new b2Vec2();
+      b2Vec2.Sub(v, this.vertices[j], p);
+      var c = b2Vec2.Cross(eSubP, v);
+      if (c < 0.0) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
