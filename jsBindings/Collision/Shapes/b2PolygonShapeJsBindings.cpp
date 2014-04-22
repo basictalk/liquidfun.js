@@ -68,7 +68,6 @@ void* b2PolygonShape_CreateFixture_4(
 
   b2PolygonShape polygon;
   polygon.Set(points, count);
-
   def.shape = &polygon;
   return ((b2Body*)body)->CreateFixture(&def);
 }

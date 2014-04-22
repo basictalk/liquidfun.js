@@ -19,7 +19,7 @@ b2World.PreSolve = function(contactPtr, oldManifoldPtr) {
   if (world.listener.PreSolve === undefined) {
     return;
   }
-  this.listener.PreSolve(new b2Contact(contactPtr), new b2Manifold(oldManifoldPtr));
+  world.listener.PreSolve(new b2Contact(contactPtr), new b2Manifold(oldManifoldPtr));
 };
 
 b2World.PostSolve = function(contactPtr, impulsePtr) {

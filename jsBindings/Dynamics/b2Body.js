@@ -1,44 +1,69 @@
 // b2Body Globals
 var b2Body_ApplyAngularImpulse = Module.cwrap('b2Body_ApplyAngularImpulse', 'null',
   ['number', 'number', 'number']);
+
 var b2Body_ApplyForce = Module.cwrap('b2Body_ApplyForce', 'number',
   ['number', 'number', 'number', 'number', 'number', 'number']);
+
+var b2Body_ApplyForceToCenter = Module.cwrap('b2Body_ApplyForceToCenter', 'number',
+  ['number', 'number', 'number', 'number']);
+
 var b2Body_ApplyTorque = Module.cwrap('b2Body_ApplyTorque', 'number',
   ['number', 'number', 'number']);
+
 var b2Body_DestroyFixture = Module.cwrap('b2Body_DestroyFixture', 'null',
   ['number', 'number']);
+
 var b2Body_GetAngle = Module.cwrap('b2Body_GetAngle', 'number', ['number']);
+
 var b2Body_GetAngularVelocity =
   Module.cwrap('b2Body_GetAngularVelocity', 'number', ['number']);
+
 var b2Body_GetInertia = Module.cwrap('b2Body_GetInertia', 'number', ['number']);
+
 var b2Body_GetLinearVelocity =
   Module.cwrap('b2Body_GetLinearVelocity', 'null', ['number', 'number']);
+
 var b2Body_GetLocalPoint = Module.cwrap('b2Body_GetLocalPoint', 'null',
   ['number', 'number', 'number', 'number']);
+
 var b2Body_GetLocalVector = Module.cwrap('b2Body_GetLocalVector', 'null',
   ['number', 'number', 'number', 'number']);
+
 var b2Body_GetMass = Module.cwrap('b2Body_GetMass', 'number', ['number']);
+
 var b2Body_GetPosition = Module.cwrap('b2Body_GetPosition', 'null', ['number', 'number']);
+
 var b2Body_GetTransform = Module.cwrap('b2Body_GetTransform', 'null',
   ['number', 'number']);
+
 var b2Body_GetType = Module.cwrap('b2Body_GetType', 'number', ['number']);
+
 var b2Body_GetWorldCenter = Module.cwrap('b2Body_GetWorldCenter', 'null',
   ['number', 'number']);
+
 var b2Body_GetWorldPoint = Module.cwrap('b2Body_GetWorldPoint', 'null',
   ['number', 'number', 'number', 'number']);
+
 var b2Body_GetWorldVector = Module.cwrap('b2Body_GetWorldVector', 'null',
   ['number', 'number', 'number', 'number']);
+
 var b2Body_SetAngularVelocity = Module.cwrap('b2Body_SetAngularVelocity', 'null',
   ['number', 'number']);
+
 var b2Body_SetAwake =
   Module.cwrap('b2Body_SetAwake', 'number',['number', 'number']);
+
 var b2Body_SetLinearVelocity = Module.cwrap('b2Body_SetLinearVelocity', 'null',
   ['number', 'number', 'number']);
+
 var b2Body_SetMassData = Module.cwrap('b2Body_SetMassData', 'null',
   ['number', 'number', 'number',
    'number', 'number']);
+
 var b2Body_SetTransform =
   Module.cwrap('b2Body_SetTransform', 'null', ['number', 'number', 'number']);
+
 var b2Body_SetType =
   Module.cwrap('b2Body_SetType', 'null', ['number', 'number']);
 
@@ -59,6 +84,10 @@ b2Body.prototype.ApplyAngularImpulse = function(force, wake) {
 
 b2Body.prototype.ApplyForce = function(force, point, wake) {
   b2Body_ApplyForce(this.ptr, force.x, force.y, point.x, point.y, wake);
+};
+
+b2Body.prototype.ApplyForceToCenter = function(force, wake) {
+  b2Body_ApplyForceToCenter(this.ptr, force.x, force.y, wake);
 };
 
 b2Body.prototype.ApplyTorque = function(force, wake) {

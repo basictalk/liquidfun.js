@@ -19,6 +19,7 @@ float32 m_tangentSpeed;*/
 
 var b2Contact_fixtureA_offset = Offsets.b2Contact.fixtureA;
 var b2Contact_fixtureB_offset = Offsets.b2Contact.fixtureB;
+var b2Contact_tangentSpeed_offset = Offsets.b2Contact.tangentSpeed;
 
 var b2Contact_GetManifold = Module.cwrap('b2Contact_GetManifold', 'number', ['number']);
 var b2Contact_GetWorldManifold = Module.cwrap('b2Contact_GetWorldManifold', 'number', ['number']);
@@ -44,4 +45,8 @@ b2Contact.prototype.GetManifold = function() {
 
 b2Contact.prototype.GetWorldManifold = function() {
   return new b2WorldManifold(b2Contact_GetWorldManifold(this.ptr));
+};
+
+b2Contact.prototype.SetTangentSpeed = function(speed) {
+  this.buffer.setFloat32(b2Contact_tangentSpeed_offset, speed, true);
 };

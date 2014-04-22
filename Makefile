@@ -63,8 +63,9 @@ $(O)/Common/b2StackAllocator.cpp
 	
 B2BODY = \
 	'_b2Body_ApplyAngularImpulse', \
-	'_b2Body_ApplyTorque', \
 	'_b2Body_ApplyForce', \
+	'_b2Body_ApplyForceToCenter', \
+	'_b2Body_ApplyTorque', \
 	'_b2Body_DestroyFixture', \
 	'_b2Body_GetAngle', \
 	'_b2Body_GetAngularVelocity', \

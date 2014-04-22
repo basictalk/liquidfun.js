@@ -6,6 +6,8 @@ extern "C" {
 void b2Body_ApplyAngularImpulse(void* body, double impulse, double wake);
 void b2Body_ApplyForce(void* body, double forceX, double forceY,
                        double pointX, double pointY, double wake);
+void b2Body_ApplyForceToCenter(void* body, double forceX, double forceY,
+                               double wake);
 void b2Body_ApplyTorque(void* body, double force, double wake);
 void b2Body_DestroyFixture(void* body, void* fixture);
 double b2Body_GetAngle(void* body);

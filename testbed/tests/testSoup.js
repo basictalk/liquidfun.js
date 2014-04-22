@@ -102,7 +102,4 @@ function TestSoup() {
   b2Vec2.MulScalar(t, t, 0.5);
   massData = new b2MassData(0.1, t, 0.0);
   body.SetMassData(massData);
-
-  // this is to ensure dead particles don't liev on to be drawn as zombies
-  Step();
 }

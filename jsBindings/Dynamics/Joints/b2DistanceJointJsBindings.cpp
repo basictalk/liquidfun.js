@@ -37,9 +37,6 @@ void* b2DistanceJointDef_InitializeAndCreate(
 
   def.dampingRatio = dampingRatio;
   def.frequencyHz = frequencyHz;
-  printf("next\n");
-  printf("%f %f %f\n", def.dampingRatio, def.frequencyHz, collideConnected);
-  printf("%f %f, %f %f\n", anchorAx, anchorAy, anchorBx, anchorBy);
   def.Initialize((b2Body*)bodyA, (b2Body*)bodyB, b2Vec2(anchorAx, anchorAy),
                  b2Vec2(anchorBx, anchorBy));
 

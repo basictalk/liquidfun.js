@@ -9,6 +9,11 @@ void b2Body_ApplyForce(void* body, double forceX, double forceY,
   ((b2Body*)body)->ApplyForce(b2Vec2(forceX, forceY), b2Vec2(pointX, pointY),
                               (bool)wake);
 }
+void b2Body_ApplyForceToCenter(void* body, double forceX, double forceY,
+                               double wake) {
+  ((b2Body*)body)->ApplyForceToCenter(b2Vec2(forceX, forceY),
+                              (bool)wake);
+}
 void b2Body_ApplyTorque(void* body, double force, double wake) {
   ((b2Body*)body)->ApplyTorque(force, (bool)wake);
 }

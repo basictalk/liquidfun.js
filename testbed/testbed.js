@@ -9,16 +9,17 @@ var objects = [];
 var timeStep = 1.0 / 60.0;
 var velocityIterations = 8;
 var positionIterations = 3;
-var test = null;
+var test = {};
 var projector = new THREE.Projector();
 var planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+var g_groundBody = null;
 
 var windowWidth = window.innerWidth;
 var windowHeight = window.innerHeight;
 
 var GenerateOffsets = Module.cwrap("GenerateOffsets", 'null');
 
-function InitTestbed() {
+function initTestbed() {
   camera = new THREE.PerspectiveCamera(70
     , windowWidth / windowHeight
     , 1, 1000);
@@ -40,21 +41,27 @@ function InitTestbed() {
   renderer = new Renderer();
   var gravity = new b2Vec2(0, -10);
   world = new b2World(gravity);
- // Testbed();
+  Testbed();
 }
+
+function testSwitch(obj) {
+  ResetWorld();
+  world.SetGravity(new b2Vec2(0, -10));
+  var bd = new b2BodyDef;
+  g_groundBody = world.CreateBody(bd);
+  test = new obj;
+}
+
 
 function Testbed(obj) {
   // Init world
-  ResetWorld();
-  world.SetGravity(new b2Vec2(0, -10));
+
 
   //GenerateOffsets();
 
   // setup ground body
 
 
-  var bd = new b2BodyDef;
-  this.groundBody = world.CreateBody(bd);
   /*var start = new Date().getTime();
   for (var i = 0; i < 1000000; i++) {
     this.groundBody.ApplyForce(new b2Vec2(10, 30), new b2Vec2(10, 30), true);
@@ -78,7 +85,8 @@ function Testbed(obj) {
     console.log("alright!");
   }*/
 
-  test = new obj;
+ // test = new TestElasticParticles();
+ //
   //test = new TestAddPair();
   //test = new TestCornerCase();
   //test = new TestDominos();
@@ -193,6 +201,7 @@ function Testbed(obj) {
   window.addEventListener( 'resize', onWindowResize, false );
 
   render();
+  testSwitch(TestMaxwell);
 }
 
 var render = function() {
@@ -224,6 +233,8 @@ var ResetWorld = function() {
       world.DestroyParticleSystem(world.particleSystems[0]);
     }
   }
+  camera.position.x = 0;
+  camera.position.y = 0;
   camera.position.z = 100;
 };
 
