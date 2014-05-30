@@ -1,5 +1,4 @@
 function TestRopeJoint() {
-
   var ground = new b2Body();
   var bd = new b2BodyDef();
   ground = world.CreateBody(bd);

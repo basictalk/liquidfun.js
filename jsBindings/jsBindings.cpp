@@ -1,3 +1,5 @@
+/* The pure C function declarations need to be externed or they get
+mangled by the compiler*/
 extern "C" {
 #include "Collision/b2CollisionJsBindings.h"
 #include "Collision/Shapes/b2ChainShapeJsBindings.h"
@@ -49,6 +51,9 @@ void GenerateOffsets();
 #include "Particle/b2ParticleSystemJsBindings.cpp"
 
 
+/*
+// TODO clean all of this up, and/or make it auto generated from the
+// header files
 void PrintOffsets(b2Body* b) {
   printf("\tb2Body: {\n");
   printf("\t\ttype: %u,\n", (unsigned int)&b->m_type - (unsigned int)b);
@@ -183,4 +188,4 @@ void GenerateOffsets() {
 
   printf("};\n");
 }
-}
+}*/

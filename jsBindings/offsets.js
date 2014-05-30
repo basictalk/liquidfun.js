@@ -1,6 +1,8 @@
-/* this semi automaticly generated file is used for optimizations.
-  Please profile first whenever you want to use it, somethings end up costing more
-  things which weren't faster with offsets:
+/*
+  TODO: Make this a fully automated process
+  this semi automatically generated file is used for optimizations.
+  Please profile first whenever you want to use it, somethings end up costing more.
+  Things which weren't faster with offsets:
   navigating bodys list was MANY ORDERS OF MAGNITUDE slower
  */
 

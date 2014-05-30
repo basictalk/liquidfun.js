@@ -5,7 +5,7 @@
 
 PYTHON=$(ENV) python
 
-O = Box2D/Box2D
+O = ../Box2D
 OBJECTS = \
 $(O)/Rope/b2Rope.cpp \
 $(O)/Collision/b2TimeOfImpact.cpp \
@@ -60,7 +60,7 @@ $(O)/Common/b2Timer.cpp \
 $(O)/Common/b2Settings.cpp \
 $(O)/Common/b2TrackedBlock.cpp \
 $(O)/Common/b2StackAllocator.cpp
-	
+
 B2BODY = \
 	'_b2Body_ApplyAngularImpulse', \
 	'_b2Body_ApplyForce', \
@@ -86,10 +86,10 @@ B2BODY = \
 	'_b2Body_SetMassData', \
 	'_b2Body_SetTransform', \
 	'_b2Body_SetType'
-	
+
 B2CHAINSHAPE = \
-	'_b2ChainShape_CreateFixture'	
-	
+	'_b2ChainShape_CreateFixture'
+
 B2CIRCLESHAPE = \
 	'_b2CircleShape_CreateFixture', \
 	'_b2CircleShape_CreateParticleGroup', \
@@ -115,7 +115,7 @@ B2FIXTURE = \
 B2FRICTIONJOINT = \
 	'_b2FrictionJointDef_Create', \
 	'_b2FrictionJointDef_InitializeAndCreate' \
-	
+
 B2GEARJOINT = \
 	'_b2GearJoint_GetRatio', \
 	'_b2GearJointDef_Create', \
@@ -134,14 +134,14 @@ B2MOTORJOINT = \
 B2MOUSEJOINT = \
 	'_b2MouseJoint_SetTarget', \
 	'_b2MouseJointDef_Create'
-	
+
 B2PARTICLEGROUP = \
 	'_b2ParticleGroup_ApplyForce', \
 	'_b2ParticleGroup_ApplyLinearImpulse', \
 	'_b2ParticleGroup_DestroyParticles', \
 	'_b2ParticleGroup_GetParticleCount', \
 	'_b2ParticleGroup_GetBufferIndex'
-	
+
 B2PARTICLESYSTEM = \
 	'_b2ParticleSystem_CreateParticle', \
 	'_b2ParticleSystem_GetColorBuffer', \
@@ -161,7 +161,7 @@ B2POLYGONSHAPE = \
   '_b2PolygonShape_CreateFixture_8', \
 	'_b2PolygonShape_CreateParticleGroup_4', \
 	'_b2PolygonShape_DestroyParticlesInShape_4'
-	
+
 B2PRISMATICJOINT = \
 	'_b2PrismaticJoint_EnableLimit', \
 	'_b2PrismaticJoint_EnableMotor', \
@@ -194,13 +194,13 @@ B2ROPEJOINT = \
 B2WELDJOINT = \
 	'_b2WeldJointDef_Create', \
 	'_b2WeldJointDef_InitializeAndCreate' \
-	
+
 B2WHEELJOINT = \
 	'_b2WheelJoint_SetMotorSpeed', \
 	'_b2WheelJoint_SetSpringFrequencyHz', \
 	'_b2WheelJointDef_Create', \
 	'_b2WheelJointDef_InitializeAndCreate' \
-	
+
 B2WORLD = \
 	'_b2World_Create', \
 	'_b2World_CreateBody', \
@@ -214,7 +214,7 @@ B2WORLD = \
 	'_b2World_SetContactListener', \
 	'_b2World_SetGravity', \
 	'_b2World_Step'
-	
+
 EXPORTS = EXPORTED_FUNCTIONS="[ \
 	'_GenerateOffsets', \
 	$(B2BODY), \
@@ -243,5 +243,5 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	]"
 
 bindings.js:
-	$(EMSCRIPTEN)/emcc -IBox2D -o hello_world.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O1 --js-library callbacks.js
+	$(EMSCRIPTEN)/emcc -I../ -o lf_core.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O2 --js-library callbacks.js
 

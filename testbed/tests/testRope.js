@@ -1,3 +1,4 @@
+// TODO Rope should probably be removed
 function TestRope() {
   var N = 40;
   var def = new b2RopeDef;

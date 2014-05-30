@@ -6,17 +6,6 @@ var e_parameterElasticBarrier = e_parameterBegin | (1 << 3);
 var e_parameterSpringBarrier = e_parameterBegin | (1 << 4);
 var e_parameterRepulsive = e_parameterBegin | (1 << 5);
 
-var particleColors = [
-  new b2ParticleColor(0xff, 0x00, 0x00, 0xff), // red
-  new b2ParticleColor(0x00, 0xff, 0x00, 0xff), // green
-  new b2ParticleColor(0x00, 0x00, 0xff, 0xff), // blue
-  new b2ParticleColor(0xff, 0x8c, 0x00, 0xff), // orange
-  new b2ParticleColor(0x00, 0xce, 0xd1, 0xff), // turquoise
-  new b2ParticleColor(0xff, 0x00, 0xff, 0xff), // magenta
-  new b2ParticleColor(0xff, 0xd7, 0x00, 0xff), // gold
-  new b2ParticleColor(0x00, 0xff, 0xff, 0xff) // cyan
-];
-
 function TestDrawingParticles() {
   camera.position.z = 8;
   var bd = new b2BodyDef;

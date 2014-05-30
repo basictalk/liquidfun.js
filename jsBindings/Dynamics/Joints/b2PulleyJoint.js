@@ -41,7 +41,7 @@ function b2PulleyJointDef() {
   this.localAnchorB = new b2Vec2();
   this.lengthA = 0;
   this.lengthB = 0;
-  this.ration = 1;
+  this.ratio = 1;
 }
 
 b2PulleyJointDef.prototype.Create = function(world) {

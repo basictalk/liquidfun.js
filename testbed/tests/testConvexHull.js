@@ -8,7 +8,11 @@ TestConvexHull.prototype.Generate = function() {
   var upperBound = new b2Vec2(8.0, 8.0);
 
   this.shape = new b2PolygonShape;
- /* for (var i = 0; i < b2_maxPolygonVertices; ++i) {
+ /* TODO: this code was part of the original test
+    and has not been tested.  It was commented out in the
+    original as well.
+
+    for (var i = 0; i < b2_maxPolygonVertices; ++i) {
     var x = 10.0 * RandomFloat(-1, 1);
     var y = 10.0 * RandomFloat(-1, 1);
 

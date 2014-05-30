@@ -12,7 +12,6 @@ var b2_particleGroupInternalMask =
     b2_particleGroupWillBeDestroyed |
     b2_particleGroupNeedsUpdateDepth;
 
-
 var b2ParticleGroup_ApplyForce =
   Module.cwrap('b2ParticleGroup_ApplyForce', 'null',
     ['number', 'number', 'number']);
@@ -59,6 +58,10 @@ b2ParticleGroup.prototype.GetGroupFlags = function() {
 
 b2ParticleGroup.prototype.GetParticleCount = function() {
   return b2ParticleGroup_GetParticleCount(this.ptr);
+};
+
+b2ParticleGroup.prototype.SetGroupFlags = function(flags) {
+  this.buffer.setUint32(b2ParticleGroup_groupFlags_offset, flags, true);
 };
 
 /**@constructor*/

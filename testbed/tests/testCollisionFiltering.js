@@ -1,4 +1,4 @@
-var	k_smallGroup = 1;
+var k_smallGroup = 1;
 var k_largeGroup = -1;
 
 var k_defaultCategory = 0x0001;
@@ -12,16 +12,16 @@ var k_circleMask = 0xFFFF;
 
 function TestCollisionFiltering() {
   // Ground body
-    var shape = new b2EdgeShape;
-    shape.Set(new b2Vec2(-40.0, 0.0), new b2Vec2(40.0, 0.0));
+  var shape = new b2EdgeShape;
+  shape.Set(new b2Vec2(-40.0, 0.0), new b2Vec2(40.0, 0.0));
 
-    var sd = new b2FixtureDef;
-    sd.shape = shape;
-    sd.friction = 0.3;
+  var sd = new b2FixtureDef;
+  sd.shape = shape;
+  sd.friction = 0.3;
 
-    var bd = new b2BodyDef;
-    var ground = world.CreateBody(bd);
-    ground.CreateFixtureFromDef(sd);
+  var bd = new b2BodyDef;
+  var ground = world.CreateBody(bd);
+  ground.CreateFixtureFromDef(sd);
 
   // Small triangle
   var polygon = new b2PolygonShape;
@@ -57,26 +57,26 @@ function TestCollisionFiltering() {
   var body2 = world.CreateBody(triangleBodyDef);
   body2.CreateFixtureFromDef(triangleShapeDef);
 
-     bd = new b2BodyDef;
-    bd.type = b2_dynamicBody;
-    bd.position.Set(-5.0, 10.0);
-    var body = world.CreateBody(bd);
+   bd = new b2BodyDef;
+  bd.type = b2_dynamicBody;
+  bd.position.Set(-5.0, 10.0);
+  var body = world.CreateBody(bd);
 
-    var p = new b2PolygonShape;
-    p.SetAsBoxXY(0.5, 1.0);
-    body.CreateFixtureFromShape(p, 1.0);
+  var p = new b2PolygonShape;
+  p.SetAsBoxXY(0.5, 1.0);
+  body.CreateFixtureFromShape(p, 1.0);
 
-    var jd = new b2PrismaticJointDef;
-    jd.bodyA = body2;
-    jd.bodyB = body;
-    jd.enableLimit = true;
-    jd.localAnchorA.Set(0.0, 4.0);
-    jd.localAnchorB.Set(0, 0);
-    jd.localAxisA.Set(0.0, 1.0);
-    jd.lowerTranslation = -1.0;
-    jd.upperTranslation = 1.0;
+  var jd = new b2PrismaticJointDef;
+  jd.bodyA = body2;
+  jd.bodyB = body;
+  jd.enableLimit = true;
+  jd.localAnchorA.Set(0.0, 4.0);
+  jd.localAnchorB.Set(0, 0);
+  jd.localAxisA.Set(0.0, 1.0);
+  jd.lowerTranslation = -1.0;
+  jd.upperTranslation = 1.0;
 
-    world.CreateJoint(jd);
+  world.CreateJoint(jd);
 
   // Small box
   polygon = new b2PolygonShape;

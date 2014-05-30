@@ -70,7 +70,7 @@ function TestElasticParticles() {
 
 
   // circle
-  bd = new b2BodyDef()
+  bd = new b2BodyDef();
   var circle = new b2CircleShape();
   bd.type = b2_dynamicBody;
   var body = world.CreateBody(bd);

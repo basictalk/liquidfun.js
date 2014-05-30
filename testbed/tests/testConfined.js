@@ -3,53 +3,28 @@ function TestConfined() {
   var columnCount = 10;
 
   // create box
-    var bd = new b2BodyDef;
-    var ground = world.CreateBody(bd);
+  var bd = new b2BodyDef;
+  var ground = world.CreateBody(bd);
 
+  // Floor
+  var shape = new b2EdgeShape;
+  shape.Set(new b2Vec2(-10.0, 0.0), new b2Vec2(10.0, 0.0));
+  ground.CreateFixtureFromShape(shape, 0.0);
 
-    // Floor
-    var shape = new b2EdgeShape;
-    shape.Set(new b2Vec2(-10.0, 0.0), new b2Vec2(10.0, 0.0));
-    ground.CreateFixtureFromShape(shape, 0.0);
-
-    // Left wall
-   shape = new b2EdgeShape;
-    shape.Set(new b2Vec2(-10.0, 0.0), new b2Vec2(-10.0, 20.0));
-    ground.CreateFixtureFromShape(shape, 0.0);
-
-    // Right wall
+  // Left wall
   shape = new b2EdgeShape;
-    shape.Set(new b2Vec2(10.0, 0.0), new b2Vec2(10.0, 20.0));
-    ground.CreateFixtureFromShape(shape, 0.0);
+  shape.Set(new b2Vec2(-10.0, 0.0), new b2Vec2(-10.0, 20.0));
+  ground.CreateFixtureFromShape(shape, 0.0);
 
-    // Roof
-   shape = new b2EdgeShape;
-    shape.Set(new b2Vec2(-10.0, 20.0), new b2Vec2(10.0, 20.0));
-    ground.CreateFixtureFromShape(shape, 0.0);
+  // Right wall
+  shape = new b2EdgeShape;
+  shape.Set(new b2Vec2(10.0, 0.0), new b2Vec2(10.0, 20.0));
+  ground.CreateFixtureFromShape(shape, 0.0);
 
-
- //create circles
-
-
- /* for (var j = 0; j < columnCount; ++j) {
-    for (var i = 0; i < rowCount; ++i) {
-      var radius = 0.5;
-      shape = new b2CircleShape;
-      shape.radius = radius;
-
-      var fd = new b2FixtureDef;
-      fd.shape = shape;
-      fd.density = 1.0;
-      fd.friction = 0.1;
-
-      bd = new b2BodyDef;
-      bd.type = b2_dynamicBody;
-      bd.position.Set(-10.0 + (2.1 * j + 1.0 + 0.01 * i) * radius, (2.0 * i + 1.0) * radius);
-      var body = world.CreateBody(bd);
-
-      body.CreateFixtureFromDef(fd);
-    }
-  }*/
+  // Roof
+  shape = new b2EdgeShape;
+  shape.Set(new b2Vec2(-10.0, 20.0), new b2Vec2(10.0, 20.0));
+  ground.CreateFixtureFromShape(shape, 0.0);
 
   world.SetGravity(new b2Vec2(0.0, 0.0));
 }
@@ -70,7 +45,6 @@ function CreateCircle() {
   var bd = new b2BodyDef;
   bd.type = b2_dynamicBody;
   bd.position = p;
-  //bd.allowSleep = false;
   var body = world.CreateBody(bd);
 
   body.CreateFixtureFromDef(fd);

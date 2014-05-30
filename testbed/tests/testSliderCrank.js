@@ -7,7 +7,6 @@ function TestSliderCrank() {
   shape.Set(new b2Vec2(-40.0, 0.0), new b2Vec2(40.0, 0.0));
   ground.CreateFixtureFromShape(shape, 0.0);
 
-
   var prevBody = ground;
 
   // Define crank.

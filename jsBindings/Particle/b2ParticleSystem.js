@@ -60,9 +60,6 @@ function b2ParticleSystem(ptr) {
   this.ptr = ptr;
   this.particleGroups = [];
   this.radius = 1.0;
-
-  // this needs to go
-  this.graphics = [];
 }
 
 b2ParticleSystem.prototype.CreateParticle = function(pd) {
@@ -105,7 +102,6 @@ b2ParticleSystem.prototype.GetVelocityBuffer = function() {
   var offset = b2ParticleSystem_GetVelocityBuffer(this.ptr);
   return new Float32Array(Module.HEAPU8.buffer, offset, count);
 };
-
 
 b2ParticleSystem.prototype.SetDamping = function(damping) {
   this.dampingStrength = damping;

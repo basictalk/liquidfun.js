@@ -1,51 +1,51 @@
 function TestDominos() {
-    var shape = new b2EdgeShape;
-    shape.Set(new b2Vec2(-40.0, 0.0), new b2Vec2(40.0, 0.0));
+  var shape = new b2EdgeShape;
+  shape.Set(new b2Vec2(-40.0, 0.0), new b2Vec2(40.0, 0.0));
 
-    var bd = new b2BodyDef;
-    var b1 = world.CreateBody(bd);
-    b1.CreateFixtureFromShape(shape, 0.0);
+  var bd = new b2BodyDef;
+  var b1 = world.CreateBody(bd);
+  b1.CreateFixtureFromShape(shape, 0.0);
 
 
-    shape = new b2PolygonShape ;
-    shape.SetAsBoxXY(6.0, 0.25);
+  shape = new b2PolygonShape ;
+  shape.SetAsBoxXY(6.0, 0.25);
 
-    bd = new b2BodyDef;
-    bd.position.Set(-1.5, 10.0);
-    var ground = world.CreateBody(bd);
-    ground.CreateFixtureFromShape(shape, 0.0);
+  bd = new b2BodyDef;
+  bd.position.Set(-1.5, 10.0);
+  var ground = world.CreateBody(bd);
+  ground.CreateFixtureFromShape(shape, 0.0);
 
-    for (var i = 0; i < 10; ++i) {
-      shape = new b2PolygonShape;
-      shape.SetAsBoxXY(0.1, 1.0);
-
-      var fd = new b2FixtureDef;
-      fd.shape = shape;
-      fd.density = 20.0;
-      fd.friction = 0.1;
-
-      bd = new b2BodyDef;
-      bd.type = b2_dynamicBody;
-      bd.position.Set(-6.0 + i, 11.25);
-      var body = world.CreateBody(bd);
-      body.CreateFixtureFromDef(fd);
-    }
-
+  for (var i = 0; i < 10; ++i) {
     shape = new b2PolygonShape;
-    shape.SetAsBoxXYCenterAngle(7.0, 0.25, new b2Vec2(), 0.3);
+    shape.SetAsBoxXY(0.1, 1.0);
+
+    var fd = new b2FixtureDef;
+    fd.shape = shape;
+    fd.density = 20.0;
+    fd.friction = 0.1;
 
     bd = new b2BodyDef;
-    bd.position.Set(1.0, 6.0);
-    ground = world.CreateBody(bd);
-    ground.CreateFixtureFromShape(shape, 0.0);
+    bd.type = b2_dynamicBody;
+    bd.position.Set(-6.0 + i, 11.25);
+    var body = world.CreateBody(bd);
+    body.CreateFixtureFromDef(fd);
+  }
 
-    shape = new b2PolygonShape;
-    shape.SetAsBoxXY(0.25, 1.5);
+  shape = new b2PolygonShape;
+  shape.SetAsBoxXYCenterAngle(7.0, 0.25, new b2Vec2(), 0.3);
 
-    bd = new b2BodyDef;
-    bd.position.Set(-7.0, 4.0);
-    var b2 = world.CreateBody(bd);
-    b2.CreateFixtureFromShape(shape, 0.0);
+  bd = new b2BodyDef;
+  bd.position.Set(1.0, 6.0);
+  ground = world.CreateBody(bd);
+  ground.CreateFixtureFromShape(shape, 0.0);
+
+  shape = new b2PolygonShape;
+  shape.SetAsBoxXY(0.25, 1.5);
+
+  bd = new b2BodyDef;
+  bd.position.Set(-7.0, 4.0);
+  var b2 = world.CreateBody(bd);
+  b2.CreateFixtureFromShape(shape, 0.0);
 
   //b3
   shape = new b2PolygonShape;
@@ -57,8 +57,6 @@ function TestDominos() {
   bd.angle = -0.15;
   var b3 = world.CreateBody(bd);
   b3.CreateFixtureFromShape(shape, 10.0);
-
-
 
   var jd = new b2RevoluteJointDef;
   anchor = new b2Vec2;
@@ -161,6 +159,6 @@ function TestDominos() {
     bd.type = b2_dynamicBody;
     bd.position.Set(5.9 + 2.0 * radius * i, 2.4);
     body = world.CreateBody(bd);
-    body.CreateFixtureFromShape(shape, 10.0);
+    body.CreateFixtureFromShape(circle, 10.0);
   }
 }

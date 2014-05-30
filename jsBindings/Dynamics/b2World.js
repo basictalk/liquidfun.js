@@ -1,4 +1,4 @@
-// global call back function
+// global call back functions
 b2World.BeginContactBody = function(contactPtr) {
   if (world.listener.BeginContactBody === undefined) {
     return;
@@ -41,8 +41,8 @@ b2World.RayCast = function(fixturePtr, pointX, pointY, normalX, normalY, fractio
 
 // Emscripten exports
 var b2World_Create = Module.cwrap('b2World_Create', 'number', ['number', 'number']);
-var b2World_CreateBody = 
-  Module.cwrap('b2World_CreateBody', 'number', 
+var b2World_CreateBody =
+  Module.cwrap('b2World_CreateBody', 'number',
     ['number', 'number', 'number',
      'number', 'number', 'number',
      'number', 'number', 'number',
@@ -77,7 +77,7 @@ var b2World_RayCast =
     ['number', 'number', 'number' ,'number' ,'number']);
 
 var b2World_SetContactListener = Module.cwrap('b2World_SetContactListener', 'null', ['number']);
-var b2World_SetGravity = Module.cwrap('b2World_SetGravity', 'null', 
+var b2World_SetGravity = Module.cwrap('b2World_SetGravity', 'null',
   ['number', 'number', 'number']);
 var b2World_Step = Module.cwrap('b2World_Step', 'null', ['number', 'number', 'number']);
 
@@ -98,7 +98,6 @@ function b2World(gravity) {
   this.rayCastCallback = null;
 
   this.buffer = new DataView(Module.HEAPU8.buffer, this.ptr);
-
 
   // preallocate some buffers to prevent having to constantly reuse
   var nDataBytes = 4 * Float32Array.BYTES_PER_ELEMENT;
@@ -124,7 +123,6 @@ b2World._RemoveItem = function(item, list) {
   }
   list.pop();
 };
-
 
 b2World.prototype.CreateBody = function(bodyDef) {
   var body = new b2Body(b2World_CreateBody(

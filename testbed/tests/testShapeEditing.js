@@ -1,12 +1,11 @@
 function TestShapeEditing() {
  // create ground
-    var bd = new b2BodyDef;
-    var ground = world.CreateBody(bd);
+  var bd = new b2BodyDef;
+  var ground = world.CreateBody(bd);
 
-    var shape = new b2EdgeShape;
-    shape.Set(new b2Vec2(-40.0, 0.0), new b2Vec2(40.0, 0.0));
-    ground.CreateFixtureFromShape(shape, 0.0);
-
+  var shape = new b2EdgeShape;
+  shape.Set(new b2Vec2(-40.0, 0.0), new b2Vec2(40.0, 0.0));
+  ground.CreateFixtureFromShape(shape, 0.0);
 
   bd = new b2BodyDef;
   bd.type = b2_dynamicBody;

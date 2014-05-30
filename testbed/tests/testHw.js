@@ -25,6 +25,4 @@ function TestHW() {
   fixtureDef.density = 1.0;
 
   body.CreateFixtureFromDef(fixtureDef);
-
-
 }

@@ -1,4 +1,14 @@
 // shouldnt be a global :(
+var particleColors = [
+  new b2ParticleColor(0xff, 0x00, 0x00, 0xff), // red
+  new b2ParticleColor(0x00, 0xff, 0x00, 0xff), // green
+  new b2ParticleColor(0x00, 0x00, 0xff, 0xff), // blue
+  new b2ParticleColor(0xff, 0x8c, 0x00, 0xff), // orange
+  new b2ParticleColor(0x00, 0xce, 0xd1, 0xff), // turquoise
+  new b2ParticleColor(0xff, 0x00, 0xff, 0xff), // magenta
+  new b2ParticleColor(0xff, 0xd7, 0x00, 0xff), // gold
+  new b2ParticleColor(0x00, 0xff, 0xff, 0xff) // cyan
+];
 var container;
 var world = null;
 var threeRenderer;
@@ -17,7 +27,7 @@ var g_groundBody = null;
 var windowWidth = window.innerWidth;
 var windowHeight = window.innerHeight;
 
-var GenerateOffsets = Module.cwrap("GenerateOffsets", 'null');
+//var GenerateOffsets = Module.cwrap("GenerateOffsets", 'null');
 
 function initTestbed() {
   camera = new THREE.PerspectiveCamera(70
@@ -55,87 +65,7 @@ function testSwitch(obj) {
 
 function Testbed(obj) {
   // Init world
-
-
   //GenerateOffsets();
-
-  // setup ground body
-
-
-  /*var start = new Date().getTime();
-  for (var i = 0; i < 1000000; i++) {
-    this.groundBody.ApplyForce(new b2Vec2(10, 30), new b2Vec2(10, 30), true);
-  }
-  var end = new Date().getTime();
-  var time = end - start;
-  console.log('Execution time: ' + time);
-
-  start = new Date().getTime();
-  for (var i = 0; i < 1000000; i++) {
-    this.groundBody.GetTransform_Test();
-  }
-  end = new Date().getTime();
-  time = end - start;
-  console.log('Execution time: ' + time);
-
-  var bGood = this.groundBody.GetTransform();
-  var bTest = this.groundBody.GetTransform_Test();
-  if (bGood.p.x === bTest.p.x && bGood.p.y === bTest.p.y &&
-    bGood.q.s === bTest.q.s && bTest.q.c === bGood.q.c) {
-    console.log("alright!");
-  }*/
-
- // test = new TestElasticParticles();
- //
-  //test = new TestAddPair();
-  //test = new TestCornerCase();
-  //test = new TestDominos();
-  //test = new TestDumpShell();
-  //test = new TestConveyorBelt();
-  //test = new TestConfined();
-  //test = new TestCollisionFiltering();
-  //test = new TestBreakable();
-  // Init test
-  //test = new TestAntiPointy();
-  //test = new TestApplyForce();
-  //test = new TestBodyTypes();
-  //test = new TestBridge();
-  //test = new TestBullet();
-  //test = new TestChain();
- // test = new TestConvexHull();
-  //test = new TestDamBreak();
-  //test = new TestDrawingParticles();
-  //test = new TestEdgeShape();
-  //test = new TestEdgeTest();
-  //test = new TestElasticParticles();
-  //test = new TestGears();
-  //test = new TestRigidParticles();
-  //test = new TestRopeJoint();
-  //test = new TestHW();
-  //test = new TestImpulse();
-  //test = new TestMobileBalanced();
-  //test = new TestParticles();
-  //test = new TestPinball();
-  //test = new TestPointy();
-  //test = new TestPrismatic();
-  //test = new TestPulley();
- // test = new TestPyramid();
- // test = new TestSoup();
-  //test = new TestSurfaceTension();
-  //test = new TestRamp();
-  //test = new TestSensorTest();
-  //test = new TestShapeEditing();
-  //test = new TestSliderCrank();
-  //test = new TestSparky();
-  //test = new TestTheoJansen();
-  //test = new TestTiles();
-  //test = new TestTumbler();
-  //test = new TestVaryingFriction();
-  //test = new TestVaryingRestitution();
-  //test = new TestVerticalStack();
-  //test = new TestSphereStack();
-  //test = new TestWaveMachine();
-  
   //Init
   var that = this;
   document.addEventListener('keypress', function(event) {
@@ -154,7 +84,7 @@ function Testbed(obj) {
     var aabb = new b2AABB;
     var d = new b2Vec2;
 
-    d.Set(0.001, 0.001);
+    d.Set(0.01, 0.01);
     b2Vec2.Sub(aabb.lowerBound, p, d);
     b2Vec2.Add(aabb.upperBound, p, d);
 
@@ -164,7 +94,7 @@ function Testbed(obj) {
     if (queryCallback.fixture) {
       var body = queryCallback.fixture.body;
       var md = new b2MouseJointDef;
-      md.bodyA = that.groundBody;
+      md.bodyA = g_groundBody;
       md.bodyB = body;
       md.target = p;
       md.maxForce = 1000 * body.GetMass();
@@ -201,7 +131,6 @@ function Testbed(obj) {
   window.addEventListener( 'resize', onWindowResize, false );
 
   render();
-  testSwitch(TestMaxwell);
 }
 
 var render = function() {
@@ -213,7 +142,6 @@ var render = function() {
     Step();
   }
   renderer.draw();
-
 
   threeRenderer.render(scene, camera);
   requestAnimationFrame(render);

@@ -1,5 +1,4 @@
-// todo these are wrong, fix these up to use the actual function def
-// todo these are also really inefficient
+// todo see if switching to function ptrs is faster
 mergeInto(LibraryManager.library, {
   b2WorldBeginContactBody: function(contactPtr) {
     b2World.BeginContactBody(contactPtr);

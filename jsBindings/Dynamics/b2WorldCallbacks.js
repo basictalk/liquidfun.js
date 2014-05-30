@@ -4,6 +4,7 @@
 // float tangentImpulse[0]
 // float tangentImpulse[1]
 // int count
+// TODO update with offsets table
 /** @constructor */
 function b2ContactImpulse(ptr) {
   this.ptr = ptr;

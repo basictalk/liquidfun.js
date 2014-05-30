@@ -1,24 +1,24 @@
 var e_depth = 4;
 function TestMobile() {
-    // Create ground body.
-      var bodyDef = new b2BodyDef;
-      bodyDef.position.Set(0.0, 20.0);
-      var ground = world.CreateBody(bodyDef);
+  // Create ground body.
+  var bodyDef = new b2BodyDef;
+  bodyDef.position.Set(0.0, 20.0);
+  var ground = world.CreateBody(bodyDef);
 
-    var a = 0.5;
-    var h = new b2Vec2(0.0, a);
+  var a = 0.5;
+  var h = new b2Vec2(0.0, a);
 
-    var root = AddNode(ground, new b2Vec2(0, 0), 0, 3.0, a);
+  var root = this.AddNode(ground, new b2Vec2(0, 0), 0, 3.0, a);
 
-    var jointDef = new b2RevoluteJointDef;
-    jointDef.bodyA = ground;
-    jointDef.bodyB = root;
-    jointDef.localAnchorA = new b2Vec2(0, 0);
-    jointDef.localAnchorB = h;
-    world.CreateJoint(jointDef);
+  var jointDef = new b2RevoluteJointDef;
+  jointDef.bodyA = ground;
+  jointDef.bodyB = root;
+  jointDef.localAnchorA = new b2Vec2(0, 0);
+  jointDef.localAnchorB = h;
+  world.CreateJoint(jointDef);
 }
 
-var AddNode = function(parent, localAnchor, depth, offset, a) {
+TestMobile.prototype.AddNode = function(parent, localAnchor, depth, offset, a) {
   var density = 20.0;
   var h = new b2Vec2(0.0, a);
 
@@ -41,8 +41,8 @@ var AddNode = function(parent, localAnchor, depth, offset, a) {
 
   var a1 = new b2Vec2(offset, -a);
   var a2 = new b2Vec2(-offset, -a);
-  var body1 = AddNode(body, a1, depth + 1, 0.5 * offset, a);
-  var body2 = AddNode(body, a2, depth + 1, 0.5 * offset, a);
+  var body1 = this.AddNode(body, a1, depth + 1, 0.5 * offset, a);
+  var body2 = this.AddNode(body, a2, depth + 1, 0.5 * offset, a);
 
   var jointDef = new b2RevoluteJointDef;
   jointDef.bodyA = body;
